@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -13,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import type { MaintenanceTask } from '@/lib/types';
-import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
+import { format, formatDistanceToNowStrict, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } from 'lucide-react';
 import Link from 'next/link';
@@ -25,7 +26,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
 
 const getUrgency = (dueDate: Date): UrgencyStatus => {
-    const today = new Date();
+    const today = new Date('2026-01-15T15:00:00');
     today.setHours(0, 0, 0, 0);
     const taskDate = new Date(dueDate);
     taskDate.setHours(0, 0, 0, 0);
@@ -33,8 +34,8 @@ const getUrgency = (dueDate: Date): UrgencyStatus => {
     const daysDiff = differenceInDays(taskDate, today);
 
     if (daysDiff < 0) return 'Vencido';
-    if (daysDiff <= 2) return 'Urgente';
-    if (daysDiff <= 7) return 'Próximo';
+    if (daysDiff <= 3) return 'Urgente';
+    if (daysDiff <= 15) return 'Próximo';
     return 'Normal';
 };
 
@@ -87,8 +88,21 @@ const buttonTextByStatus: { [key in MaintenanceTask['status']]: string } = {
 
 const TaskCard = ({ task }: { task: MaintenanceTask }) => {
     const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
+    const operator = mockOperators.find(o => o.id === vehicle?.operatorId);
     const urgency = task.status === 'Pendiente' ? getUrgency(task.dueDate) : 'Normal';
     const UrgencyIcon = urgencyIcons[urgency];
+    const today = new Date('2026-01-15T15:00:00');
+
+    const formattedDistance = formatDistanceToNowStrict(task.dueDate, {
+        addSuffix: true,
+        locale: es,
+    });
+    
+    const isOverdue = differenceInDays(task.dueDate, today) < 0;
+    const dateText = isOverdue 
+        ? `Vencido ${formattedDistance}`.replace('hace','hace')
+        : formattedDistance;
+
 
     return (
         <Card className={cn("flex flex-col", task.status === 'Pendiente' ? urgencyCardClass[urgency] : '')}>
@@ -114,10 +128,12 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                                 {vehicle.uniqueId} ({task.vehicleId})
                             </Link>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Building className="h-4 w-4" />
-                            <span className="text-xs">{vehicle.operatorName}</span>
-                        </div>
+                         {operator && (
+                            <div className="flex items-center gap-2">
+                                <Building className="h-4 w-4" />
+                                <span className="text-xs">{operator.name}</span>
+                            </div>
+                         )}
                     </>
                 )}
                 <div className="flex items-start gap-2">
@@ -127,10 +143,8 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                         'text-attention': urgency === 'Próximo',
                     })} />
                     <div className={cn("text-sm", task.status === 'Pendiente' && urgencyDateClass[urgency], 'p-1 rounded-md')}>
-                       <span>
-                         {formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })}
-                       </span>
-                        <br />
+                       <span>{dateText}</span>
+                       <br />
                        <span className="text-xs">({format(task.dueDate, 'd MMM, yyyy', { locale: es })})</span>
                     </div>
                 </div>
@@ -245,3 +259,5 @@ export default function PreventivePage() {
     </main>
   );
 }
+
+    
