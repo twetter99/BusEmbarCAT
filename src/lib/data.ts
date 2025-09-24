@@ -1,4 +1,4 @@
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator, EquipmentSubtype } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -54,45 +54,75 @@ export const mockVehicles: Vehicle[] = rawVehicles.map(v => {
   }
 });
 
-export const mockEquipment: Equipment[] = [
-  // Vehículo 1: VEH-ALSINAGR-300
-  { id: 'EQ-PUP-001', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-IND-001', type: 'Validadora INDRA', subType: undefined, assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-IND-001', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-MMC-001', operator: operatorNameMap.get('op-01')! },
-  
-  // Vehículo 2: VEH-AUTOCARE-302
-  { id: 'EQ-PUP-003', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-PUP-003', operator: operatorNameMap.get('op-02')! },
-  { id: 'EQ-INE-001', type: 'Validadora Inetum', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: operatorNameMap.get('op-02')! },
-  { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-CAB-001', operator: operatorNameMap.get('op-02')! },
+const generateEquipment = (): Equipment[] => {
+  const equipmentList: Equipment[] = [];
+  const operators = Array.from(operatorNameMap.values());
 
-  // Vehículo 3: VEH-AUTOCARS-326 (En Mantenimiento)
-  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-CON-001', operator: operatorNameMap.get('op-03')! },
-  { id: 'EQ-PUP-002', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-PUP-002', operator: operatorNameMap.get('op-03')! },
-  
-  // Vehículo 4: VEH-AUTOCARS-338
-  { id: 'EQ-PUP-004', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-PUP-004', operator: operatorNameMap.get('op-04')! },
-  { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-KIT-001', operator: operatorNameMap.get('op-04')! },
+  // Helper function to create equipment
+  const createEquipment = (type: EquipmentType, subType: EquipmentSubtype | undefined, vehicle: Vehicle | null, status: Equipment['status'], serial: string, location?: string) => {
+    equipmentList.push({
+      id: `EQ-${serial}`,
+      type,
+      subType,
+      assignedVehicleUniqueId: vehicle ? vehicle.uniqueId : null,
+      status,
+      serialNumber: `SN-${serial}`,
+      operator: vehicle ? vehicle.operatorName : operators[Math.floor(Math.random() * operators.length)],
+      location,
+    });
+  };
 
-  // Equipos en Almacén o Reparación (sin asignar a vehículo)
-  { id: 'EQ-ANT-001', type: 'Material auxiliar', subType: 'Antena', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-02')! },
-  { id: 'EQ-PLC-001', type: 'Material auxiliar', subType: 'Placa de conexión', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-PLC-001', location: 'Almacén Operador', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-SOP-001', type: 'Material auxiliar', subType: 'Soporte', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-SOP-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-05')! },
-  { id: 'EQ-FUS-001', type: 'Material auxiliar', subType: 'Fusible', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-FUS-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-PER-001', type: 'Material auxiliar', subType: 'Perno', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-PER-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-BRI-001', type: 'Material auxiliar', subType: 'Brida', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-BRI-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-IND-002', type: 'Validadora INDRA', subType: undefined, assignedVehicleUniqueId: null, status: 'Requiere Reparación', serialNumber: 'SN-IND-002', location: 'Taller Reparaciones Norte', operator: operatorNameMap.get('op-03')! },
-];
+  // Create equipment for some vehicles
+  createEquipment('Pupitre', undefined, mockVehicles[0], 'Operativo', 'PUP-001');
+  createEquipment('Validadora INDRA', undefined, mockVehicles[0], 'Operativo', 'IND-001');
+  createEquipment('Material auxiliar', 'MMC', mockVehicles[0], 'Operativo', 'MMC-001');
+  
+  createEquipment('Pupitre', undefined, mockVehicles[1], 'Operativo', 'PUP-002');
+  createEquipment('Validadora Inetum', undefined, mockVehicles[1], 'Operativo', 'INE-001');
+  
+  createEquipment('Pupitre', undefined, mockVehicles[2], 'Requiere Reparación', 'PUP-003');
+  createEquipment('Terminal de consulta INDRA', undefined, mockVehicles[2], 'Operativo', 'CON-001');
+
+  createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operativo', 'IND-002');
+  createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operativo', 'IND-003');
+
+  // Create unassigned equipment
+  createEquipment('Pupitre', undefined, null, 'En Stock', 'PUP-100', 'Almacén Principal');
+  createEquipment('Validadora INDRA', undefined, null, 'Requiere Reparación', 'IND-100', 'Taller Reparaciones');
+  createEquipment('Validadora Inetum', undefined, null, 'En Stock', 'INE-100', 'Almacén Operador 2');
+  createEquipment('Terminal de consulta INDRA', undefined, null, 'En Stock', 'CON-100', 'Almacén Principal');
+  
+  // Create all subtypes of Material auxiliar
+  createEquipment('Material auxiliar', 'MMC', mockVehicles[4], 'Operativo', 'MMC-002');
+  createEquipment('Material auxiliar', 'Placa de conexión', null, 'En Stock', 'PLC-101', 'Almacén Principal');
+  createEquipment('Material auxiliar', 'Soporte', mockVehicles[5], 'Requiere Reparación', 'SOP-001');
+  createEquipment('Material auxiliar', 'Antena', null, 'En Stock', 'ANT-101', 'Almacén Operador 1');
+  createEquipment('Material auxiliar', 'Cambio de IP', mockVehicles[6], 'Operativo', 'CIP-001');
+  createEquipment('Material auxiliar', 'Kit de conexión HARTING', null, 'En Stock', 'HAR-101', 'Almacén Principal');
+  createEquipment('Material auxiliar', 'Cable de conexión', mockVehicles[7], 'Operativo', 'CAB-001');
+  createEquipment('Material auxiliar', 'Conector', null, 'Requiere Reparación', 'CON-102', 'Taller Reparaciones');
+  createEquipment('Material auxiliar', 'Fusible', mockVehicles[8], 'Operativo', 'FUS-001');
+  createEquipment('Material auxiliar', 'Perno', null, 'En Stock', 'PER-101', 'Almacén Principal');
+  createEquipment('Material auxiliar', 'Tanque', mockVehicles[9], 'Operativo', 'TAN-001');
+  createEquipment('Material auxiliar', 'Brida', null, 'En Stock', 'BRI-101', 'Almacén Principal');
+  createEquipment('Material auxiliar', 'Travesaño', mockVehicles[10], 'Operativo', 'TRA-001');
+  createEquipment('Material auxiliar', 'Barra', null, 'En Stock', 'BAR-101', 'Almacén Principal');
+
+  return equipmentList;
+};
+
+export const mockEquipment: Equipment[] = generateEquipment();
 
 export const mockTasks: MaintenanceTask[] = [
-  { id: 'MT-001', type: 'Preventivo', title: 'Limpieza y comprobación de pupitre', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Trimestral', dueDate: add(new Date(), { days: 10 }), status: 'Pendiente', technician: 'Alice' },
-  { id: 'MT-002', type: 'Preventivo', title: 'Revisión semestral de anclajes', vehicleId: '7001-HCR', equipmentType: 'Validadora Inetum', frequency: 'Semestral', dueDate: add(new Date(), { days: 25 }), status: 'Pendiente' },
-  { id: 'MT-003', type: 'Preventivo', title: 'Revisión anual de cableado', vehicleId: '4602-JKD', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Bob' },
-  { id: 'MT-004', type: 'Preventivo', title: 'Limpieza de validadoras', vehicleId: '4192-KFL', equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'En Progreso', technician: 'Alice' },
-  { id: 'MT-005', type: 'Preventivo', title: 'Revisión de conexiones de antena', vehicleId: '5400-LFN', equipmentType: 'Material auxiliar', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
-  { id: 'MT-006', type: 'Preventivo', title: 'Sustitución de pilas CR-2032', vehicleId: '3806-MBW', equipmentType: 'Pupitre', frequency: 'Bimensual', dueDate: sub(new Date(), { days: 2 }), status: 'Pendiente' },
-  { id: 'MT-007', type: 'Preventivo', title: 'Comprobación de bornes y brida', vehicleId: '3235-MCR', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 5 }), status: 'Pendiente', technician: 'Charlie' },
-  { id: 'MT-008', type: 'Preventivo', title: 'Inspección de fusibles', vehicleId: '1399-MCY', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 20 }), status: 'Completado', technician: 'Bob' },
-  { id: 'MT-009', type: 'Preventivo', title: 'Revisión de base de pupitre', vehicleId: '7907-MNZ', equipmentType: 'Pupitre', frequency: 'Semestral', dueDate: add(new Date(), { days: 60 }), status: 'Pendiente' },
+  { id: 'MT-001', type: 'Preventivo', title: 'Limpieza y comprobación de pupitre', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Trimestral', dueDate: add(new Date(), { days: 10 }), status: 'Pendiente', technician: 'Jordi' },
+  { id: 'MT-002', type: 'Preventivo', title: 'Revisión semestral de anclajes', vehicleId: '7001-HCR', equipmentType: 'Validadora Inetum', frequency: 'Semestral', dueDate: add(new Date(), { days: 25 }), status: 'Pendiente', technician: 'Oriol' },
+  { id: 'MT-003', type: 'Preventivo', title: 'Revisión anual de cableado', vehicleId: '4602-JKD', equipmentType: 'Cableado', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Marc' },
+  { id: 'MT-004', type: 'Preventivo', title: 'Limpieza de validadoras', vehicleId: '4192-KFL', equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'En Progreso', technician: 'Jordi' },
+  { id: 'MT-005', type: 'Preventivo', title: 'Revisión de conexiones de antena', vehicleId: '5400-LFN', equipmentType: 'Antena', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
+  { id: 'MT-006', type: 'Preventivo', title: 'Sustitución de pilas CR-2032', vehicleId: '3806-MBW', equipmentType: 'Pupitre', frequency: 'Bimensual', dueDate: sub(new Date(), { days: 2 }), status: 'Pendiente', technician: 'Pau' },
+  { id: 'MT-007', type: 'Preventivo', title: 'Comprobación de bornes y brida', vehicleId: '3235-MCR', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 5 }), status: 'Pendiente', technician: 'Arnau' },
+  { id: 'MT-008', type: 'Preventivo', title: 'Inspección de fusibles', vehicleId: '1399-MCY', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 20 }), status: 'Completado', technician: 'Marc' },
+  { id: 'MT-009', type: 'Preventivo', title: 'Revisión de base de pupitre', vehicleId: '7907-MNZ', equipmentType: 'Pupitre', frequency: 'Semestral', dueDate: add(new Date(), { days: 60 }), status: 'Pendiente', technician: 'Xavier' },
   { id: 'MT-010', type: 'Preventivo', title: 'Identificación completa de equipos', vehicleId: '0816-NDV', equipmentType: 'Todos', frequency: 'Bimensual', dueDate: sub(new Date(), { days: 15 }), status: 'En Progreso', technician: 'David' },
 ];
 
