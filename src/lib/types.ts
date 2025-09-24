@@ -32,7 +32,9 @@ export type EquipmentType =
   | 'Validadora Inetum'
   | 'Terminal de consulta INDRA'
   | 'Material auxiliar'
-  | 'Todos';
+  | 'Todos'
+  | 'Cableado'
+  | 'Antena';
 
 export const equipmentTypeCategories: Record<string, EquipmentType[] | string> = {
     'Pupitre': ['Pupitre'],
@@ -96,6 +98,8 @@ export type Incident = {
   status: 'Abierto' | 'En Progreso' | 'Resuelto';
   reportedAt: Date;
   slaDays: number;
+  priority: 'Crítica' | 'Alta' | 'Media' | 'Baja';
+  equipmentType: EquipmentType;
 };
 
 export type InventoryItem = {

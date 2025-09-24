@@ -96,10 +96,10 @@ export const mockTasks: MaintenanceTask[] = [
 
 
 export const mockIncidents: Incident[] = [
-    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2 },
-    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Bob', status: 'En Progreso', reportedAt: new Date('2024-07-27'), slaDays: 3 },
-    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'Charlie', status: 'Resuelto', reportedAt: new Date('2024-07-25'), slaDays: 1 },
-    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date(), slaDays: 1 },
+    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2, priority: 'Crítica', equipmentType: 'Pupitre' },
+    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Bob', status: 'En Progreso', reportedAt: new Date('2024-07-27'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'Charlie', status: 'Resuelto', reportedAt: new Date('2024-07-25'), slaDays: 1, priority: 'Media', equipmentType: 'Antena' },
+    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date(), slaDays: 1, priority: 'Alta', equipmentType: 'Material auxiliar' },
 ];
 
 export const mockInventory: InventoryItem[] = [
