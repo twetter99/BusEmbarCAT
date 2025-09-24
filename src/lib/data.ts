@@ -61,6 +61,7 @@ export const mockEquipment: Equipment[] = [
   { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-MMC-001', operator: operatorNameMap.get('op-01')! },
   
   // Vehículo 2: VEH-AUTOCARE-302
+  { id: 'EQ-PUP-003', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-PUP-003', operator: operatorNameMap.get('op-02')! },
   { id: 'EQ-INE-001', type: 'Validadora Inetum', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: operatorNameMap.get('op-02')! },
   { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-CAB-001', operator: operatorNameMap.get('op-02')! },
 
@@ -69,6 +70,7 @@ export const mockEquipment: Equipment[] = [
   { id: 'EQ-PUP-002', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-PUP-002', operator: operatorNameMap.get('op-03')! },
   
   // Vehículo 4: VEH-AUTOCARS-338
+  { id: 'EQ-PUP-004', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-PUP-004', operator: operatorNameMap.get('op-04')! },
   { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-KIT-001', operator: operatorNameMap.get('op-04')! },
 
   // Equipos en Almacén o Reparación (sin asignar a vehículo)
@@ -96,10 +98,10 @@ export const mockTasks: MaintenanceTask[] = [
 
 
 export const mockIncidents: Incident[] = [
-    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2, priority: 'Crítica', equipmentType: 'Pupitre' },
-    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Bob', status: 'En Progreso', reportedAt: new Date('2024-07-27'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
-    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'Charlie', status: 'Resuelto', reportedAt: new Date('2024-07-25'), slaDays: 1, priority: 'Media', equipmentType: 'Antena' },
-    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date(), slaDays: 1, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Jordi', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2, priority: 'Crítica', equipmentType: 'Pupitre' },
+    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Marc', status: 'En Progreso', reportedAt: new Date('2024-07-27'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'David', status: 'Resuelto', reportedAt: new Date('2024-07-25'), slaDays: 1, priority: 'Media', equipmentType: 'Antena' },
+    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Pau', status: 'Abierto', reportedAt: new Date(), slaDays: 1, priority: 'Alta', equipmentType: 'Material auxiliar' },
 ];
 
 export const mockInventory: InventoryItem[] = [
