@@ -39,7 +39,6 @@ export const navItems: NavConfig = {
       { id: 'maintenance', href: '#', label: 'Mantenimiento y averías', icon: Wrench, subItems: [
         { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo', icon: CalendarCheck },
         { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo', icon: ShieldCheck },
-        { id: 'checklists', href: '/checklists', label: 'Checklists', icon: CheckSquare },
       ]},
       { id: 'summarize', href: '/summarize', label: 'Resumen IA', icon: Sparkles },
       { id: 'inventory', href: '/inventory', label: 'Inventario', icon: Boxes },

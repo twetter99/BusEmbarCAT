@@ -230,18 +230,6 @@ export const mockInventory: InventoryItem[] = [
     { id: 'INV-005', name: 'Lector de tarjetas RFID', sku: 'COMP-RFID-READER', category: 'Específico del Proveedor', stock: 35, location: 'Almacén Operador' },
 ];
 
-export const mockChecklist: Checklist = {
-  id: 'CHK-001',
-  title: 'Checklist Validador Inetum',
-  items: [
-    { id: 'item-1', text: 'Inspeccionar la condición física (carcasa, pantalla)', completed: false },
-    { id: 'item-2', text: 'Limpiar el lector de tarjetas con un paño adecuado', completed: true },
-    { id: 'item-3', text: 'Verificar la versión del firmware (debe ser v3.4.1 o superior)', completed: false },
-    { id: 'item-4', text: 'Ejecutar prueba de diagnóstico de hardware', completed: false },
-    { id: "item-5", text: 'Probar con múltiples tipos de tarjetas (T-Mobilitat, bancaria)', completed: false },
-    { id: 'item-6', text: 'Comprobar las conexiones de alimentación y red', completed: true },
-    { id: 'item-7', text: 'Confirmar que las transacciones se registran correctamente', completed: false },
-  ],
-};
+
 
     
