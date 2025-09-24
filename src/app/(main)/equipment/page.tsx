@@ -31,7 +31,7 @@ const LocationCell = ({ item }: { item: Equipment }) => {
         const vehicle = mockVehicles.find(v => v.uniqueId === item.assignedVehicleUniqueId);
         if (vehicle) {
             return (
-                <Link href={`/vehicles?id=${vehicle.uniqueId}`} className="flex items-center gap-2 text-primary hover:underline">
+                <Link href={`/vehicles/${vehicle.uniqueId}`} className="flex items-center gap-2 text-primary hover:underline">
                     <LinkIcon className="h-4 w-4" />
                     <span>Vehículo {vehicle.uniqueId} ({vehicle.id})</span>
                 </Link>
@@ -78,7 +78,10 @@ export default function EquipmentPage() {
               {mockEquipment.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.serialNumber}</TableCell>
-                  <TableCell>{item.type}</TableCell>
+                  <TableCell>
+                    {item.type}
+                    {item.subType && <span className="text-muted-foreground ml-2">({item.subType})</span>}
+                  </TableCell>
                   <TableCell>
                     <LocationCell item={item} />
                   </TableCell>
