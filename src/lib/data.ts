@@ -1,4 +1,4 @@
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator, EquipmentSubtype } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -139,21 +139,23 @@ export const mockTasks: MaintenanceTask[] = [
 
 const now = new Date();
 export const mockIncidents: Incident[] = [
-    // VENCIDAS (Rojas)
+    // VENCIDAS (Rojas) - Abiertas
     { id: 'AV-001', vehicleId: '6916-HCR', issue: 'Pantalla pupitre completamente negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Abierto', reportedAt: sub(now, { days: 5 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
     { id: 'AV-002', vehicleId: '7001-HCR', issue: 'Sistema no arranca tras reinicio', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Abierto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
     { id: 'AV-003', vehicleId: '4602-JKD', issue: 'Validadora INDRA sin respuesta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Abierto', reportedAt: sub(now, { days: 6 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
     
-    // URGENTES (Naranjas) - Vencen en < 1 día
-    { id: 'AV-004', vehicleId: '7907-MNZ', issue: 'Impresora tickets atascada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 4 }), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
-    { id: 'AV-005', vehicleId: '3806-MBW', issue: 'Cable de antena suelto', reportedBy: 'Técnico', assignedTo: 'Xavier', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 6 }), slaDays: 3, priority: 'Media', equipmentType: 'Antena' },
+    // URGENTES (Naranjas) - Abiertas
+    { id: 'AV-004', vehicleId: '7907-MNZ', issue: 'Impresora tickets atascada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 20 }), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    { id: 'AV-005', vehicleId: '3806-MBW', issue: 'Cable de antena suelto', reportedBy: 'Técnico', assignedTo: 'Xavier', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 18 }), slaDays: 3, priority: 'Media', equipmentType: 'Antena' },
 
-    // NORMALES (Amarillas) - Vencen en 1-2 días
+    // PRÓXIMAS (Amarillas) - Abiertas
     { id: 'AV-006', vehicleId: '3235-MCR', issue: 'Lectura lenta de tarjetas', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Abierto', reportedAt: sub(now, { days: 1 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
-    { id: 'AV-008', vehicleId: '7001-HCR', issue: 'Error E041 en validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Abierto', reportedAt: sub(now, { days: 1, hours: 12 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+    
+    // NORMALES (Sin color especial) - Abiertas
+    { id: 'AV-008', vehicleId: '4192-KFL', issue: 'Error E041 en validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Abierto', reportedAt: sub(now, { hours: 12 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
 
-    // EN REPARACIÓN
-    { id: 'AV-007', vehicleId: '4192-KFL', issue: 'Luz LED intermitente', reportedBy: 'Técnico', assignedTo: 'Josep', status: 'En Progreso', reportedAt: sub(now, { days: 2 }), slaDays: 3, priority: 'Baja', equipmentType: 'Material auxiliar' },
+    // EN PROGRESO
+    { id: 'AV-007', vehicleId: '5400-LFN', issue: 'Luz LED intermitente', reportedBy: 'Técnico', assignedTo: 'Josep', status: 'En Progreso', reportedAt: sub(now, { days: 2 }), slaDays: 3, priority: 'Baja', equipmentType: 'Material auxiliar' },
     { id: 'AV-009', vehicleId: '1399-MCY', issue: 'Sonido de validación bajo', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progreso', reportedAt: sub(now, { hours: 4 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
     
     // RESUELTAS
