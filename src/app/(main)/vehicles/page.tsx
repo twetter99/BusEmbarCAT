@@ -45,23 +45,27 @@ export default function VehiclesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID del Vehículo</TableHead>
+                <TableHead>COD BUS</TableHead>
+                <TableHead>Matrícula</TableHead>
                 <TableHead>Modelo</TableHead>
-                <TableHead>VIN</TableHead>
+                <TableHead>N° Obra / Chasis</TableHead>
                 <TableHead>Operador</TableHead>
                 <TableHead>Estado</TableHead>
+                <TableHead>Fecha Pre-Instalación</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {mockVehicles.map((vehicle) => (
                 <TableRow key={vehicle.id}>
-                  <TableCell className="font-medium">{vehicle.id}</TableCell>
+                  <TableCell className="font-medium">{vehicle.codBus}</TableCell>
+                  <TableCell>{vehicle.id}</TableCell>
                   <TableCell>{vehicle.model}</TableCell>
                   <TableCell>{vehicle.vin}</TableCell>
                   <TableCell>{vehicle.operator}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge>
                   </TableCell>
+                  <TableCell>{vehicle.preInstallationDate}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

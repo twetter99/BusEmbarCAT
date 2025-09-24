@@ -9,11 +9,13 @@ export type User = {
 };
 
 export type Vehicle = {
-  id: string;
+  id: string; // Matrícula
   model: string;
   operator: string;
   status: 'Activo' | 'En Mantenimiento' | 'Fuera de Servicio';
-  vin: string;
+  vin: string; // N° Obra / Chasis
+  codBus: string;
+  preInstallationDate: string;
 };
 
 export type EquipmentType = 
@@ -31,7 +33,7 @@ export type EquipmentType =
   | 'Conector'
   | 'Material diverso';
 
-export const equipmentTypeCategories = {
+export const equipmentTypeCategories: Record<string, EquipmentType[] | EquipmentType> = {
     'Pupitre': 'Pupitre',
     'Terminal de validación': ['Validadora INDRA', 'Validadora Inetum'],
     'Terminal de consulta': ['Terminal de consulta INDRA'],
@@ -86,4 +88,16 @@ export type InventoryItem = {
   category: 'Genérico' | 'Stock Libre' | 'Específico del Proveedor';
   stock: number;
   location: string;
+};
+
+export type ChecklistItem = {
+  id: string;
+  text: string;
+  completed: boolean;
+};
+
+export type Checklist = {
+  id: string;
+  title: string;
+  items: ChecklistItem[];
 };
