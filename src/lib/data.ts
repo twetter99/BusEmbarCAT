@@ -89,19 +89,19 @@ export const mockTasks: MaintenanceTask[] = [
   { id: 'MT-003', type: 'Preventivo', title: 'Revisión anual de cableado', vehicleId: '4602-JKD', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Bob' },
   { id: 'MT-004', type: 'Preventivo', title: 'Limpieza de validadoras', vehicleId: '4192-KFL', equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'En Progreso', technician: 'Alice' },
   { id: 'MT-005', type: 'Preventivo', title: 'Revisión de conexiones de antena', vehicleId: '5400-LFN', equipmentType: 'Material auxiliar', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
-  { id: 'MT-006', type: 'Preventivo', title: 'Sustitución de pilas CR-2032', vehicleId: '3806-MBW', equipmentType: 'Pupitre', frequency: 'Bimensual', dueDate: add(new Date(), { days: -2 }), status: 'Pendiente' },
+  { id: 'MT-006', type: 'Preventivo', title: 'Sustitución de pilas CR-2032', vehicleId: '3806-MBW', equipmentType: 'Pupitre', frequency: 'Bimensual', dueDate: sub(new Date(), { days: 2 }), status: 'Pendiente' },
   { id: 'MT-007', type: 'Preventivo', title: 'Comprobación de bornes y brida', vehicleId: '3235-MCR', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 5 }), status: 'Pendiente', technician: 'Charlie' },
   { id: 'MT-008', type: 'Preventivo', title: 'Inspección de fusibles', vehicleId: '1399-MCY', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 20 }), status: 'Completado', technician: 'Bob' },
   { id: 'MT-009', type: 'Preventivo', title: 'Revisión de base de pupitre', vehicleId: '7907-MNZ', equipmentType: 'Pupitre', frequency: 'Semestral', dueDate: add(new Date(), { days: 60 }), status: 'Pendiente' },
-  { id: 'MT-010', type: 'Preventivo', title: 'Identificación completa de equipos', vehicleId: '0816-NDV', equipmentType: 'Todos', frequency: 'Bimensual', dueDate: add(new Date(), { days: -15 }), status: 'En Progreso', technician: 'David' },
+  { id: 'MT-010', type: 'Preventivo', title: 'Identificación completa de equipos', vehicleId: '0816-NDV', equipmentType: 'Todos', frequency: 'Bimensual', dueDate: sub(new Date(), { days: 15 }), status: 'En Progreso', technician: 'David' },
 ];
 
 
 export const mockIncidents: Incident[] = [
-    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Jordi', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2, priority: 'Crítica', equipmentType: 'Pupitre' },
-    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Marc', status: 'En Progreso', reportedAt: new Date('2024-07-27'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
-    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'David', status: 'Resuelto', reportedAt: new Date('2024-07-25'), slaDays: 1, priority: 'Media', equipmentType: 'Antena' },
-    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Pau', status: 'Abierto', reportedAt: new Date(), slaDays: 1, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Jordi', status: 'Abierto', reportedAt: sub(new Date(), { hours: 4 }), slaDays: 2, priority: 'Crítica', equipmentType: 'Pupitre' },
+    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Marc', status: 'En Progreso', reportedAt: sub(new Date(), { days: 1 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'David', status: 'Resuelto', reportedAt: sub(new Date(), { days: 3 }), slaDays: 1, priority: 'Media', equipmentType: 'Antena' },
+    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Pau', status: 'Abierto', reportedAt: sub(new Date(), { days: 2 }), slaDays: 1, priority: 'Alta', equipmentType: 'Material auxiliar' },
 ];
 
 export const mockInventory: InventoryItem[] = [
