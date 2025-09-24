@@ -56,7 +56,7 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
       return (
         <SidebarMenuItem key={item.label} className="!p-0">
           <Collapsible defaultOpen={isParentActive}>
-            <CollapsibleTrigger className="w-full">
+            <CollapsibleTrigger asChild className="w-full">
                <SidebarMenuButton
                 isActive={isParentActive}
                 icon={<item.icon />}
