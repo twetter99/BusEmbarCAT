@@ -63,9 +63,12 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                     <Wrench className="h-4 w-4" />
                     <span>Revisión de: {task.equipmentType}</span>
                 </div>
-                {task.technician && <div className="flex items-center gap-2">
+                {task.technician ? <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     <span>Asignado a {task.technician}</span>
+                </div> : <div className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="text-muted-foreground italic">Sin asignar</span>
                 </div>}
             </CardContent>
             <CardFooter>
@@ -76,11 +79,11 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
 }
 
 export default function PreventivePage() {
+    const [activeTab, setActiveTab] = React.useState('Pendiente');
     const [filters, setFilters] = React.useState({
       operator: 'all',
       technician: 'all',
       frequency: 'all',
-      status: 'all',
     });
 
     const technicians = React.useMemo(() => {
@@ -88,37 +91,46 @@ export default function PreventivePage() {
         mockTasks.forEach(task => {
             if(task.technician) techSet.add(task.technician);
         });
-        return ['all', ...Array.from(techSet)];
+        return Array.from(techSet).sort();
     }, []);
 
     const frequencies = React.useMemo(() => {
         const freqSet = new Set<string>();
         mockTasks.forEach(task => freqSet.add(task.frequency));
-        return ['all', ...Array.from(freqSet)];
+        return Array.from(freqSet).sort();
     }, []);
 
     const filteredTasks = React.useMemo(() => {
         return mockTasks.filter(task => {
-            const operatorMatch = filters.operator === 'all' || (mockVehicles.find(v => v.id === task.vehicleId)?.operatorId === filters.operator);
-            const technicianMatch = filters.technician === 'all' || task.technician === filters.technician;
+            const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
+            const operatorMatch = filters.operator === 'all' || vehicle?.operatorId === filters.operator;
+            
+            const technicianMatch = filters.technician === 'all' 
+                || (filters.technician === 'unassigned' && !task.technician)
+                || task.technician === filters.technician;
+                
             const frequencyMatch = filters.frequency === 'all' || task.frequency === filters.frequency;
-            const statusMatch = filters.status === 'all' || task.status === filters.status;
+            
+            const statusMatch = task.status === activeTab;
+
             return operatorMatch && technicianMatch && frequencyMatch && statusMatch;
         });
-    }, [filters]);
+    }, [filters, activeTab]);
     
-    const pendingTasks = filteredTasks.filter(t => t.status === 'Pendiente');
-    const inProgressTasks = filteredTasks.filter(t => t.status === 'En Progreso');
-    const completedTasks = filteredTasks.filter(t => t.status === 'Completado');
+    const pendingTasks = mockTasks.filter(t => t.status === 'Pendiente');
+    const inProgressTasks = mockTasks.filter(t => t.status === 'En Progreso');
+    const completedTasks = mockTasks.filter(t => t.status === 'Completado');
+    
+    const displayedTasks = filteredTasks;
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <Tabs defaultValue="pending">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center justify-between mb-4">
                  <TabsList className="grid w-full max-w-lg grid-cols-3">
-                    <TabsTrigger value="pending">Pendiente ({pendingTasks.length})</TabsTrigger>
-                    <TabsTrigger value="in-progress">En Progreso ({inProgressTasks.length})</TabsTrigger>
-                    <TabsTrigger value="completed">Completado ({completedTasks.length})</TabsTrigger>
+                    <TabsTrigger value="Pendiente">Pendiente ({pendingTasks.length})</TabsTrigger>
+                    <TabsTrigger value="En Progreso">En Progreso ({inProgressTasks.length})</TabsTrigger>
+                    <TabsTrigger value="Completado">Completado ({completedTasks.length})</TabsTrigger>
                 </TabsList>
             </div>
 
@@ -130,24 +142,17 @@ export default function PreventivePage() {
                 operators={mockOperators}
             />
 
-            <TabsContent value="pending">
-                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
-                    {pendingTasks.map(task => <TaskCard key={task.id} task={task} />)}
-                </div>
-                 {pendingTasks.length === 0 && <p className="text-muted-foreground text-center py-8">No hay tareas pendientes que coincidan con los filtros.</p>}
-            </TabsContent>
-            <TabsContent value="in-progress">
-                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
-                    {inProgressTasks.map(task => <TaskCard key={task.id} task={task} />)}
-                </div>
-                 {inProgressTasks.length === 0 && <p className="text-muted-foreground text-center py-8">No hay tareas en progreso que coincidan con los filtros.</p>}
-            </TabsContent>
-            <TabsContent value="completed">
-                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
-                    {completedTasks.map(task => <TaskCard key={task.id} task={task} />)}
-                </div>
-                 {completedTasks.length === 0 && <p className="text-muted-foreground text-center py-8">No hay tareas completadas que coincidan con los filtros.</p>}
-            </TabsContent>
+            <div className="mt-4">
+                {displayedTasks.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {displayedTasks.map(task => <TaskCard key={task.id} task={task} />)}
+                    </div>
+                ) : (
+                    <p className="text-muted-foreground text-center py-8">
+                        No hay tareas que coincidan con los filtros seleccionados para el estado "{activeTab}".
+                    </p>
+                )}
+            </div>
         </Tabs>
     </main>
   );

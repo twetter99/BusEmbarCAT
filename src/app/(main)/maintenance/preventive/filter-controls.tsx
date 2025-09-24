@@ -12,7 +12,6 @@ interface FilterControlsProps {
     operator: string;
     technician: string;
     frequency: string;
-    status: string;
   };
   onFilterChange: (filters: FilterControlsProps['filters']) => void;
   technicians: string[];
@@ -37,7 +36,6 @@ export function FilterControls({
         operator: 'all',
         technician: 'all',
         frequency: 'all',
-        status: 'all',
     });
   }
 
@@ -45,6 +43,26 @@ export function FilterControls({
     <Card>
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
+          <div className="space-y-2">
+            <Label htmlFor="operator-filter">Operador</Label>
+            <Select
+              value={filters.operator}
+              onValueChange={(value) => handleFilterChange('operator', value)}
+            >
+              <SelectTrigger id="operator-filter">
+                <SelectValue placeholder="Filtrar por operador" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los operadores</SelectItem>
+                {operators.map((op) => (
+                  <SelectItem key={op.id} value={op.id}>
+                    {op.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
           <div className="space-y-2">
             <Label htmlFor="technician-filter">Técnico</Label>
             <Select
@@ -55,9 +73,10 @@ export function FilterControls({
                 <SelectValue placeholder="Filtrar por técnico" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">Todos los técnicos</SelectItem>
                 {technicians.map((tech) => (
                   <SelectItem key={tech} value={tech}>
-                    {tech === 'all' ? 'Todos los técnicos' : tech}
+                    {tech}
                   </SelectItem>
                 ))}
                  <SelectItem value="unassigned">Sin asignar</SelectItem>
@@ -75,29 +94,12 @@ export function FilterControls({
                 <SelectValue placeholder="Filtrar por frecuencia" />
               </SelectTrigger>
               <SelectContent>
+                 <SelectItem value="all">Todas las frecuencias</SelectItem>
                 {frequencies.map((freq) => (
                   <SelectItem key={freq} value={freq}>
-                    {freq === 'all' ? 'Todas las frecuencias' : freq}
+                    {freq}
                   </SelectItem>
                 ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="status-filter">Estado</Label>
-            <Select
-              value={filters.status}
-              onValueChange={(value) => handleFilterChange('status', value)}
-            >
-              <SelectTrigger id="status-filter">
-                <SelectValue placeholder="Filtrar por estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los estados</SelectItem>
-                <SelectItem value="Pendiente">Pendiente</SelectItem>
-                <SelectItem value="En Progreso">En Progreso</SelectItem>
-                <SelectItem value="Completado">Completado</SelectItem>
               </SelectContent>
             </Select>
           </div>
