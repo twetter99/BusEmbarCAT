@@ -137,13 +137,29 @@ export const mockTasks: MaintenanceTask[] = [
   { id: 'MT-008', type: 'Preventivo', title: 'Inspección de fusibles', vehicleId: '1399-MCY', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 20 }), status: 'Completado', technician: 'Marc' },
 ];
 
-
+const now = new Date();
 export const mockIncidents: Incident[] = [
-    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Jordi', status: 'Abierto', reportedAt: sub(new Date(), { hours: 4 }), slaDays: 2, priority: 'Crítica', equipmentType: 'Pupitre' },
-    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Marc', status: 'En Progreso', reportedAt: sub(new Date(), { days: 1 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
-    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'David', status: 'Resuelto', reportedAt: sub(new Date(), { days: 10 }), slaDays: 1, priority: 'Media', equipmentType: 'Antena' },
-    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Pau', status: 'Abierto', reportedAt: sub(new Date(), { days: 2 }), slaDays: 1, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    // VENCIDAS (Rojas)
+    { id: 'AV-001', vehicleId: '6916-HCR', issue: 'Pantalla pupitre completamente negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Abierto', reportedAt: sub(now, { days: 5 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
+    { id: 'AV-002', vehicleId: '7001-HCR', issue: 'Sistema no arranca tras reinicio', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Abierto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
+    { id: 'AV-003', vehicleId: '4602-JKD', issue: 'Validadora INDRA sin respuesta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Abierto', reportedAt: sub(now, { days: 6 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
+    
+    // URGENTES (Naranjas) - Vencen en < 1 día
+    { id: 'AV-004', vehicleId: '7907-MNZ', issue: 'Impresora tickets atascada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 4 }), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    { id: 'AV-005', vehicleId: '3806-MBW', issue: 'Cable de antena suelto', reportedBy: 'Técnico', assignedTo: 'Xavier', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 6 }), slaDays: 3, priority: 'Media', equipmentType: 'Antena' },
+
+    // NORMALES (Amarillas) - Vencen en 1-2 días
+    { id: 'AV-006', vehicleId: '3235-MCR', issue: 'Lectura lenta de tarjetas', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Abierto', reportedAt: sub(now, { days: 1 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
+    { id: 'AV-008', vehicleId: '7001-HCR', issue: 'Error E041 en validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Abierto', reportedAt: sub(now, { days: 1, hours: 12 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+
+    // EN REPARACIÓN
+    { id: 'AV-007', vehicleId: '4192-KFL', issue: 'Luz LED intermitente', reportedBy: 'Técnico', assignedTo: 'Josep', status: 'En Progreso', reportedAt: sub(now, { days: 2 }), slaDays: 3, priority: 'Baja', equipmentType: 'Material auxiliar' },
+    { id: 'AV-009', vehicleId: '1399-MCY', issue: 'Sonido de validación bajo', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progreso', reportedAt: sub(now, { hours: 4 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
+    
+    // RESUELTAS
+    { id: 'AV-010', vehicleId: '0816-NDV', issue: 'Pantalla con píxeles muertos', reportedBy: 'Técnico', assignedTo: 'Bernat', status: 'Resuelto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Baja', equipmentType: 'Terminal de consulta INDRA' },
 ];
+
 
 export const mockInventory: InventoryItem[] = [
     { id: 'INV-001', name: 'Cable de red 2m', sku: 'CAB-NET-2M', category: 'Genérico', stock: 150, location: 'Almacén Principal' },

@@ -35,16 +35,27 @@ const SlaCell = ({ incident }: { incident: Incident }) => {
     const daysRemaining = differenceInDays(dueDate, new Date());
 
     let variant: 'destructive' | 'secondary' | 'default' = 'default';
-    if (daysRemaining < 1) {
+    let text = `${daysRemaining} día${daysRemaining !== 1 ? 's' : ''} restante${daysRemaining !== 1 ? 's' : ''}`;
+
+    if (daysRemaining < 0) {
         variant = 'destructive';
-    } else if (daysRemaining < 2) {
+        text = 'Vencido';
+    } else if (daysRemaining < 1) {
         variant = 'secondary';
+        text = 'Urgente';
+    } else {
+       variant = 'default'
     }
+
+    if (incident.status === 'En Progreso') {
+        return <TableCell><Badge variant="secondary">En Progreso</Badge></TableCell>
+    }
+
 
     return (
         <TableCell>
             <Badge variant={variant}>
-                {daysRemaining > 0 ? `${daysRemaining} día${daysRemaining > 1 ? 's' : ''} restante${daysRemaining > 1 ? 's' : ''}` : 'Vencido'}
+                {text}
             </Badge>
         </TableCell>
     )
