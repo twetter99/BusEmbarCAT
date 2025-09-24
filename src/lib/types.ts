@@ -1,3 +1,4 @@
+
 export type Role = 'Administrador' | 'Operador' | 'Sermetra';
 
 export type User = {
@@ -128,4 +129,46 @@ export type Checklist = {
   id: string;
   title: string;
   items: ChecklistItem[];
+};
+
+export type InstallationStatus = 'Programada' | 'En Progreso' | 'Completada';
+
+export type Installation = {
+  id: string;
+  vehicleId: string;
+  vehicleModel: string;
+  operatorId: string;
+  scheduledDate: string;
+  technician?: string;
+  status: InstallationStatus;
+  materials: string[];
+};
+
+export type DecommissioningStatus = 'Programada' | 'En Progreso' | 'Completada';
+
+export type Decommissioning = {
+    id: string;
+    vehicleId: string;
+    vehicleModel: string;
+    operatorId: string;
+    reason: string;
+    scheduledDate: string;
+    status: DecommissioningStatus;
+    materials: string[];
+};
+
+export type TransferStatus = 'Programada' | 'Fase 1 OK' | 'En Progreso' | 'Completada';
+
+export type Transfer = {
+    id: string;
+    originVehicleId: string;
+    destinationVehicleId: string;
+    originVehicleModel: string;
+    destinationVehicleModel: string;
+    operatorId: string;
+    status: TransferStatus;
+    phase1_status: 'Pendiente' | 'Completada';
+    phase1_date: string;
+    phase2_status: 'Pendiente' | 'Completada';
+    phase2_date: string;
 };

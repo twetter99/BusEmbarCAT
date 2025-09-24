@@ -1,5 +1,5 @@
 
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator, Installation, Decommissioning, Transfer } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -230,6 +230,18 @@ export const mockInventory: InventoryItem[] = [
     { id: 'INV-005', name: 'Lector de tarjetas RFID', sku: 'COMP-RFID-READER', category: 'Específico del Proveedor', stock: 35, location: 'Almacén Operador' },
 ];
 
+export const mockInstallations: Installation[] = [
+    { id: 'INST-001', vehicleId: 'VEH-NUEVO-450', vehicleModel: 'Mercedes Citaro 3P', operatorId: 'op-01', scheduledDate: '25/09/2024', technician: 'Jordi', status: 'En Progreso', materials: ['Pupitre: SN-PUP-NEW-001', 'Validadoras: 2 unidades', 'Cableado: Nuevo (carrocero)'] },
+    { id: 'INST-002', vehicleId: 'VEH-NUEVO-451', vehicleModel: 'Solaris Urbino 12 Hybrid', operatorId: 'op-07', scheduledDate: '28/09/2024', technician: 'Pau', status: 'Programada', materials: ['Pupitre: SN-PUP-NEW-002', 'Validadoras: 3 unidades', 'Kit de conexión HARTING'] },
+];
 
+export const mockDecommissionings: Decommissioning[] = [
+    { id: 'DECOM-001', vehicleId: 'VEH-BAJA-201', vehicleModel: 'Otokar Vectio LE', operatorId: 'op-02', reason: 'Fin vida útil vehículo', scheduledDate: '28/09/2024', status: 'Programada', materials: ['Pupitre: SN-PUP-JULIA-201', 'Validadoras: 3 unidades', 'Cableado: NO recuperar'] },
+];
 
+export const mockTransfers: Transfer[] = [
+    { id: 'TRANS-001', originVehicleId: 'VEH-ORIGEN-180', destinationVehicleId: 'VEH-DESTINO-480', originVehicleModel: 'Mercedes Citaro (2018)', destinationVehicleModel: 'Mercedes Citaro Hybrid', operatorId: 'op-08', status: 'Fase 1 OK', phase1_status: 'Completada', phase1_date: '15/09/2024', phase2_status: 'Programada', phase2_date: '02/10/2024' },
+    { id: 'TRANS-002', originVehicleId: 'VEH-ORIGEN-190', destinationVehicleId: 'VEH-DESTINO-490', originVehicleModel: 'Otokar Vectio', destinationVehicleModel: 'Solaris Urbino', operatorId: 'op-04', status: 'Programada', phase1_status: 'Pendiente', phase1_date: '27/09/2024', phase2_status: 'Pendiente', phase2_date: '05/10/2024' },
+];
     
+
