@@ -34,10 +34,10 @@ export type EquipmentType =
   | 'Material auxiliar';
 
 export const equipmentTypeCategories: Record<string, EquipmentType[] | string> = {
-    'Pupitre': 'Pupitre',
-    'Terminal de validación': ['Validadora INDRA', 'Validadora Inetum'],
-    'Terminal de consulta': ['Terminal de consulta INDRA'],
-    'Material auxiliar': 'Material auxiliar'
+    'Pupitre': ['Pupitre'],
+    'Validación': ['Validadora INDRA', 'Validadora Inetum'],
+    'Consulta': ['Terminal de consulta INDRA'],
+    'Auxiliar': ['Material auxiliar']
 };
 
 

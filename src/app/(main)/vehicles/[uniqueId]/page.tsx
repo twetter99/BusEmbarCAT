@@ -19,7 +19,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, HardDrive, Info, Wrench } from 'lucide-react';
 import { mockVehicles, mockEquipment, mockOperators } from '@/lib/data';
-import type { Vehicle, Equipment } from '@/lib/types';
+import type { Vehicle, Equipment, EquipmentType } from '@/lib/types';
+import { equipmentTypeCategories } from '@/lib/types';
 import { useParams, useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
 
@@ -39,6 +40,77 @@ const equipmentStatusVariant: {
   'En Stock': 'secondary',
 };
 
+const equipmentLimits: { [key: string]: number } = {
+    'Pupitre': 1,
+    'Validación': 4,
+    'Auxiliar': 1,
+    'Consulta': 99, // No limit specified
+};
+
+const getCategoryForType = (type: EquipmentType): string | null => {
+    for (const category in equipmentTypeCategories) {
+        const types = equipmentTypeCategories[category];
+        if (Array.isArray(types) && types.includes(type)) {
+            return category;
+        }
+    }
+    return null;
+}
+
+const EquipmentSection = ({ title, items, limit }: { title: string; items: Equipment[]; limit: number }) => {
+    const count = items.length;
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-4">
+            <span>{title}</span>
+            <span className="text-sm font-medium text-muted-foreground">({count}/{limit})</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Número de Serie</TableHead>
+                <TableHead>Tipo de Equipo</TableHead>
+                <TableHead>Estado</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {items.length > 0 ? (
+                items.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">
+                      {item.serialNumber}
+                    </TableCell>
+                    <TableCell>{item.type}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={equipmentStatusVariant[item.status]}
+                      >
+                        {item.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="text-center text-muted-foreground"
+                  >
+                    No hay equipamiento de este tipo instalado.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    );
+};
+
+
 export default function VehicleDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -49,6 +121,17 @@ export default function VehicleDetailPage() {
   const installedEquipment = mockEquipment.filter(
     (e) => e.assignedVehicleUniqueId === uniqueId
   );
+
+  const groupedEquipment = installedEquipment.reduce((acc, item) => {
+    const category = getCategoryForType(item.type);
+    if (category) {
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(item);
+    }
+    return acc;
+  }, {} as Record<string, Equipment[]>);
 
   if (!vehicle) {
     return (
@@ -139,57 +222,25 @@ export default function VehicleDetailPage() {
               </div>
             </CardContent>
           </Card>
+          
+          <div className="space-y-4">
+             <h2 className="text-xl font-bold flex items-center gap-3">
+                <HardDrive className="h-6 w-6 text-primary" />
+                Equipamiento Instalado
+            </h2>
+            {Object.entries(equipmentLimits).map(([category, limit]) => {
+                if (limit > 99) return null; // Don't show categories without a real limit
+                return (
+                    <EquipmentSection 
+                        key={category}
+                        title={category}
+                        items={groupedEquipment[category] || []}
+                        limit={limit}
+                    />
+                )
+            })}
+           </div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center gap-4">
-              <HardDrive className="h-6 w-6 text-primary" />
-              <div>
-                <CardTitle>Equipamiento Instalado</CardTitle>
-                <CardDescription>
-                  Hardware y componentes asignados a este vehículo.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Número de Serie</TableHead>
-                    <TableHead>Tipo de Equipo</TableHead>
-                    <TableHead>Estado</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {installedEquipment.length > 0 ? (
-                    installedEquipment.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell className="font-medium">
-                          {item.serialNumber}
-                        </TableCell>
-                        <TableCell>{item.type}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={equipmentStatusVariant[item.status]}
-                          >
-                            {item.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={3}
-                        className="text-center text-muted-foreground"
-                      >
-                        No hay equipamiento instalado en este vehículo.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
         </div>
 
         <div className="space-y-8">
