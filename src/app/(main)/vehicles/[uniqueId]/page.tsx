@@ -260,11 +260,11 @@ export default function VehicleDetailPage() {
               <div className="text-sm text-muted-foreground">
                 <p>
                   <span className="font-semibold">Última Revisión:</span>{' '}
-                  24/05/2024
+                  10/01/2026
                 </p>
                 <p>
                   <span className="font-semibold">Próximo Mantenimiento:</span>{' '}
-                  24/08/2024
+                  10/04/2026
                 </p>
               </div>
             </CardContent>
