@@ -14,11 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockVehicles } from '@/lib/data'; // Using vehicles to get operator names
+import { mockOperators } from '@/lib/data';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 
 export default function OperatorsPage() {
-    const operators = [...new Set(mockVehicles.map(v => v.operator))];
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -44,9 +43,9 @@ export default function OperatorsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {operators.map((operator) => (
-                <TableRow key={operator}>
-                  <TableCell className="font-medium">{operator}</TableCell>
+              {mockOperators.map((operator) => (
+                <TableRow key={operator.id}>
+                  <TableCell className="font-medium">{operator.name}</TableCell>
                    <TableCell className="text-right">
                     <Button variant="ghost" size="icon">
                       <Edit className="h-4 w-4" />

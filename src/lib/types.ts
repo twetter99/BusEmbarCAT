@@ -8,15 +8,21 @@ export type User = {
   operatorId?: string;
 };
 
+export type Operator = {
+  id: string;
+  name: string;
+}
+
 export type Vehicle = {
   uniqueId: string;
   codBus: string;
-  id: string;
+  id: string; // Matrícula
   vin: string;
   model: string;
   bodywork: string;
   preInstallationDate: string;
-  operator: string;
+  operatorId: string;
+  operatorName: string; // Duplicado para facilitar el acceso
   status: 'Activo' | 'En Mantenimiento' | 'Fuera de Servicio';
 };
 

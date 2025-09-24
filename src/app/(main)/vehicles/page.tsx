@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/table';
 import { mockVehicles } from '@/lib/data';
 import type { Vehicle } from '@/lib/types';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, FileText } from 'lucide-react';
+import Link from 'next/link';
 
 const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'destructive' } = {
     'Activo': 'default',
@@ -54,6 +55,7 @@ export default function VehiclesPage() {
                 <TableHead>Fecha Instalación</TableHead>
                 <TableHead>Operador</TableHead>
                 <TableHead>Estado</TableHead>
+                <TableHead>Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -66,9 +68,17 @@ export default function VehiclesPage() {
                   <TableCell>{vehicle.model}</TableCell>
                   <TableCell>{vehicle.bodywork}</TableCell>
                   <TableCell>{vehicle.preInstallationDate || 'N/A'}</TableCell>
-                  <TableCell>{vehicle.operator}</TableCell>
+                  <TableCell>{vehicle.operatorName}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/vehicles/${vehicle.uniqueId}`}>
+                        <FileText className="h-4 w-4 mr-2"/>
+                        Ver Ficha
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

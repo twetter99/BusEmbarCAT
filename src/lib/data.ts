@@ -1,18 +1,34 @@
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator } from '@/lib/types';
 import { add, sub } from 'date-fns';
+
+export const mockOperators: Operator[] = [
+    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA' },
+    { id: 'op-02', name: 'AUTOCARES JULIA, SL' },
+    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA' },
+    { id: 'op-04', name: 'AUTOCARS PRAT, SA' },
+    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU' },
+    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL' },
+    { id: 'op-07', name: 'AUTOCORB, SA' },
+    { id: 'op-08', name: 'HISPANO LLACUNENSE, SL' },
+    { id: 'op-09', name: 'MONTFERRI HERMANOS, SL' },
+    { id: 'op-10', name: 'TRANSPORTES MIR' },
+    { id: 'op-11', name: 'TUS, SCCL' }
+];
 
 export const mockUsers: User[] = [
     { id: 'user-001', name: 'Admin User', email: 'admin@busembacat.com', role: 'Administrador' },
-    { id: 'user-002', name: 'Operator User', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA' },
+    { id: 'user-002', name: 'Operator User', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'op-01' },
     { id: 'user-003', name: 'Sermetra User', email: 'sermetra@busembacat.com', role: 'Sermetra' },
 ];
 
-const generateUniqueId = (codBus: string, operator: string): string => {
-  const operatorCode = operator.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 8);
+const operatorMap = new Map(mockOperators.map(op => [op.name, op.id]));
+
+const generateUniqueId = (codBus: string, operatorName: string): string => {
+  const operatorCode = operatorName.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 8);
   return `VEH-${operatorCode}-${codBus}`;
 }
 
-const rawVehicles: Omit<Vehicle, 'uniqueId'>[] = [
+const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & { operator: string }[] = [
   { codBus: '300', id: '6916-HCR', vin: 'WEB62809013122121', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/06/22', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
   { codBus: '302', id: '7001-HCR', vin: 'WEB62808313122109', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
   { codBus: '326', id: '4602-JKD', vin: 'WEB62852313704925', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/06/22', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'En Mantenimiento' },
@@ -26,10 +42,15 @@ const rawVehicles: Omit<Vehicle, 'uniqueId'>[] = [
   { codBus: '368', id: '0816-NDV', vin: 'WEB2852511L621420', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '', operator: "TUS, SCCL", status: 'Activo' }
 ];
 
-export const mockVehicles: Vehicle[] = rawVehicles.map(v => ({
-  ...v,
-  uniqueId: generateUniqueId(v.codBus, v.operator),
-}));
+export const mockVehicles: Vehicle[] = rawVehicles.map(v => {
+  const operatorId = operatorMap.get(v.operator) || 'op-unknown';
+  return {
+    ...v,
+    uniqueId: generateUniqueId(v.codBus, v.operator),
+    operatorId: operatorId,
+    operatorName: v.operator,
+  }
+});
 
 export const mockEquipment: Equipment[] = [
   { id: 'EQ-PUP-001', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
