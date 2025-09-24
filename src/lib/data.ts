@@ -22,6 +22,7 @@ export const mockUsers: User[] = [
 ];
 
 const operatorMap = new Map(mockOperators.map(op => [op.name, op.id]));
+const operatorNameMap = new Map(mockOperators.map(op => [op.id, op.name]));
 
 const generateUniqueId = (codBus: string, operatorName: string): string => {
   const operatorCode = operatorName.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 8);
@@ -30,7 +31,7 @@ const generateUniqueId = (codBus: string, operatorName: string): string => {
 
 const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & { operator: string }[] = [
   { codBus: '300', id: '6916-HCR', vin: 'WEB62809013122121', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/06/22', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-  { codBus: '302', id: '7001-HCR', vin: 'WEB62808313122109', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
+  { codBus: '302', id: '7001-HCR', vin: 'WEB62808313122109', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/06/22', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
   { codBus: '326', id: '4602-JKD', vin: 'WEB62852313704925', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/06/22', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'En Mantenimiento' },
   { codBus: '338', id: '4192-KFL', vin: 'NLRTMLA20HA006121', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/06/22', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
   { codBus: '342', id: '5400-LFN', vin: 'WEB62805610612016', model: 'MERCEDES', bodywork: 'CITARO Hybrid', preInstallationDate: '16/06/22', operator: "AUTOCARS R. FONT, SAU", status: 'Activo' },
@@ -39,8 +40,9 @@ const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & {
   { codBus: '350', id: '3235-MCR', vin: 'WEB62805610616792', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/23', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
   { codBus: '354', id: '1399-MCY', vin: 'WEB62852510616914', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/23', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
   { codBus: '358', id: '7907-MNZ', vin: 'WEB2805611L619111', model: 'DAIMLER BUSES', bodywork: 'CITARO HYBRID (Clas 1) - 3 ptas', preInstallationDate: '12/03/24', operator: "TRANSPORTES MIR", status: 'Activo' },
-  { codBus: '368', id: '0816-NDV', vin: 'WEB2852511L621420', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '', operator: "TUS, SCCL", status: 'Activo' }
+  { codBus: '368', id: '0816-NDV', vin: 'WEB2852511L621420', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/24', operator: "TUS, SCCL", status: 'Activo' }
 ];
+
 
 export const mockVehicles: Vehicle[] = rawVehicles.map(v => {
   const operatorId = operatorMap.get(v.operator) || 'op-unknown';
@@ -53,15 +55,32 @@ export const mockVehicles: Vehicle[] = rawVehicles.map(v => {
 });
 
 export const mockEquipment: Equipment[] = [
-  { id: 'EQ-PUP-001', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
-  { id: 'EQ-IND-001', type: 'Validadora INDRA', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-IND-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
-  { id: 'EQ-INE-001', type: 'Validadora Inetum', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: "AUTOCARES JULIA, SL" },
-  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-CON-001', operator: "AUTOCARS DEL PENEDÈS, SA" },
-  { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-MMC-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
-  { id: 'EQ-PLC-001', type: 'Material auxiliar', subType: 'Placa de conexión', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PLC-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
-  { id: 'EQ-ANT-001', type: 'Material auxiliar', subType: 'Antena', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal', operator: "AUTOCARES JULIA, SL" },
-  { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-KIT-001', operator: "AUTOCARS PRAT, SA" },
-  { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-CAB-001', operator: "AUTOCARES JULIA, SL" },
+  // Vehículo 1: VEH-ALSINAGR-300
+  { id: 'EQ-PUP-001', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-IND-001', type: 'Validadora INDRA', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-IND-001', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-MMC-001', operator: operatorNameMap.get('op-01')! },
+  
+  // Vehículo 2: VEH-AUTOCARE-302
+  { id: 'EQ-INE-001', type: 'Validadora Inetum', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: operatorNameMap.get('op-02')! },
+  { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-CAB-001', operator: operatorNameMap.get('op-02')! },
+
+  // Vehículo 3: VEH-AUTOCARS-326 (En Mantenimiento)
+  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-CON-001', operator: operatorNameMap.get('op-03')! },
+  { id: 'EQ-PUP-002', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-PUP-002', operator: operatorNameMap.get('op-03')! },
+  
+  // Vehículo 4: VEH-AUTOCARS-338
+  { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-KIT-001', operator: operatorNameMap.get('op-04')! },
+
+  // Equipos en Almacén o Reparación (sin asignar a vehículo)
+  { id: 'EQ-ANT-001', type: 'Material auxiliar', subType: 'Antena', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-02')! },
+  { id: 'EQ-PLC-001', type: 'Material auxiliar', subType: 'Placa de conexión', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-PLC-001', location: 'Almacén Operador', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-SOP-001', type: 'Material auxiliar', subType: 'Soporte', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-SOP-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-05')! },
+  { id: 'EQ-FUS-001', type: 'Material auxiliar', subType: 'Fusible', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-FUS-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-PER-001', type: 'Material auxiliar', subType: 'Perno', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-PER-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-BRI-001', type: 'Material auxiliar', subType: 'Brida', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-BRI-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
+
+  // Equipo en reparación
+  { id: 'EQ-IND-002', type: 'Validadora INDRA', assignedVehicleUniqueId: null, status: 'Requiere Reparación', serialNumber: 'SN-IND-002', location: 'Taller Reparaciones Norte', operator: operatorNameMap.get('op-03')! },
 ];
 
 export const mockTasks: MaintenanceTask[] = [

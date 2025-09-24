@@ -16,11 +16,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { mockEquipment, mockVehicles } from '@/lib/data';
-import type { Equipment } from '@/lib/types';
-import { PlusCircle, Link as LinkIcon, Package } from 'lucide-react';
+import type { Equipment, EquipmentStatus } from '@/lib/types';
+import { PlusCircle, Link as LinkIcon, Package, Wrench } from 'lucide-react';
 import Link from 'next/link';
 
-const statusVariant: { [key in Equipment['status']]: 'default' | 'secondary' | 'destructive' } = {
+const statusVariant: { [key in EquipmentStatus]: 'default' | 'secondary' | 'destructive' } = {
     'Operativo': 'default',
     'Requiere Reparación': 'destructive',
     'En Stock': 'secondary',
@@ -39,9 +39,13 @@ const LocationCell = ({ item }: { item: Equipment }) => {
         }
     }
 
+    const icon = item.status === 'Requiere Reparación' 
+        ? <Wrench className="h-4 w-4 text-destructive" /> 
+        : <Package className="h-4 w-4" />;
+
     return (
         <span className="flex items-center gap-2 text-muted-foreground">
-            <Package className="h-4 w-4" />
+            {icon}
             {item.location || 'Sin asignar'}
         </span>
     );

@@ -51,18 +51,26 @@ export const equipmentSubTypes = {
         'Kit de conexión HARTING',
         'Cable de conexión',
         'Conector',
-        'Material diverso'
+        'Material diverso',
+        'Fusible',
+        'Perno',
+        'Tanque',
+        'Brida',
+        'Travesaño',
+        'Barra'
     ]
 } as const;
+
+export type EquipmentStatus = 'Operativo' | 'Requiere Reparación' | 'En Stock';
 
 export type Equipment = {
   id: string;
   type: EquipmentType;
   subType?: string;
   assignedVehicleUniqueId: string | null;
-  status: 'Operativo' | 'Requiere Reparación' | 'En Stock';
+  status: EquipmentStatus;
   serialNumber: string;
-  location?: 'Almacén Principal' | 'Almacén Operador';
+  location?: string;
   operator: string;
 };
 
