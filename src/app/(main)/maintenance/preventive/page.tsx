@@ -95,7 +95,6 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
             <CardHeader>
                 <div className="flex items-start justify-between">
                     <div>
-                        <Badge variant="secondary" className="mb-2">{task.frequency}</Badge>
                         <CardTitle className="text-lg">{task.title}</CardTitle>
                         <CardDescription>Mantenimiento Preventivo</CardDescription>
                     </div>
@@ -158,17 +157,8 @@ export default function PreventivePage() {
     const [activeTab, setActiveTab] = React.useState('Pendiente');
     const [filters, setFilters] = React.useState({
       operator: 'all',
-      technician: 'all',
       category: 'all',
     });
-
-    const technicians = React.useMemo(() => {
-        const techSet = new Set<string>();
-        mockTasks.forEach(task => {
-            if(task.technician) techSet.add(task.technician);
-        });
-        return Array.from(techSet).sort();
-    }, []);
 
     const frequencies = React.useMemo(() => {
         const freqSet = new Set<string>();
@@ -182,26 +172,25 @@ export default function PreventivePage() {
         'Próximo': 3,
         'Normal': 4,
     };
+    
+    const allTasksByStatus = React.useMemo(() => ({
+        'Pendiente': mockTasks.filter(t => t.status === 'Pendiente'),
+        'En Progreso': mockTasks.filter(t => t.status === 'En Progreso'),
+        'Completado': mockTasks.filter(t => t.status === 'Completado'),
+    }), []);
 
     const getPendingTabTitle = () => {
-        const pending = allTasksByStatus['Pendiente'];
-        return `Pendiente (${pending.length})`;
+        return `Pendiente (${allTasksByStatus['Pendiente'].length})`;
     }
 
     const filteredTasks = React.useMemo(() => {
         const tasks = mockTasks.filter(task => {
             const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
             const operatorMatch = filters.operator === 'all' || vehicle?.operatorId === filters.operator;
-            
-            const technicianMatch = filters.technician === 'all' 
-                || (filters.technician === 'unassigned' && !task.technician)
-                || task.technician === filters.technician;
-                
             const frequencyMatch = filters.category === 'all' || task.frequency === filters.category;
-            
             const statusMatch = task.status === activeTab;
 
-            return operatorMatch && technicianMatch && frequencyMatch && statusMatch;
+            return operatorMatch && frequencyMatch && statusMatch;
         });
 
         if (activeTab === 'Pendiente') {
@@ -217,12 +206,6 @@ export default function PreventivePage() {
         
         return tasks;
     }, [filters, activeTab, urgencyOrder]);
-    
-    const allTasksByStatus = {
-        'Pendiente': mockTasks.filter(t => t.status === 'Pendiente'),
-        'En Progreso': mockTasks.filter(t => t.status === 'En Progreso'),
-        'Completado': mockTasks.filter(t => t.status === 'Completado'),
-    };
     
     const displayedTasks = filteredTasks;
 
@@ -240,7 +223,6 @@ export default function PreventivePage() {
             <FilterControls
                 filters={filters}
                 onFilterChange={setFilters}
-                technicians={technicians}
                 categories={frequencies}
                 categoryLabel="Frecuencia"
                 operators={mockOperators}

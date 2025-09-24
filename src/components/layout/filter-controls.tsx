@@ -10,11 +10,9 @@ import type { Operator } from '@/lib/types';
 interface FilterControlsProps {
   filters: {
     operator: string;
-    technician: string;
     category: string;
   };
   onFilterChange: (filters: FilterControlsProps['filters']) => void;
-  technicians: string[];
   categories: string[];
   categoryLabel: string;
   operators: Operator[];
@@ -23,7 +21,6 @@ interface FilterControlsProps {
 export function FilterControls({
   filters,
   onFilterChange,
-  technicians,
   categories,
   categoryLabel,
   operators,
@@ -36,7 +33,6 @@ export function FilterControls({
   const clearFilters = () => {
     onFilterChange({
         operator: 'all',
-        technician: 'all',
         category: 'all',
     });
   }
@@ -65,27 +61,6 @@ export function FilterControls({
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="technician-filter">Técnico</Label>
-            <Select
-              value={filters.technician}
-              onValueChange={(value) => handleFilterChange('technician', value)}
-            >
-              <SelectTrigger id="technician-filter">
-                <SelectValue placeholder="Filtrar por técnico" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los técnicos</SelectItem>
-                {technicians.map((tech) => (
-                  <SelectItem key={tech} value={tech}>
-                    {tech}
-                  </SelectItem>
-                ))}
-                 <SelectItem value="unassigned">Sin asignar</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="category-filter">{categoryLabel}</Label>
             <Select
