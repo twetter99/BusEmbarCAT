@@ -77,6 +77,7 @@ export type Equipment = {
 
 export type MaintenanceTask = {
   id: string;
+  type: 'Preventivo' | 'Correctivo';
   title: string;
   vehicleId: string;
   equipmentType: Equipment['type'];
