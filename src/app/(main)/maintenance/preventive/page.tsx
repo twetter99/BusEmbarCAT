@@ -26,7 +26,7 @@ const statusVariant: { [key in MaintenanceTask['status']]: 'destructive' | 'seco
 
 const buttonTextByStatus: { [key in MaintenanceTask['status']]: string } = {
     'Pendiente': 'Ver Ficha',
-    'En Progreso': 'Continuar',
+    'En Progreso': 'Ver Progreso',
     'Completado': 'Ver Informe',
 }
 
