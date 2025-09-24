@@ -24,6 +24,12 @@ const statusVariant: { [key in MaintenanceTask['status']]: 'destructive' | 'seco
     'Completado': 'outline',
 }
 
+const buttonTextByStatus: { [key in MaintenanceTask['status']]: string } = {
+    'Pendiente': 'Ver Ficha',
+    'En Progreso': 'Continuar',
+    'Completado': 'Ver Informe',
+}
+
 const TaskCard = ({ task }: { task: MaintenanceTask }) => {
     const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
     return (
@@ -61,7 +67,7 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                 </div>}
             </CardContent>
             <CardFooter>
-                <Button className="w-full">Iniciar Tarea</Button>
+                <Button className="w-full">{buttonTextByStatus[task.status]}</Button>
             </CardFooter>
         </Card>
     );
