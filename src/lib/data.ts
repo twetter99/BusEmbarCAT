@@ -16,7 +16,7 @@ const validOperators = [
   "CINTOI BUS, SL", "PLANA COMPANY, SL", "UTE HUERTA Y GRACIA", "LA HISPANO IGUALADINA, SL",
   "UTE SANT BOI", "BARCELONA Y OTROS CASAS COMPANY, SA", "AUTOBUSES MARFINA, SA",
   "LA VALLESANA, SA", "MOVENTIA L'HOSPITALET", "TRANSPORTE CONDADO CIUDAD, SA",
-  "TRANSPORTES PUJOL Y PUJOL", "25 OSONA BUS, SA", "BARCELONA BUS, SL", "CINGLES BUS, SA",
+  "TRANSPORTES PUJOL Y PUJOL", "25 OSONA BUS, SA", "BARCELona BUS, SL", "CINGLES BUS, SA",
   "COMPAÑÍA SAGALÉS, SA", "FERROCARRILES Y TRANSPORTES, SA", "AUTOBUSES MANRESA, SA",
   "17 BAGES BUS, SA", "UTE VALLDOREIX", "SOLER Y SAURET, SA", "TEISA"
 ];
@@ -45,40 +45,43 @@ export const mockEquipment: Equipment[] = [
   { id: 'EQ-MMC-001', type: 'MMC', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-MMC-001' },
   { id: 'EQ-PLC-001', type: 'Placa de conexión', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-PLC-001' },
   { id: 'EQ-ANT-001', type: 'Antena', assignedVehicleId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal' },
-  { id: 'EQ-KIT-001', type: 'Kit de conexión HARTING', assignedVehicleId: '4192-KFL', status: 'En Stock', serialNumber: 'SN-KIT-001', location: 'Almacén Operador' },
+  { id: 'EQ-KIT-001', type: 'Kit de conexión HARTING', assignedVehicleId: '4192-KFL', status: 'Operativo', serialNumber: 'SN-KIT-001' },
   { id: 'EQ-CAB-001', type: 'Cable de conexión', assignedVehicleId: '7001-HCR', status: 'Operativo', serialNumber: 'SN-CAB-001' },
 ];
 
 export const mockTasks: MaintenanceTask[] = [
-    { id: 'TSK-001', title: 'Revisión Trimestral de Validador', vehicleId: '6916-HCR', equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(new Date(), { days: 10 }), status: 'Pendiente', technician: 'Alice' },
-    { id: 'TSK-002', title: 'Calibración Anual de GPS', vehicleId: '7001-HCR', equipmentType: 'Antena', frequency: 'Anual', dueDate: add(new Date(), { days: 30 }), status: 'Pendiente', technician: 'Bob' },
-    { id: 'TSK-003', title: 'Actualización Semestral de Consola', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Semestral', dueDate: sub(new Date(), { days: 5 }), status: 'En Progreso', technician: 'Alice' },
-    { id: 'TSK-004', title: 'Revisión Trimestral de Validador', vehicleId: '4602-JKD', equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 90 }), status: 'Completado', technician: 'Charlie' },
+  { id: 'MT-001', title: 'Revisión trimestral Pupitre', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Trimestral', dueDate: add(new Date(), { days: 10 }), status: 'Pendiente', technician: 'Alice' },
+  { id: 'MT-002', title: 'Mantenimiento semestral Validadora', vehicleId: '7001-HCR', equipmentType: 'Validadora Inetum', frequency: 'Semestral', dueDate: add(new Date(), { days: 25 }), status: 'Pendiente' },
+  { id: 'MT-003', title: 'Revisión anual MMC', vehicleId: '4602-JKD', equipmentType: 'MMC', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Bob' },
+  { id: 'MT-004', title: 'Chequeo de Antena', vehicleId: '4192-KFL', equipmentType: 'Antena', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'En Progreso', technician: 'Alice' },
+  { id: 'MT-005', title: 'Revisión de Kit de conexión', vehicleId: '5400-LFN', equipmentType: 'Kit de conexión HARTING', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
 ];
 
 export const mockIncidents: Incident[] = [
-    { id: 'INC-001', vehicleId: '7001-HCR', issue: 'Antena GPS no reporta ubicación', reportedBy: 'Operador Smith', assignedTo: 'Equipo Técnico B', status: 'Abierto', reportedAt: sub(new Date(), { hours: 4 }), slaDays: 3 },
-    { id: 'INC-002', vehicleId: '6916-HCR', issue: 'Validador de boletos falla ocasionalmente al leer tarjetas', reportedBy: 'CMG', assignedTo: 'Equipo Técnico A', status: 'En Progreso', reportedAt: sub(new Date(), { days: 1 }), slaDays: 3 },
-    { id: 'INC-003', vehicleId: '4192-KFL', issue: 'La pantalla del pupitre está congelada', reportedBy: 'Operador Doe', assignedTo: 'Equipo Técnico A', status: 'Resuelto', reportedAt: sub(new Date(), { days: 5 }), slaDays: 3 },
+    { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2 },
+    { id: 'INC-002', vehicleId: '4602-JKD', issue: 'La validadora no lee las tarjetas T-Mobilitat.', reportedBy: 'Jane Smith', assignedTo: 'Bob', status: 'En Progreso', reportedAt: new Date('2024-07-27'), slaDays: 3 },
+    { id: 'INC-003', vehicleId: '5993-LMS', issue: 'Pérdida intermitente de la señal GPS.', reportedBy: 'Peter Jones', assignedTo: 'Charlie', status: 'Resuelto', reportedAt: new Date('2024-07-25'), slaDays: 1 },
+    { id: 'INC-004', vehicleId: '7907-MNZ', issue: 'La impresora de tickets no funciona.', reportedBy: 'Emily Brown', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date(), slaDays: 1 },
 ];
 
 export const mockInventory: InventoryItem[] = [
-    { id: 'INV-001', name: 'Fusible Estándar 15A', sku: 'GEN-FUSE-15A', category: 'Genérico', stock: 250, location: 'Almacén A, Contenedor 3' },
-    { id: 'INV-002', name: 'Reemplazo de Pantalla de Validador', sku: 'VEND-VSR-01', category: 'Específico del Proveedor', stock: 15, location: 'Almacén B, Estante 1' },
-    { id: 'INV-003', name: 'Cable Ethernet 5m', sku: 'FREE-ETH-5M', category: 'Stock Libre', stock: 42, location: 'Banco de Técnicos' },
-    { id: 'INV-004', name: 'Antena GPS', sku: 'VEND-GPS-ANT-04', category: 'Específico del Proveedor', stock: 8, location: 'Almacén B, Estante 2' },
+    { id: 'INV-001', name: 'Cable de red 2m', sku: 'CAB-NET-2M', category: 'Genérico', stock: 150, location: 'Almacén Principal' },
+    { id: 'INV-002', name: 'Rollo de papel térmico', sku: 'PAP-THER-ROLL', category: 'Genérico', stock: 300, location: 'Almacén Principal' },
+    { id: 'INV-003', name: 'Validadora Inetum v3', sku: 'VAL-INETUM-V3', category: 'Específico del Proveedor', stock: 12, location: 'Almacén Operador' },
+    { id: 'INV-004', name: 'Tornillos M4', sku: 'HW-SCREW-M4', category: 'Stock Libre', stock: 2500, location: 'Almacén Principal' },
+    { id: 'INV-005', name: 'Lector de tarjetas RFID', sku: 'COMP-RFID-READER', category: 'Específico del Proveedor', stock: 35, location: 'Almacén Operador' },
 ];
 
 export const mockChecklist: Checklist = {
-    id: 'CHK-QRT-VAL-01',
-    title: 'Mantenimiento Trimestral de Validador',
-    items: [
-        { id: '1', text: 'Inspeccionar la condición física en busca de daños o desgaste.', completed: false },
-        { id: '2', text: 'Limpiar el lector de tarjetas y el sensor sin contacto.', completed: false },
-        { id: '3', text: 'Verificar que la versión del firmware esté actualizada.', completed: false },
-        { id: '4', text: 'Ejecutar prueba de diagnóstico para todos los tipos de lectores.', completed: false },
-        { id: '5', text: 'Probar con tarjetas estándar, de concesión y de personal.', completed: false },
-        { id: '6', text: 'Comprobar las conexiones de los cables de alimentación y datos.', completed: false },
-        { id: '7', text: 'Confirmar el registro exitoso de transacciones.', completed: false },
-    ],
+  id: 'CHK-001',
+  title: 'Checklist Validador Inetum',
+  items: [
+    { id: 'item-1', text: 'Inspeccionar la condición física (carcasa, pantalla)', completed: false },
+    { id: 'item-2', text: 'Limpiar el lector de tarjetas con un paño adecuado', completed: true },
+    { id: 'item-3', text: 'Verificar la versión del firmware (debe ser v3.4.1 o superior)', completed: false },
+    { id: 'item-4', text: 'Ejecutar prueba de diagnóstico de hardware', completed: false },
+    { id: 'item-5', text: 'Probar con múltiples tipos de tarjetas (T-Mobilitat, bancaria)', completed: false },
+    { id: 'item-6', text: 'Comprobar las conexiones de alimentación y red', completed: true },
+    { id: 'item-7', text: 'Confirmar que las transacciones se registran correctamente', completed: false },
+  ],
 };
