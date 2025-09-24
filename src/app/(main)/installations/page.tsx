@@ -15,8 +15,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { mockInstallations, mockDecommissionings, mockTransfers, mockOperators } from '@/lib/data';
 import type { Installation, Decommissioning, Transfer } from '@/lib/types';
-import { Package, PackageCheck, PackageOpen, ArrowRight, Truck, Building, Calendar, User } from 'lucide-react';
+import { Package, PackageCheck, PackageOpen, ArrowRight, Truck, Building, Calendar, User, PlusCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { NewInstallationForm, NewDecommissioningForm, NewTransferForm } from './forms';
+
 
 const statusVariant: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' | 'warning' } = {
   'Programada': 'secondary',
@@ -173,9 +181,41 @@ export default function InstallationsPage() {
   const newInstallationsCount = mockInstallations.length;
   const decommissioningsCount = mockDecommissionings.length;
   const transfersCount = mockTransfers.length;
+  const [isInstallationFormOpen, setInstallationFormOpen] = React.useState(false);
+  const [isDecommissioningFormOpen, setDecommissioningFormOpen] = React.useState(false);
+  const [isTransferFormOpen, setTransferFormOpen] = React.useState(false);
+
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+        <div className="flex items-center justify-between">
+            <div className="flex-1">
+                {/* El título se gestiona desde el layout */}
+            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4" /> Nueva Operación
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => setInstallationFormOpen(true)}>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Nueva Instalación
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setDecommissioningFormOpen(true)}>
+                         <PackageOpen className="mr-2 h-4 w-4" />
+                        Nueva Desinstalación
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setTransferFormOpen(true)}>
+                         <ArrowRight className="mr-2 h-4 w-4" />
+                        Nuevo Traspaso
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+
+
        <Card>
         <CardHeader>
             <CardTitle>Resumen Operativo</CardTitle>
@@ -243,6 +283,9 @@ export default function InstallationsPage() {
             </Card>
         </TabsContent>
       </Tabs>
+      <NewInstallationForm isOpen={isInstallationFormOpen} onOpenChange={setInstallationFormOpen} />
+      <NewDecommissioningForm isOpen={isDecommissioningFormOpen} onOpenChange={setDecommissioningFormOpen} />
+      <NewTransferForm isOpen={isTransferFormOpen} onOpenChange={setTransferFormOpen} />
     </main>
   );
 }
