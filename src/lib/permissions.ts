@@ -40,10 +40,10 @@ export const navItems: NavConfig = {
       { id: 'inventory', href: '/inventory', label: 'Inventario', icon: Boxes },
     ],
     configuration: [
-        { id: 'users', href: '/settings/users', label: 'Usuarios y Roles', icon: Users },
-        { id: 'operators', href: '/settings/operators', label: 'Operadores', icon: Building },
-        { id: 'parameters', href: '/settings/parameters', label: 'Parámetros', icon: SlidersHorizontal },
-        { id: 'access', href: '/settings/access', label: 'Accesos', icon: KeyRound },
+        { id: 'users', href: '/users', label: 'Usuarios y Roles', icon: Users },
+        { id: 'operators', href: '/operators', label: 'Operadores', icon: Building },
+        { id: 'parameters', href: '/parameters', label: 'Parámetros', icon: SlidersHorizontal },
+        { id: 'access', href: '/access', label: 'Accesos', icon: KeyRound },
     ]
 }
 
