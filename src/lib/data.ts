@@ -3,7 +3,7 @@ import { add, sub } from 'date-fns';
 
 export const mockUsers: User[] = [
     { id: 'user-001', name: 'Admin User', email: 'admin@busembacat.com', role: 'Administrador' },
-    { id: 'user-002', name: 'Operator User', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'TUSGSAL' },
+    { id: 'user-002', name: 'Operator User', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA' },
     { id: 'user-003', name: 'Sermetra User', email: 'sermetra@busembacat.com', role: 'Sermetra' },
 ];
 
@@ -32,15 +32,15 @@ export const mockVehicles: Vehicle[] = rawVehicles.map(v => ({
 }));
 
 export const mockEquipment: Equipment[] = [
-  { id: 'EQ-PUP-001', type: 'Pupitre', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-PUP-001' },
-  { id: 'EQ-IND-001', type: 'Validadora INDRA', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-IND-001' },
-  { id: 'EQ-INE-001', type: 'Validadora Inetum', assignedVehicleId: '7001-HCR', status: 'Operativo', serialNumber: 'SN-INE-001' },
-  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', assignedVehicleId: '4602-JKD', status: 'Requiere Reparación', serialNumber: 'SN-CON-001' },
-  { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-MMC-001' },
-  { id: 'EQ-PLC-001', type: 'Material auxiliar', subType: 'Placa de conexión', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-PLC-001' },
-  { id: 'EQ-ANT-001', type: 'Material auxiliar', subType: 'Antena', assignedVehicleId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal' },
-  { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleId: '4192-KFL', status: 'Operativo', serialNumber: 'SN-KIT-001' },
-  { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleId: '7001-HCR', status: 'Operativo', serialNumber: 'SN-CAB-001' },
+  { id: 'EQ-PUP-001', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
+  { id: 'EQ-IND-001', type: 'Validadora INDRA', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-IND-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
+  { id: 'EQ-INE-001', type: 'Validadora Inetum', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: "AUTOCARES JULIA, SL" },
+  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-CON-001', operator: "AUTOCARS DEL PENEDÈS, SA" },
+  { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-MMC-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
+  { id: 'EQ-PLC-001', type: 'Material auxiliar', subType: 'Placa de conexión', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PLC-001', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA" },
+  { id: 'EQ-ANT-001', type: 'Material auxiliar', subType: 'Antena', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal', operator: "AUTOCARES JULIA, SL" },
+  { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-KIT-001', operator: "AUTOCARS PRAT, SA" },
+  { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-CAB-001', operator: "AUTOCARES JULIA, SL" },
 ];
 
 export const mockTasks: MaintenanceTask[] = [
@@ -74,7 +74,7 @@ export const mockChecklist: Checklist = {
     { id: 'item-2', text: 'Limpiar el lector de tarjetas con un paño adecuado', completed: true },
     { id: 'item-3', text: 'Verificar la versión del firmware (debe ser v3.4.1 o superior)', completed: false },
     { id: 'item-4', text: 'Ejecutar prueba de diagnóstico de hardware', completed: false },
-    { id: 'item-5', text: 'Probar con múltiples tipos de tarjetas (T-Mobilitat, bancaria)', completed: false },
+    { id: "item-5", text: 'Probar con múltiples tipos de tarjetas (T-Mobilitat, bancaria)', completed: false },
     { id: 'item-6', text: 'Comprobar las conexiones de alimentación y red', completed: true },
     { id: 'item-7', text: 'Confirmar que las transacciones se registran correctamente', completed: false },
   ],

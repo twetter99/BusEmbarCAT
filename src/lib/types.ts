@@ -9,15 +9,15 @@ export type User = {
 };
 
 export type Vehicle = {
-  uniqueId: string; // ID único del vehículo (ej. VEH-ALSINA-300)
-  id: string; // Matrícula
+  uniqueId: string;
+  codBus: string;
+  id: string;
+  vin: string;
   model: string;
+  bodywork: string;
+  preInstallationDate: string;
   operator: string;
   status: 'Activo' | 'En Mantenimiento' | 'Fuera de Servicio';
-  vin: string; // N° Obra / Chasis
-  codBus: string; // Número de Calca
-  bodywork: string; // Carrocería
-  preInstallationDate: string;
 };
 
 export type EquipmentType = 
@@ -53,10 +53,11 @@ export type Equipment = {
   id: string;
   type: EquipmentType;
   subType?: string;
-  assignedVehicleId: string | null;
+  assignedVehicleUniqueId: string | null;
   status: 'Operativo' | 'Requiere Reparación' | 'En Stock';
   serialNumber: string;
   location?: 'Almacén Principal' | 'Almacén Operador';
+  operator: string;
 };
 
 export type MaintenanceTask = {

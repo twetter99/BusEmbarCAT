@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockEquipment } from '@/lib/data';
+import { mockEquipment, mockVehicles } from '@/lib/data';
 import type { Equipment } from '@/lib/types';
 import { PlusCircle, Link as LinkIcon, Package } from 'lucide-react';
 import Link from 'next/link';
@@ -26,15 +26,36 @@ const statusVariant: { [key in Equipment['status']]: 'default' | 'secondary' | '
     'En Stock': 'secondary',
 }
 
+const LocationCell = ({ item }: { item: Equipment }) => {
+    if (item.assignedVehicleUniqueId) {
+        const vehicle = mockVehicles.find(v => v.uniqueId === item.assignedVehicleUniqueId);
+        if (vehicle) {
+            return (
+                <Link href={`/vehicles?id=${vehicle.uniqueId}`} className="flex items-center gap-2 text-primary hover:underline">
+                    <LinkIcon className="h-4 w-4" />
+                    <span>Vehículo {vehicle.uniqueId} ({vehicle.id})</span>
+                </Link>
+            )
+        }
+    }
+
+    return (
+        <span className="flex items-center gap-2 text-muted-foreground">
+            <Package className="h-4 w-4" />
+            {item.location || 'Sin asignar'}
+        </span>
+    );
+};
+
 export default function EquipmentPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Inventario de Equipamiento</CardTitle>
+            <CardTitle>Gestión de Equipamiento</CardTitle>
             <CardDescription>
-              Realiza un seguimiento de todos los componentes de hardware de la flota.
+              Control de equipos por vehículo, almacén y operador.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
@@ -49,6 +70,7 @@ export default function EquipmentPage() {
                 <TableHead>Número de Serie</TableHead>
                 <TableHead>Tipo</TableHead>
                 <TableHead>Ubicación</TableHead>
+                <TableHead>Operador</TableHead>
                 <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
@@ -58,18 +80,9 @@ export default function EquipmentPage() {
                   <TableCell className="font-medium">{item.serialNumber}</TableCell>
                   <TableCell>{item.type}</TableCell>
                   <TableCell>
-                    {item.assignedVehicleId ? (
-                      <Link href={`/vehicles?id=${item.assignedVehicleId}`} className="flex items-center gap-1 text-primary hover:underline">
-                        <LinkIcon className="h-3 w-3" />
-                        Vehículo {item.assignedVehicleId}
-                      </Link>
-                    ) : (
-                      <span className="flex items-center gap-1 text-muted-foreground">
-                        <Package className="h-3 w-3" />
-                        {item.location || 'Sin asignar'}
-                      </span>
-                    )}
+                    <LocationCell item={item} />
                   </TableCell>
+                  <TableCell>{item.operator}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[item.status]}>{item.status}</Badge>
                   </TableCell>
