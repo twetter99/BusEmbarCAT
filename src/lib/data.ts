@@ -59,7 +59,7 @@ const generateEquipment = (): Equipment[] => {
   const operators = Array.from(operatorNameMap.values());
 
   // Helper function to create equipment
-  const createEquipment = (type: EquipmentType, subType: EquipmentSubtype | undefined, vehicle: Vehicle | null, status: Equipment['status'], serial: string, location?: string) => {
+  const createEquipment = (type: EquipmentType, subType: string | undefined, vehicle: Vehicle | null, status: Equipment['status'], serial: string, location?: string) => {
     equipmentList.push({
       id: `EQ-${serial}`,
       type,
@@ -114,28 +114,27 @@ const generateEquipment = (): Equipment[] => {
 export const mockEquipment: Equipment[] = generateEquipment();
 
 export const mockTasks: MaintenanceTask[] = [
-  // Vencido
-  { id: 'MT-001', type: 'Preventivo', title: 'Limpieza y comprobación de pupitre', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 3 }), status: 'Pendiente', technician: 'Jordi' },
-  // Urgente
-  { id: 'MT-002', type: 'Preventivo', title: 'Revisión semestral de anclajes', vehicleId: '7001-HCR', equipmentType: 'Validadora Inetum', frequency: 'Semestral', dueDate: add(new Date(), { days: 2 }), status: 'Pendiente', technician: 'Oriol' },
-  // Próximo
-  { id: 'MT-004', type: 'Preventivo', title: 'Limpieza de validadoras', vehicleId: '4192-KFL', equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(new Date(), { days: 5 }), status: 'Pendiente', technician: 'Jordi' },
-  // Normal
-  { id: 'MT-005', type: 'Preventivo', title: 'Revisión de conexiones de antena', vehicleId: '5400-LFN', equipmentType: 'Antena', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
-  // Normal
-  { id: 'MT-006', type: 'Preventivo', title: 'Sustitución de pilas CR-2032', vehicleId: '3806-MBW', equipmentType: 'Pupitre', frequency: 'Bimensual', dueDate: add(new Date(), { days: 12 }), status: 'Pendiente', technician: 'Pau' },
-  // Próximo
-  { id: 'MT-007', type: 'Preventivo', title: 'Comprobación de bornes y brida', vehicleId: '3235-MCR', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 7 }), status: 'Pendiente', technician: 'Arnau' },
-  // Normal
-  { id: 'MT-009', type: 'Preventivo', title: 'Revisión de base de pupitre', vehicleId: '7907-MNZ', equipmentType: 'Pupitre', frequency: 'Semestral', dueDate: add(new Date(), { days: 60 }), status: 'Pendiente', technician: 'Xavier' },
-  
-  // En Progreso
-  { id: 'MT-010', type: 'Preventivo', title: 'Identificación completa de equipos', vehicleId: '0816-NDV', equipmentType: 'Todos', frequency: 'Bimensual', dueDate: sub(new Date(), { days: 15 }), status: 'En Progreso', technician: 'David' },
+    // Trimestrales
+    { id: 'MT-001', type: 'Preventivo', title: 'Revisión placa conexiones', vehicleId: '6916-HCR', equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 14 }), status: 'Pendiente', technician: 'Jordi' },
+    { id: 'MT-002', type: 'Preventivo', title: 'Revisión placa conexiones', vehicleId: '7001-HCR', equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'Pendiente', technician: 'Oriol' },
+    
+    // Anuales
+    { id: 'MT-003', type: 'Preventivo', title: 'Limpieza pupitre y bornes', vehicleId: '4602-JKD', equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(new Date(), { days: 15 }), status: 'Pendiente', technician: 'Marc' },
+    { id: 'MT-004', type: 'Preventivo', title: 'Revisión soporte y barras', vehicleId: '4192-KFL', equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(new Date(), { days: 35 }), status: 'Pendiente' },
+    { id: 'MT-005', type: 'Preventivo', title: 'Limpieza general validadora', vehicleId: '5400-LFN', equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(new Date(), { days: 1 }), status: 'Pendiente', technician: 'Pau' },
+    { id: 'MT-011', type: 'Preventivo', title: 'Limpieza pupitre y bornes', vehicleId: '5993-LMS', equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(new Date(), { days: 90 }), status: 'Completado', technician: 'Pau' },
 
-  // Completado
-  { id: 'MT-003', type: 'Preventivo', title: 'Revisión anual de cableado', vehicleId: '4602-JKD', equipmentType: 'Cableado', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Marc' },
-  { id: 'MT-008', type: 'Preventivo', title: 'Inspección de fusibles', vehicleId: '1399-MCY', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 20 }), status: 'Completado', technician: 'Marc' },
+    // Bianuales
+    { id: 'MT-006', type: 'Preventivo', title: 'Cambio baterías CPU', vehicleId: '3806-MBW', equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(new Date(), { days: 120 }), status: 'Pendiente' },
+    { id: 'MT-007', type: 'Preventivo', title: 'Revisión brida y antena', vehicleId: '3235-MCR', equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: add(new Date(), { days: 180 }), status: 'Pendiente', technician: 'Arnau' },
+    { id: 'MT-012', type: 'Preventivo', title: 'Cambio baterías CPU', vehicleId: '1399-MCY', equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(new Date(), { days: 30 }), status: 'En Progreso', technician: 'Arnau' },
+
+    // Tareas adicionales para tener más datos
+    { id: 'MT-008', type: 'Preventivo', title: 'Revisión placa conexiones', vehicleId: '1399-MCY', equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Xavier' },
+    { id: 'MT-009', type: 'Preventivo', title: 'Limpieza general validadora', vehicleId: '7907-MNZ', equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(new Date(), { days: 90 }), status: 'Pendiente', technician: 'David' },
+    { id: 'MT-010', type: 'Preventivo', title: 'Revisión soporte y barras', vehicleId: '0816-NDV', equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(new Date(), { days: 2 }), status: 'Pendiente' },
 ];
+
 
 const now = new Date();
 export const mockIncidents: Incident[] = [

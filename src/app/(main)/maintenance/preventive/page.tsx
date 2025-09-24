@@ -137,7 +137,7 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                 </div>
                 <div className="flex items-center gap-2">
                     <Wrench className="h-4 w-4" />
-                    <span>Revisión de: {task.equipmentType}</span>
+                    <span>Tarea: {task.equipmentType}</span>
                 </div>
                 {task.technician ? <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
@@ -230,7 +230,7 @@ export default function PreventivePage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center justify-between mb-4">
-                 <TabsList className="grid w-full max-w-2xl grid-cols-3">
+                 <TabsList className="grid w-full max-w-lg grid-cols-3">
                     <TabsTrigger value="Pendiente">{getPendingTabTitle()}</TabsTrigger>
                     <TabsTrigger value="En Progreso">En Progreso ({allTasksByStatus['En Progreso'].length})</TabsTrigger>
                     <TabsTrigger value="Completado">Completado ({allTasksByStatus['Completado'].length})</TabsTrigger>

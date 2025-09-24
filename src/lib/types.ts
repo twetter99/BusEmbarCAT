@@ -34,7 +34,14 @@ export type EquipmentType =
   | 'Material auxiliar'
   | 'Todos'
   | 'Cableado'
-  | 'Antena';
+  | 'Antena'
+  | 'Placa conexiones'
+  | 'Bornes y Pupitre'
+  | 'Soporte y Barras'
+  | 'Limpieza Validadora'
+  | 'Baterías CPU'
+  | 'Brida y Antena';
+
 
 export const equipmentTypeCategories: Record<string, EquipmentType[] | string> = {
     'Pupitre': ['Pupitre'],
@@ -82,8 +89,8 @@ export type MaintenanceTask = {
   type: 'Preventivo' | 'Correctivo';
   title: string;
   vehicleId: string;
-  equipmentType: Equipment['type'];
-  frequency: 'Trimestral' | 'Semestral' | 'Anual' | 'Bimensual';
+  equipmentType: EquipmentType;
+  frequency: 'Trimestral' | 'Anual' | 'Bianual';
   dueDate: Date;
   status: 'Pendiente' | 'En Progreso' | 'Completado';
   technician?: string;
