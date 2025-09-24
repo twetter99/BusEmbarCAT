@@ -24,17 +24,17 @@ const validOperators = [
 const assignOperator = (index: number) => validOperators[index % validOperators.length];
 
 export const mockVehicles: Vehicle[] = [
-  { id: '6916-HCR', model: 'MERCEDES CITARO 3 puertas', operator: assignOperator(0), status: 'Activo', vin: 'WEB62809013122121', codBus: '300', preInstallationDate: '' },
-  { id: '7001-HCR', model: 'MERCEDES CITARO 2 puertas', operator: assignOperator(1), status: 'Activo', vin: 'WEB62808313122109', codBus: '302', preInstallationDate: '' },
-  { id: '4602-JKD', model: 'MERCEDES CITARO LE MÜ 2 puertas', operator: assignOperator(2), status: 'En Mantenimiento', vin: 'WEB62852313704925', codBus: '326', preInstallationDate: '08/06/2022' },
-  { id: '4192-KFL', model: 'OTOKAR VECTIO LE', operator: assignOperator(3), status: 'Activo', vin: 'NLRTMLA20HA006121', codBus: '338', preInstallationDate: '15/06/2022' },
-  { id: '5400-LFN', model: 'MERCEDES CITARO Hybrid', operator: assignOperator(4), status: 'Activo', vin: 'WEB62805610612016', codBus: '342', preInstallationDate: '16/06/2022' },
-  { id: '5993-LMS', model: 'EVOBUS-SOLARIS URBINO 12 HYBRID', operator: assignOperator(5), status: 'Fuera de Servicio', vin: 'SUU241163MB023120', codBus: '344', preInstallationDate: '14/06/2022' },
-  { id: '3806-MBW', model: 'EVOBUS-SOLARIS Solaris Urbino 12 Hybrid', operator: assignOperator(6), status: 'Activo', vin: 'SUU241163NB025635', codBus: '349', preInstallationDate: '01/02/2023' },
-  { id: '3235-MCR', model: 'MERCEDES Citaro Hybrid', operator: assignOperator(7), status: 'Activo', vin: 'WEB62805610616792', codBus: '350', preInstallationDate: '02/02/2023' },
-  { id: '1399-MCY', model: 'MERCEDES Citaro LE MÜ Hybrid', operator: assignOperator(8), status: 'Activo', vin: 'WEB62852510616914', codBus: '354', preInstallationDate: '02/02/2023' },
-  { id: '7907-MNZ', model: 'DAIMLER BUSES CITARO HYBRID (Clas 1) - 3 ptas', operator: assignOperator(9), status: 'Activo', vin: 'WEB2805611L619111', codBus: '358', preInstallationDate: '12/03/2024' },
-  { id: '0816-NDV', model: 'DAIMLER BUSES Citaro LE MÜ Hybrid 2p', operator: assignOperator(10), status: 'Activo', vin: 'WEB2852511L621420', codBus: '368', preInstallationDate: '' }
+  { codBus: '300', id: '6916-HCR', vin: 'WEB62809013122121', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '', operator: assignOperator(0), status: 'Activo' },
+  { codBus: '302', id: '7001-HCR', vin: 'WEB62808313122109', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '', operator: assignOperator(1), status: 'Activo' },
+  { codBus: '326', id: '4602-JKD', vin: 'WEB62852313704925', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/06/22', operator: assignOperator(2), status: 'En Mantenimiento' },
+  { codBus: '338', id: '4192-KFL', vin: 'NLRTMLA20HA006121', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/06/22', operator: assignOperator(3), status: 'Activo' },
+  { codBus: '342', id: '5400-LFN', vin: 'WEB62805610612016', model: 'MERCEDES', bodywork: 'CITARO Hybrid', preInstallationDate: '16/06/22', operator: assignOperator(4), status: 'Activo' },
+  { codBus: '344', id: '5993-LMS', vin: 'SUU241163MB023120', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/06/22', operator: assignOperator(5), status: 'Fuera de Servicio' },
+  { codBus: '349', id: '3806-MBW', vin: 'SUU241163NB025635', model: 'EVOBUS-SOLARIS', bodywork: 'Solaris Urbino 12 Hybrid', preInstallationDate: '01/02/23', operator: assignOperator(6), status: 'Activo' },
+  { codBus: '350', id: '3235-MCR', vin: 'WEB62805610616792', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/23', operator: assignOperator(7), status: 'Activo' },
+  { codBus: '354', id: '1399-MCY', vin: 'WEB62852510616914', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/23', operator: assignOperator(8), status: 'Activo' },
+  { codBus: '358', id: '7907-MNZ', vin: 'WEB2805611L619111', model: 'DAIMLER BUSES', bodywork: 'CITARO HYBRID (Clas 1) - 3 ptas', preInstallationDate: '12/03/24', operator: assignOperator(9), status: 'Activo' },
+  { codBus: '368', id: '0816-NDV', vin: 'WEB2852511L621420', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '', operator: assignOperator(10), status: 'Activo' }
 ];
 
 export const mockEquipment: Equipment[] = [

@@ -14,7 +14,8 @@ export type Vehicle = {
   operator: string;
   status: 'Activo' | 'En Mantenimiento' | 'Fuera de Servicio';
   vin: string; // N° Obra / Chasis
-  codBus: string;
+  codBus: string; // Número de Calca
+  bodywork: string; // Carrocería
   preInstallationDate: string;
 };
 
