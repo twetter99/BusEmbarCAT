@@ -26,14 +26,25 @@ const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'de
 }
 
 export default function VehiclesPage() {
+  const uniqueModels = Array.from(new Set(mockVehicles.map(v => v.model)))
+    .map(model => {
+        const vehiclesOfModel = mockVehicles.filter(v => v.model === model);
+        const firstVehicle = vehiclesOfModel[0];
+        return {
+            ...firstVehicle,
+            count: vehiclesOfModel.length
+        };
+    });
+
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Vehículos</CardTitle>
+            <CardTitle>Modelos de Vehículos</CardTitle>
             <CardDescription>
-              Una lista completa de todos los vehículos de la flota.
+              Un resumen de todos los modelos de vehículos en la flota.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
@@ -45,27 +56,21 @@ export default function VehiclesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>COD BUS</TableHead>
-                <TableHead>Matrícula</TableHead>
                 <TableHead>Modelo</TableHead>
-                <TableHead>N° Obra / Chasis</TableHead>
-                <TableHead>Operador</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Fecha Pre-Instalación</TableHead>
+                <TableHead>Operador de Ejemplo</TableHead>
+                <TableHead>Cantidad</TableHead>
+                <TableHead>Estado General</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockVehicles.map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell className="font-medium">{vehicle.codBus}</TableCell>
-                  <TableCell>{vehicle.id}</TableCell>
-                  <TableCell>{vehicle.model}</TableCell>
-                  <TableCell>{vehicle.vin}</TableCell>
+              {uniqueModels.map((vehicle) => (
+                <TableRow key={vehicle.model}>
+                  <TableCell className="font-medium">{vehicle.model}</TableCell>
                   <TableCell>{vehicle.operator}</TableCell>
+                  <TableCell>{vehicle.count}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge>
                   </TableCell>
-                  <TableCell>{vehicle.preInstallationDate}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
