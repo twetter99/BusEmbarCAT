@@ -11,12 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import type { MaintenanceTask } from '@/lib/types';
 import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock } from 'lucide-react';
+import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } from 'lucide-react';
 import Link from 'next/link';
 import { FilterControls } from '@/components/layout/filter-controls';
 import { cn } from '@/lib/utils';
@@ -108,12 +108,18 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground flex-grow">
                  {vehicle && (
-                    <div className="flex items-center gap-2">
-                        <Truck className="h-4 w-4" />
-                        <Link href={`/vehicles/${vehicle.uniqueId}`} className="hover:underline text-primary">
-                            {vehicle.uniqueId} ({task.vehicleId})
-                        </Link>
-                    </div>
+                    <>
+                        <div className="flex items-center gap-2">
+                            <Truck className="h-4 w-4" />
+                            <Link href={`/vehicles/${vehicle.uniqueId}`} className="hover:underline text-primary">
+                                {vehicle.uniqueId} ({task.vehicleId})
+                            </Link>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Building className="h-4 w-4" />
+                            <span className="text-xs">{vehicle.operatorName}</span>
+                        </div>
+                    </>
                 )}
                 <div className="flex items-start gap-2">
                     <UrgencyIcon className={cn("h-4 w-4 mt-0.5", {
