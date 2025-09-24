@@ -41,75 +41,21 @@ const equipmentStatusVariant: {
 };
 
 const equipmentLimits: { [key: string]: number } = {
-    'Pupitre': 1,
-    'Validación': 4,
-    'Auxiliar': 1,
-    'Consulta': 99, // No limit specified
+  Pupitre: 1,
+  Validación: 4,
+  Auxiliar: 1,
+  Consulta: 99, // No limit specified
 };
 
 const getCategoryForType = (type: EquipmentType): string | null => {
-    for (const category in equipmentTypeCategories) {
-        const types = equipmentTypeCategories[category];
-        if (Array.isArray(types) && types.includes(type)) {
-            return category;
-        }
+  for (const category in equipmentTypeCategories) {
+    const types = equipmentTypeCategories[category];
+    if (Array.isArray(types) && types.includes(type)) {
+      return category;
     }
-    return null;
-}
-
-const EquipmentSection = ({ title, items, limit }: { title: string; items: Equipment[]; limit: number }) => {
-    const count = items.length;
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-4">
-            <span>{title}</span>
-            <span className="text-sm font-medium text-muted-foreground">({count}/{limit})</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Número de Serie</TableHead>
-                <TableHead>Tipo de Equipo</TableHead>
-                <TableHead>Estado</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.length > 0 ? (
-                items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">
-                      {item.serialNumber}
-                    </TableCell>
-                    <TableCell>{item.type}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={equipmentStatusVariant[item.status]}
-                      >
-                        {item.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={3}
-                    className="text-center text-muted-foreground"
-                  >
-                    No hay equipamiento de este tipo instalado.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    );
+  }
+  return null;
 };
-
 
 export default function VehicleDetailPage() {
   const params = useParams();
@@ -125,13 +71,15 @@ export default function VehicleDetailPage() {
   const groupedEquipment = installedEquipment.reduce((acc, item) => {
     const category = getCategoryForType(item.type);
     if (category) {
-        if (!acc[category]) {
-            acc[category] = [];
-        }
-        acc[category].push(item);
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
     }
     return acc;
   }, {} as Record<string, Equipment[]>);
+
+  const totalEquipmentLimit = Object.values(equipmentLimits).filter(l => l < 99).reduce((sum, limit) => sum + limit, 0);
 
   if (!vehicle) {
     return (
@@ -222,25 +170,58 @@ export default function VehicleDetailPage() {
               </div>
             </CardContent>
           </Card>
-          
-          <div className="space-y-4">
-             <h2 className="text-xl font-bold flex items-center gap-3">
-                <HardDrive className="h-6 w-6 text-primary" />
-                Equipamiento Instalado
-            </h2>
-            {Object.entries(equipmentLimits).map(([category, limit]) => {
-                if (limit > 99) return null; // Don't show categories without a real limit
-                return (
-                    <EquipmentSection 
-                        key={category}
-                        title={category}
-                        items={groupedEquipment[category] || []}
-                        limit={limit}
-                    />
-                )
-            })}
-           </div>
 
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <HardDrive className="h-6 w-6 text-primary" />
+                    Equipamiento Instalado
+                </div>
+                <span className="text-sm font-medium text-muted-foreground">
+                    Total: {installedEquipment.length}/{totalEquipmentLimit} equipos
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {installedEquipment.length > 0 ? (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Tipo de Equipo</TableHead>
+                      <TableHead>Número de Serie</TableHead>
+                      <TableHead>Estado</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {installedEquipment.map((item) => {
+                       const category = getCategoryForType(item.type) || 'Otro';
+                       const limit = equipmentLimits[category] || 0;
+                       const count = groupedEquipment[category]?.length || 0;
+                      return (
+                        <TableRow key={item.id}>
+                          <TableCell className="font-medium">
+                            {item.type}
+                            {limit < 99 && <span className="ml-2 text-muted-foreground text-xs">({count}/{limit})</span>}
+                          </TableCell>
+                          <TableCell>{item.serialNumber}</TableCell>
+                          <TableCell>
+                            <Badge variant={equipmentStatusVariant[item.status]}>
+                              {item.status}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  <p>Este vehículo no tiene equipamiento asignado actualmente.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         <div className="space-y-8">
@@ -250,30 +231,42 @@ export default function VehicleDetailPage() {
               <CardTitle>Estado y Operador</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
-               <div>
-                  <p className="font-semibold text-muted-foreground">Operador</p>
-                  <p>{operator?.name || 'No asignado'}</p>
+              <div>
+                <p className="font-semibold text-muted-foreground">Operador</p>
+                <p>{operator?.name || 'No asignado'}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-muted-foreground">
+                  Estado del Vehículo
+                </p>
+                <div>
+                  <Badge variant={statusVariant[vehicle.status]}>
+                    {vehicle.status}
+                  </Badge>
                 </div>
-                 <div>
-                  <p className="font-semibold text-muted-foreground">Estado del Vehículo</p>
-                  <div><Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge></div>
-                </div>
+              </div>
             </CardContent>
           </Card>
-           <Card>
+          <Card>
             <CardHeader>
-                <CardTitle>Estadísticas</CardTitle>
+              <CardTitle>Estadísticas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="flex justify-between items-center text-sm">
-                    <p className="font-medium">Total de Equipos Instalados</p>
-                    <p className="font-bold text-lg">{installedEquipment.length}</p>
-                </div>
-                 <Separator />
-                 <div className="text-sm text-muted-foreground">
-                    <p><span className="font-semibold">Última Revisión:</span> 24/05/2024</p>
-                    <p><span className="font-semibold">Próximo Mantenimiento:</span> 24/08/2024</p>
-                 </div>
+              <div className="flex justify-between items-center text-sm">
+                <p className="font-medium">Total de Equipos Instalados</p>
+                <p className="font-bold text-lg">{installedEquipment.length}</p>
+              </div>
+              <Separator />
+              <div className="text-sm text-muted-foreground">
+                <p>
+                  <span className="font-semibold">Última Revisión:</span>{' '}
+                  24/05/2024
+                </p>
+                <p>
+                  <span className="font-semibold">Próximo Mantenimiento:</span>{' '}
+                  24/08/2024
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
