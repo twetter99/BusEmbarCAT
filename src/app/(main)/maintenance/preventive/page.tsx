@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import type { MaintenanceTask } from '@/lib/types';
 import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
@@ -20,6 +19,7 @@ import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } fr
 import Link from 'next/link';
 import { FilterControls } from '@/components/layout/filter-controls';
 import { cn } from '@/lib/utils';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
@@ -147,7 +147,9 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                 </div>}
             </CardContent>
             <CardFooter>
-                <Button className="w-full">{buttonTextByStatus[task.status]}</Button>
+                 <Button asChild className="w-full">
+                    <Link href={`/maintenance/preventive/${task.id}`}>{buttonTextByStatus[task.status]}</Link>
+                </Button>
             </CardFooter>
         </Card>
     );
@@ -222,7 +224,7 @@ export default function PreventivePage() {
 
             <FilterControls
                 filters={filters}
-                onFilterChange={setFilters}
+                onFilterChange={(newFilters) => setFilters(f => ({...f, ...newFilters}))}
                 categories={frequencies}
                 categoryLabel="Frecuencia"
                 operators={mockOperators}
