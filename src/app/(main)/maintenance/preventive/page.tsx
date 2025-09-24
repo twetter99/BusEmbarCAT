@@ -12,19 +12,72 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockTasks, mockVehicles, mockOperators, mockUsers } from '@/lib/data';
-import type { MaintenanceTask, Operator } from '@/lib/types';
-import { format, formatDistanceToNow } from 'date-fns';
+import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
+import type { MaintenanceTask } from '@/lib/types';
+import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User, Calendar, Wrench, Truck } from 'lucide-react';
+import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { FilterControls } from './filter-controls';
+import { cn } from '@/lib/utils';
+
+
+type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
+
+const getUrgency = (dueDate: Date): UrgencyStatus => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const taskDate = new Date(dueDate);
+    taskDate.setHours(0, 0, 0, 0);
+    
+    const daysDiff = differenceInDays(taskDate, today);
+
+    if (daysDiff < 0) return 'Vencido';
+    if (daysDiff <= 2) return 'Urgente';
+    if (daysDiff <= 7) return 'Próximo';
+    return 'Normal';
+};
 
 const statusVariant: { [key in MaintenanceTask['status']]: 'destructive' | 'secondary' | 'outline' } = {
     'Pendiente': 'destructive',
     'En Progreso': 'secondary',
     'Completado': 'outline',
 }
+
+const urgencyBadgeVariant: { [key in UrgencyStatus]: 'destructive' | 'warning' | 'attention' | 'default' } = {
+    'Vencido': 'destructive',
+    'Urgente': 'warning',
+    'Próximo': 'attention',
+    'Normal': 'default',
+};
+
+const urgencyText: { [key in UrgencyStatus]: string } = {
+    'Vencido': 'Vencido',
+    'Urgente': 'Urgente',
+    'Próximo': 'Próximo',
+    'Normal': 'Pendiente',
+};
+
+const urgencyCardClass: { [key in UrgencyStatus]: string } = {
+  'Vencido': 'border-l-4 border-l-destructive',
+  'Urgente': 'border-l-4 border-l-warning',
+  'Próximo': 'border-l-4 border-l-attention',
+  'Normal': '',
+};
+
+const urgencyDateClass: { [key in UrgencyStatus]: string } = {
+  'Vencido': 'bg-destructive/10 text-destructive underline decoration-destructive',
+  'Urgente': 'bg-warning/10 text-warning-foreground underline decoration-warning',
+  'Próximo': 'bg-attention/10 text-attention-foreground underline decoration-attention',
+  'Normal': '',
+};
+
+const urgencyIcons: { [key in UrgencyStatus]: React.ElementType } = {
+  'Vencido': AlertTriangle,
+  'Urgente': Zap,
+  'Próximo': Calendar,
+  'Normal': Clock,
+};
 
 const buttonTextByStatus: { [key in MaintenanceTask['status']]: string } = {
     'Pendiente': 'Ver Ficha',
@@ -34,8 +87,11 @@ const buttonTextByStatus: { [key in MaintenanceTask['status']]: string } = {
 
 const TaskCard = ({ task }: { task: MaintenanceTask }) => {
     const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
+    const urgency = task.status === 'Pendiente' ? getUrgency(task.dueDate) : 'Normal';
+    const UrgencyIcon = urgencyIcons[urgency];
+
     return (
-        <Card className="flex flex-col">
+        <Card className={cn("flex flex-col", task.status === 'Pendiente' ? urgencyCardClass[urgency] : '')}>
             <CardHeader>
                 <div className="flex items-start justify-between">
                     <div>
@@ -43,7 +99,11 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                         <CardTitle className="text-lg">{task.title}</CardTitle>
                         <CardDescription>Mantenimiento Preventivo</CardDescription>
                     </div>
-                    <Badge variant={statusVariant[task.status]}>{task.status}</Badge>
+                     {task.status === 'Pendiente' ? (
+                        <Badge variant={urgencyBadgeVariant[urgency]}>{urgencyText[urgency]}</Badge>
+                    ) : (
+                        <Badge variant={statusVariant[task.status]}>{task.status}</Badge>
+                    )}
                 </div>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground flex-grow">
@@ -55,9 +115,19 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                         </Link>
                     </div>
                 )}
-                <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>Vence {formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })} ({format(task.dueDate, 'd MMM, yyyy', { locale: es })})</span>
+                <div className="flex items-start gap-2">
+                    <UrgencyIcon className={cn("h-4 w-4 mt-0.5", {
+                        'text-destructive': urgency === 'Vencido',
+                        'text-warning': urgency === 'Urgente',
+                        'text-attention': urgency === 'Próximo',
+                    })} />
+                    <div className={cn("text-sm", task.status === 'Pendiente' && urgencyDateClass[urgency], 'p-1 rounded-md')}>
+                       <span>
+                         {formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })}
+                       </span>
+                        <br />
+                       <span className="text-xs">({format(task.dueDate, 'd MMM, yyyy', { locale: es })})</span>
+                    </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <Wrench className="h-4 w-4" />
@@ -100,8 +170,15 @@ export default function PreventivePage() {
         return Array.from(freqSet).sort();
     }, []);
 
+    const urgencyOrder: Record<UrgencyStatus, number> = {
+        'Vencido': 1,
+        'Urgente': 2,
+        'Próximo': 3,
+        'Normal': 4,
+    };
+
     const filteredTasks = React.useMemo(() => {
-        return mockTasks.filter(task => {
+        const tasks = mockTasks.filter(task => {
             const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
             const operatorMatch = filters.operator === 'all' || vehicle?.operatorId === filters.operator;
             
@@ -115,22 +192,51 @@ export default function PreventivePage() {
 
             return operatorMatch && technicianMatch && frequencyMatch && statusMatch;
         });
-    }, [filters, activeTab]);
+
+        if (activeTab === 'Pendiente') {
+            tasks.sort((a, b) => {
+                const urgencyA = getUrgency(a.dueDate);
+                const urgencyB = getUrgency(b.dueDate);
+                if (urgencyOrder[urgencyA] !== urgencyOrder[urgencyB]) {
+                    return urgencyOrder[urgencyA] - urgencyOrder[urgencyB];
+                }
+                return a.dueDate.getTime() - b.dueDate.getTime();
+            });
+        }
+        
+        return tasks;
+    }, [filters, activeTab, urgencyOrder]);
     
-    const pendingTasks = mockTasks.filter(t => t.status === 'Pendiente');
-    const inProgressTasks = mockTasks.filter(t => t.status === 'En Progreso');
-    const completedTasks = mockTasks.filter(t => t.status === 'Completado');
+    const allTasksByStatus = {
+        'Pendiente': mockTasks.filter(t => t.status === 'Pendiente'),
+        'En Progreso': mockTasks.filter(t => t.status === 'En Progreso'),
+        'Completado': mockTasks.filter(t => t.status === 'Completado'),
+    };
     
     const displayedTasks = filteredTasks;
+
+    const getPendingTabTitle = () => {
+        const pending = allTasksByStatus['Pendiente'];
+        const vencidos = pending.filter(t => getUrgency(t.dueDate) === 'Vencido').length;
+        const urgentes = pending.filter(t => getUrgency(t.dueDate) === 'Urgente').length;
+        
+        let criticalInfo = [];
+        if (vencidos > 0) criticalInfo.push(`${vencidos} vencidos`);
+        if (urgentes > 0) criticalInfo.push(`${urgentes} urgentes`);
+
+        const baseTitle = `Pendiente (${pending.length})`;
+        return criticalInfo.length > 0 ? `${baseTitle} - ${criticalInfo.join(', ')}` : baseTitle;
+    }
+
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center justify-between mb-4">
-                 <TabsList className="grid w-full max-w-lg grid-cols-3">
-                    <TabsTrigger value="Pendiente">Pendiente ({pendingTasks.length})</TabsTrigger>
-                    <TabsTrigger value="En Progreso">En Progreso ({inProgressTasks.length})</TabsTrigger>
-                    <TabsTrigger value="Completado">Completado ({completedTasks.length})</TabsTrigger>
+                 <TabsList className="grid w-full max-w-xl grid-cols-3">
+                    <TabsTrigger value="Pendiente">{getPendingTabTitle()}</TabsTrigger>
+                    <TabsTrigger value="En Progreso">En Progreso ({allTasksByStatus['En Progreso'].length})</TabsTrigger>
+                    <TabsTrigger value="Completado">Completado ({allTasksByStatus['Completado'].length})</TabsTrigger>
                 </TabsList>
             </div>
 
