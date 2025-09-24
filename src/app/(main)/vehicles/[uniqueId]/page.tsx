@@ -205,7 +205,7 @@ export default function VehicleDetailPage() {
                 </div>
                  <div>
                   <p className="font-semibold text-muted-foreground">Estado del Vehículo</p>
-                  <p><Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge></p>
+                  <div><Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge></div>
                 </div>
             </CardContent>
           </Card>
