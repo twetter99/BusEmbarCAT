@@ -3,7 +3,6 @@ import {
   Bus,
   Truck,
   HardDrive,
-  ClipboardList,
   CheckSquare,
   Sparkles,
   Siren,
@@ -16,6 +15,7 @@ import {
   Wrench,
   CalendarCheck,
   ShieldCheck,
+  Replace,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -36,6 +36,7 @@ export const navItems: NavConfig = {
       { id: 'dashboard', href: '/', label: 'Panel de control', icon: Bus },
       { id: 'vehicles', href: '/vehicles', label: 'Vehículos', icon: Truck },
       { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
+      { id: 'installations', href: '/installations', label: 'Instalaciones y Traspasos', icon: Replace },
       { id: 'maintenance', href: '#', label: 'Mantenimiento y averías', icon: Wrench, subItems: [
         { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo', icon: CalendarCheck },
         { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo', icon: ShieldCheck },
@@ -58,15 +59,15 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     },
     'Operador': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations'
         ],
         write: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns', 'installations'
         ],
     },
     'Sermetra': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations'
         ],
         write: [],
     }
