@@ -215,26 +215,12 @@ export default function PreventivePage() {
     
     const displayedTasks = filteredTasks;
 
-    const getPendingTabTitle = () => {
-        const pending = allTasksByStatus['Pendiente'];
-        const vencidos = pending.filter(t => getUrgency(t.dueDate) === 'Vencido').length;
-        const urgentes = pending.filter(t => getUrgency(t.dueDate) === 'Urgente').length;
-        
-        let criticalInfo = [];
-        if (vencidos > 0) criticalInfo.push(`${vencidos} venc`);
-        if (urgentes > 0) criticalInfo.push(`${urgentes} urg`);
-
-        const baseTitle = `Pendiente (${pending.length})`;
-        return criticalInfo.length > 0 ? `${baseTitle} (${criticalInfo.join(', ')})` : baseTitle;
-    }
-
-
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center justify-between mb-4">
                  <TabsList className="grid w-full max-w-2xl grid-cols-3">
-                    <TabsTrigger value="Pendiente">{getPendingTabTitle()}</TabsTrigger>
+                    <TabsTrigger value="Pendiente">Pendiente ({allTasksByStatus['Pendiente'].length})</TabsTrigger>
                     <TabsTrigger value="En Progreso">En Progreso ({allTasksByStatus['En Progreso'].length})</TabsTrigger>
                     <TabsTrigger value="Completado">Completado ({allTasksByStatus['Completado'].length})</TabsTrigger>
                 </TabsList>
