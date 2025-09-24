@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table';
 import { mockEquipment } from '@/lib/data';
 import type { Equipment } from '@/lib/types';
-import { PlusCircle, Link as LinkIcon } from 'lucide-react';
+import { PlusCircle, Link as LinkIcon, Package } from 'lucide-react';
 import Link from 'next/link';
 
 const statusVariant: { [key in Equipment['status']]: 'default' | 'secondary' | 'destructive' } = {
@@ -48,7 +48,7 @@ export default function EquipmentPage() {
               <TableRow>
                 <TableHead>Número de Serie</TableHead>
                 <TableHead>Tipo</TableHead>
-                <TableHead>Vehículo Asignado</TableHead>
+                <TableHead>Ubicación</TableHead>
                 <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
@@ -61,10 +61,13 @@ export default function EquipmentPage() {
                     {item.assignedVehicleId ? (
                       <Link href={`/vehicles?id=${item.assignedVehicleId}`} className="flex items-center gap-1 text-primary hover:underline">
                         <LinkIcon className="h-3 w-3" />
-                        {item.assignedVehicleId}
+                        Vehículo {item.assignedVehicleId}
                       </Link>
                     ) : (
-                      <span className="text-muted-foreground">Sin asignar</span>
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <Package className="h-3 w-3" />
+                        {item.location || 'Sin asignar'}
+                      </span>
                     )}
                   </TableCell>
                   <TableCell>

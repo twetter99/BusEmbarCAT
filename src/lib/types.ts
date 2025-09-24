@@ -16,12 +16,45 @@ export type Vehicle = {
   vin: string;
 };
 
+export type EquipmentType = 
+  | 'Pupitre'
+  | 'Validadora INDRA'
+  | 'Validadora Inetum'
+  | 'Terminal de consulta INDRA'
+  | 'MMC'
+  | 'Placa de conexión'
+  | 'Soporte'
+  | 'Antena'
+  | 'Cambio de IP'
+  | 'Kit de conexión HARTING'
+  | 'Cable de conexión'
+  | 'Conector'
+  | 'Material diverso';
+
+export const equipmentTypeCategories = {
+    'Pupitre': 'Pupitre',
+    'Terminal de validación': ['Validadora INDRA', 'Validadora Inetum'],
+    'Terminal de consulta': ['Terminal de consulta INDRA'],
+    'Material auxiliar': [
+        'MMC',
+        'Placa de conexión',
+        'Soporte',
+        'Antena',
+        'Cambio de IP',
+        'Kit de conexión HARTING',
+        'Cable de conexión',
+        'Conector',
+        'Material diverso'
+    ]
+};
+
 export type Equipment = {
   id: string;
-  type: 'Validador' | 'Consola' | 'Módulo GPS' | 'Router';
+  type: EquipmentType;
   assignedVehicleId: string | null;
   status: 'Operativo' | 'Requiere Reparación' | 'En Stock';
   serialNumber: string;
+  location?: 'Almacén Principal' | 'Almacén Operador';
 };
 
 export type MaintenanceTask = {
