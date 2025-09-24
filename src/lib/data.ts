@@ -1,5 +1,11 @@
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User } from '@/lib/types';
 import { add, sub } from 'date-fns';
+
+export const mockUsers: User[] = [
+    { id: 'user-001', name: 'Admin User', email: 'admin@busembacat.com', role: 'Administrador' },
+    { id: 'user-002', name: 'Operator User', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'MetroTrans' },
+    { id: 'user-003', name: 'Sermetra User', email: 'sermetra@busembacat.com', role: 'Sermetra' },
+];
 
 export const mockVehicles: Vehicle[] = [
   { id: 'BC-123-X', model: 'Volvo 9800', operator: 'MetroTrans', status: 'Activo', vin: 'VIN1234567890' },

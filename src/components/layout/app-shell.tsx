@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Avatar,
   AvatarFallback,
@@ -28,6 +28,9 @@ import {
   SidebarFooter,
   SidebarTrigger,
   SidebarInset,
+  SidebarSeparator,
+  SidebarGroup,
+  SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import {
   Bus,
@@ -41,23 +44,37 @@ import {
   User,
   LogOut,
   Settings,
+  Users,
+  Building,
+  SlidersHorizontal,
+  KeyRound,
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-
-const navItems = [
-  { href: '/', label: 'Panel de control', icon: Bus },
-  { href: '/vehicles', label: 'Vehículos', icon: Truck },
-  { href: '/equipment', label: 'Equipamiento', icon: HardDrive },
-  { href: '/tasks', label: 'Tareas', icon: ClipboardList },
-  { href: '/checklists', label: 'Checklists', icon: CheckSquare },
-  { href: '/summarize', label: 'Resumen IA', icon: Sparkles },
-  { href: '/incidents', label: 'Incidencias', icon: Siren },
-  { href: '/inventory', label: 'Inventario', icon: Boxes },
-];
+import { useAuth } from '@/hooks/use-auth';
+import { hasPermission, navItems } from '@/lib/permissions';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
+  
+  const getNavTitle = () => {
+    const allItems = [...navItems.production, ...navItems.configuration];
+    return allItems.find(item => {
+        if (item.subItems) {
+            return item.subItems.some(subItem => pathname === subItem.href);
+        }
+        return pathname === item.href;
+    })?.label ?? 'Panel de control';
+  }
+
+  if (!user) return null;
 
   return (
     <SidebarProvider>
@@ -71,22 +88,45 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenu>
-            {navItems.map((item) => (
-              <SidebarMenuItem key={item.label}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  icon={<item.icon />}
-                  tooltip={{ children: item.label }}
-                >
-                  <Link href={item.href}>
-                    {item.label}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
+            <SidebarMenu>
+                <SidebarGroup>
+                    <SidebarGroupLabel>Producción</SidebarGroupLabel>
+                    {navItems.production.map((item) => hasPermission(user.role, item.id) && (
+                    <SidebarMenuItem key={item.label}>
+                        <SidebarMenuButton
+                        asChild
+                        isActive={pathname === item.href}
+                        icon={<item.icon />}
+                        tooltip={{ children: item.label }}
+                        >
+                        <Link href={item.href}>
+                            {item.label}
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    ))}
+                </SidebarGroup>
+
+                <SidebarSeparator />
+
+                <SidebarGroup>
+                    <SidebarGroupLabel>Configuración</SidebarGroupLabel>
+                     {navItems.configuration.map((item) => hasPermission(user.role, item.id) && (
+                        <SidebarMenuItem key={item.label}>
+                            <SidebarMenuButton
+                            asChild
+                            isActive={pathname === item.href}
+                            icon={<item.icon />}
+                            tooltip={{ children: item.label }}
+                            >
+                            <Link href={item.href}>
+                                {item.label}
+                            </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarGroup>
+            </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-4">
             <DropdownMenu>
@@ -94,9 +134,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <Button variant="ghost" className="justify-start gap-2 w-full px-2">
                          <Avatar className="h-8 w-8">
                            {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} />}
-                           <AvatarFallback>U</AvatarFallback>
+                           <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                          </Avatar>
-                         <span className="truncate">Supervisor de Mantenimiento</span>
+                         <div className="text-left">
+                            <p className="truncate text-sm font-medium">{user.name}</p>
+                            <p className="truncate text-xs text-muted-foreground">{user.role}</p>
+                         </div>
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent className="w-56 mb-2" side="top" align="start">
@@ -105,7 +148,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <DropdownMenuItem><User className="mr-2 h-4 w-4" /><span>Perfil</span></DropdownMenuItem>
                     <DropdownMenuItem><Settings className="mr-2 h-4 w-4" /><span>Configuración</span></DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><LogOut className="mr-2 h-4 w-4" /><span>Cerrar sesión</span></DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" /><span>Cerrar sesión</span></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarFooter>
@@ -115,7 +158,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <SidebarTrigger className="md:hidden" />
           <div className="flex-1">
             <h2 className="text-2xl font-bold tracking-tight font-headline">
-              {navItems.find(item => item.href === pathname)?.label ?? 'Panel de control'}
+              {getNavTitle()}
             </h2>
           </div>
           <DropdownMenu>
@@ -123,7 +166,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <Button variant="secondary" size="icon" className="rounded-full">
                          <Avatar className="h-8 w-8">
                            {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} />}
-                           <AvatarFallback>U</AvatarFallback>
+                           <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                          </Avatar>
                          <span className="sr-only">Menú de usuario</span>
                     </Button>
@@ -134,7 +177,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <DropdownMenuItem>Perfil</DropdownMenuItem>
                     <DropdownMenuItem>Configuración</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>Cerrar sesión</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

@@ -1,3 +1,13 @@
+export type Role = 'Administrador' | 'Operador' | 'Sermetra';
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  operatorId?: string;
+};
+
 export type Vehicle = {
   id: string;
   model: string;
