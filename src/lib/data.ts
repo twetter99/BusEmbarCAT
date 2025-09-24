@@ -89,7 +89,7 @@ export const mockEquipment: Equipment[] = [
   { id: 'EQ-MMC-001', type: 'MMC', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-MMC-001' },
   { id: 'EQ-PLC-001', type: 'Placa de conexión', assignedVehicleId: '6916-HCR', status: 'Operativo', serialNumber: 'SN-PLC-001' },
   { id: 'EQ-ANT-001', type: 'Antena', assignedVehicleId: null, status: 'En Stock', serialNumber: 'SN-ANT-001', location: 'Almacén Principal' },
-  { id: 'EQ-KIT-001', type: 'Kit de conexión HARTING', assignedVehicleId: null, status: 'En Stock', serialNumber: 'SN-KIT-001', location: 'Almacén Operador' },
+  { id: 'EQ-KIT-001', type: 'Kit de conexión HARTING', assignedVehicleId: '2288-HHG', status: 'En Stock', serialNumber: 'SN-KIT-001', location: 'Almacén Operador' },
   { id: 'EQ-CAB-001', type: 'Cable de conexión', assignedVehicleId: '7001-HCR', status: 'Operativo', serialNumber: 'SN-CAB-001' },
 ];
 
