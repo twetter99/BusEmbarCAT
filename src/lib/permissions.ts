@@ -12,10 +12,13 @@ import {
   Building,
   SlidersHorizontal,
   KeyRound,
-  LucideIcon
+  LucideIcon,
+  Wrench,
+  CalendarCheck,
+  ShieldCheck,
 } from 'lucide-react';
 
-type NavItem = {
+export type NavItem = {
     id: string;
     href: string;
     label: string;
@@ -23,7 +26,7 @@ type NavItem = {
     subItems?: NavItem[];
 }
 
-type NavConfig = {
+export type NavConfig = {
     production: NavItem[];
     configuration: NavItem[];
 }
@@ -33,10 +36,14 @@ export const navItems: NavConfig = {
       { id: 'dashboard', href: '/', label: 'Panel de control', icon: Bus },
       { id: 'vehicles', href: '/vehicles', label: 'Vehículos', icon: Truck },
       { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
-      { id: 'tasks', href: '/tasks', label: 'Tareas', icon: ClipboardList },
-      { id: 'checklists', href: '/checklists', label: 'Checklists', icon: CheckSquare },
+      { id: 'maintenance', href: '#', label: 'Mantenimiento y averías', icon: Wrench, subItems: [
+        { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo', icon: CalendarCheck },
+        { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo', icon: ShieldCheck },
+        { id: 'breakdowns', href: '/maintenance/breakdowns', label: 'Averías', icon: Siren },
+        { id: 'tasks', href: '/tasks', label: 'Tareas', icon: ClipboardList },
+        { id: 'checklists', href: '/checklists', label: 'Checklists', icon: CheckSquare },
+      ]},
       { id: 'summarize', href: '/summarize', label: 'Resumen IA', icon: Sparkles },
-      { id: 'incidents', href: '/incidents', label: 'Incidencias', icon: Siren },
       { id: 'inventory', href: '/inventory', label: 'Inventario', icon: Boxes },
     ],
     configuration: [
@@ -54,15 +61,15 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     },
     'Operador': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance'
         ],
         write: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns'
         ],
     },
     'Sermetra': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance'
         ],
         write: [],
     }

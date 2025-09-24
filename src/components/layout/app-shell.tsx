@@ -31,27 +31,77 @@ import {
   SidebarSeparator,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import {
   Bus,
-  Truck,
-  HardDrive,
-  ClipboardList,
-  CheckSquare,
-  Sparkles,
-  Siren,
-  Boxes,
-  User,
   LogOut,
   Settings,
-  Users,
-  Building,
-  SlidersHorizontal,
-  KeyRound,
+  User,
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useAuth } from '@/hooks/use-auth';
-import { hasPermission, navItems } from '@/lib/permissions';
+import { hasPermission, navItems, NavItem } from '@/lib/permissions';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const renderNavItems = (items: NavItem[], userRole: string, currentPath: string) => {
+  return items.map((item) => {
+    if (!hasPermission(userRole, item.id)) return null;
+
+    if (item.subItems) {
+      const isParentActive = item.subItems.some(sub => currentPath.startsWith(sub.href));
+      return (
+        <SidebarMenuItem key={item.label} className="!p-0">
+          <Collapsible defaultOpen={isParentActive}>
+            <CollapsibleTrigger className="w-full">
+               <SidebarMenuButton
+                isActive={isParentActive}
+                icon={<item.icon />}
+                className="justify-between"
+                >
+                <span>{item.label}</span>
+                <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                {item.subItems.map(subItem => hasPermission(userRole, subItem.id) && (
+                    <SidebarMenuItem key={subItem.href}>
+                        <SidebarMenuSubButton asChild isActive={currentPath === subItem.href}>
+                            <Link href={subItem.href}>
+                                <subItem.icon />
+                                <span>{subItem.label}</span>
+                            </Link>
+                        </SidebarMenuSubButton>
+                    </SidebarMenuItem>
+                ))}
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </Collapsible>
+        </SidebarMenuItem>
+      );
+    }
+
+    return (
+      <SidebarMenuItem key={item.label}>
+        <SidebarMenuButton
+          asChild
+          isActive={currentPath === item.href}
+          icon={<item.icon />}
+          tooltip={{ children: item.label }}
+        >
+          <Link href={item.href}>
+            {item.label}
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  });
+};
+
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -66,12 +116,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   
   const getNavTitle = () => {
     const allItems = [...navItems.production, ...navItems.configuration];
-    return allItems.find(item => {
-        if (item.subItems) {
-            return item.subItems.some(subItem => pathname === subItem.href);
-        }
-        return pathname === item.href;
-    })?.label ?? 'Panel de control';
+    for (const item of allItems) {
+      if (item.href === pathname) {
+        return item.label;
+      }
+      if (item.subItems) {
+        const subItem = item.subItems.find(sub => pathname.startsWith(sub.href));
+        if (subItem) return subItem.label;
+      }
+    }
+    return 'Panel de control';
   }
 
   if (!user) return null;
@@ -91,40 +145,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <SidebarMenu>
                 <SidebarGroup>
                     <SidebarGroupLabel>Producción</SidebarGroupLabel>
-                    {navItems.production.map((item) => hasPermission(user.role, item.id) && (
-                    <SidebarMenuItem key={item.label}>
-                        <SidebarMenuButton
-                        asChild
-                        isActive={pathname === item.href}
-                        icon={<item.icon />}
-                        tooltip={{ children: item.label }}
-                        >
-                        <Link href={item.href}>
-                            {item.label}
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    ))}
+                    {renderNavItems(navItems.production, user.role, pathname)}
                 </SidebarGroup>
 
                 <SidebarSeparator />
 
                 <SidebarGroup>
                     <SidebarGroupLabel>Configuración</SidebarGroupLabel>
-                     {navItems.configuration.map((item) => hasPermission(user.role, item.id) && (
-                        <SidebarMenuItem key={item.label}>
-                            <SidebarMenuButton
-                            asChild
-                            isActive={pathname === item.href}
-                            icon={<item.icon />}
-                            tooltip={{ children: item.label }}
-                            >
-                            <Link href={item.href}>
-                                {item.label}
-                            </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
+                     {renderNavItems(navItems.configuration, user.role, pathname)}
                 </SidebarGroup>
             </SidebarMenu>
         </SidebarContent>
