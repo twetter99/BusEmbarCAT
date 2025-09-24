@@ -25,32 +25,32 @@ import { mockVehicles, mockTasks, mockIncidents, mockInventory } from '@/lib/dat
 import Link from 'next/link';
 
 const chartData = [
-  { month: 'January', tasks: 186 },
-  { month: 'February', tasks: 305 },
-  { month: 'March', tasks: 237 },
-  { month: 'April', tasks: 273 },
-  { month: 'May', tasks: 209 },
-  { month: 'June', tasks: 214 },
+  { month: 'Enero', tasks: 186 },
+  { month: 'Febrero', tasks: 305 },
+  { month: 'Marzo', tasks: 237 },
+  { month: 'Abril', tasks: 273 },
+  { month: 'Mayo', tasks: 209 },
+  { month: 'Junio', tasks: 214 },
 ];
 
 const chartConfig = {
   tasks: {
-    label: 'Tasks',
+    label: 'Tareas',
     color: 'hsl(var(--accent))',
   },
 } satisfies ChartConfig;
 
 export default function DashboardPage() {
-    const activeVehicles = mockVehicles.filter(v => v.status === 'Active').length;
-    const pendingTasks = mockTasks.filter(t => t.status === 'Pending' || t.status === 'In Progress').length;
-    const openIncidents = mockIncidents.filter(i => i.status === 'Open').length;
+    const activeVehicles = mockVehicles.filter(v => v.status === 'Activo').length;
+    const pendingTasks = mockTasks.filter(t => t.status === 'Pendiente' || t.status === 'En Progreso').length;
+    const openIncidents = mockIncidents.filter(i => i.status === 'Abierto').length;
     const totalInventory = mockInventory.reduce((acc, item) => acc + item.stock, 0);
 
   const summaryCards = [
-    { title: 'Active Vehicles', value: activeVehicles, icon: Truck, href: '/vehicles' },
-    { title: 'Pending Tasks', value: pendingTasks, icon: ClipboardList, href: '/tasks' },
-    { title: 'Open Incidents', value: openIncidents, icon: Siren, href: '/incidents' },
-    { title: 'Inventory Items', value: totalInventory, icon: Boxes, href: '/inventory' },
+    { title: 'Vehículos Activos', value: activeVehicles, icon: Truck, href: '/vehicles' },
+    { title: 'Tareas Pendientes', value: pendingTasks, icon: ClipboardList, href: '/tasks' },
+    { title: 'Incidencias Abiertas', value: openIncidents, icon: Siren, href: '/incidents' },
+    { title: 'Artículos de Inventario', value: totalInventory, icon: Boxes, href: '/inventory' },
   ];
 
   return (
@@ -73,8 +73,8 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-1">
         <Card>
           <CardHeader>
-            <CardTitle>Maintenance Overview</CardTitle>
-            <CardDescription>Monthly completed maintenance tasks.</CardDescription>
+            <CardTitle>Resumen de Mantenimiento</CardTitle>
+            <CardDescription>Tareas de mantenimiento completadas mensualmente.</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[250px] w-full">

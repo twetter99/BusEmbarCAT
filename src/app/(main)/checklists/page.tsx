@@ -38,7 +38,7 @@ export default function ChecklistsPage() {
           <CardHeader>
             <CardTitle>{mockChecklist.title}</CardTitle>
             <CardDescription>
-              Vehicle: BC-123-X | Technician: Alice
+              Vehículo: BC-123-X | Técnico: Alice
             </CardDescription>
             <div className="flex items-center gap-2 pt-2">
               <Progress value={progressPercentage} className="w-full" />
@@ -72,7 +72,7 @@ export default function ChecklistsPage() {
             </form>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Submit Checklist</Button>
+            <Button className="w-full">Enviar checklist</Button>
           </CardFooter>
         </Card>
       </div>

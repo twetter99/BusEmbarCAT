@@ -24,12 +24,12 @@ export default function Error({
                 <div className="mx-auto bg-destructive/10 p-3 rounded-full">
                     <TriangleAlert className="h-8 w-8 text-destructive" />
                 </div>
-                <CardTitle className="mt-4">Something went wrong!</CardTitle>
-                <CardDescription>{error.message || "An unexpected error occurred."}</CardDescription>
+                <CardTitle className="mt-4">¡Algo salió mal!</CardTitle>
+                <CardDescription>{error.message || "Ocurrió un error inesperado."}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Button onClick={() => reset()}>
-                    Try again
+                    Intentar de nuevo
                 </Button>
             </CardContent>
         </Card>

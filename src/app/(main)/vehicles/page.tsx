@@ -20,9 +20,9 @@ import type { Vehicle } from '@/lib/types';
 import { PlusCircle } from 'lucide-react';
 
 const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'destructive' } = {
-    'Active': 'default',
-    'In Maintenance': 'secondary',
-    'Decommissioned': 'destructive',
+    'Activo': 'default',
+    'En Mantenimiento': 'secondary',
+    'Fuera de Servicio': 'destructive',
 }
 
 export default function VehiclesPage() {
@@ -31,25 +31,25 @@ export default function VehiclesPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Vehicles</CardTitle>
+            <CardTitle>Vehículos</CardTitle>
             <CardDescription>
-              A complete list of all vehicles in the fleet.
+              Una lista completa de todos los vehículos de la flota.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Add Vehicle
+            Añadir Vehículo
           </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Vehicle ID</TableHead>
-                <TableHead>Model</TableHead>
+                <TableHead>ID del Vehículo</TableHead>
+                <TableHead>Modelo</TableHead>
                 <TableHead>VIN</TableHead>
-                <TableHead>Operator</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Operador</TableHead>
+                <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

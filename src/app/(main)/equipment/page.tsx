@@ -21,9 +21,9 @@ import { PlusCircle, Link as LinkIcon } from 'lucide-react';
 import Link from 'next/link';
 
 const statusVariant: { [key in Equipment['status']]: 'default' | 'secondary' | 'destructive' } = {
-    'Operational': 'default',
-    'Requires Repair': 'destructive',
-    'In Stock': 'secondary',
+    'Operativo': 'default',
+    'Requiere Reparación': 'destructive',
+    'En Stock': 'secondary',
 }
 
 export default function EquipmentPage() {
@@ -32,24 +32,24 @@ export default function EquipmentPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Equipment Inventory</CardTitle>
+            <CardTitle>Inventario de Equipamiento</CardTitle>
             <CardDescription>
-              Track all hardware components across the fleet.
+              Realiza un seguimiento de todos los componentes de hardware de la flota.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Add Equipment
+            Añadir Equipamiento
           </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Serial Number</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Assigned Vehicle</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Número de Serie</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Vehículo Asignado</TableHead>
+                <TableHead>Estado</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -64,7 +64,7 @@ export default function EquipmentPage() {
                         {item.assignedVehicleId}
                       </Link>
                     ) : (
-                      <span className="text-muted-foreground">Unassigned</span>
+                      <span className="text-muted-foreground">Sin asignar</span>
                     )}
                   </TableCell>
                   <TableCell>

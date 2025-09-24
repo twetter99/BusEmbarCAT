@@ -21,14 +21,14 @@ import { add, differenceInDays } from 'date-fns';
 import { PlusCircle } from 'lucide-react';
 
 const statusVariant: { [key in Incident['status']]: 'destructive' | 'secondary' | 'outline' } = {
-    'Open': 'destructive',
-    'In Progress': 'secondary',
-    'Resolved': 'outline',
+    'Abierto': 'destructive',
+    'En Progreso': 'secondary',
+    'Resuelto': 'outline',
 }
 
 const SlaCell = ({ incident }: { incident: Incident }) => {
-    if (incident.status === 'Resolved') {
-        return <TableCell><Badge variant="outline">Resolved</Badge></TableCell>
+    if (incident.status === 'Resuelto') {
+        return <TableCell><Badge variant="outline">Resuelto</Badge></TableCell>
     }
 
     const dueDate = add(incident.reportedAt, { days: incident.slaDays });
@@ -44,7 +44,7 @@ const SlaCell = ({ incident }: { incident: Incident }) => {
     return (
         <TableCell>
             <Badge variant={variant}>
-                {daysRemaining > 0 ? `${daysRemaining} day${daysRemaining > 1 ? 's' : ''} left` : 'Overdue'}
+                {daysRemaining > 0 ? `${daysRemaining} día${daysRemaining > 1 ? 's' : ''} restante${daysRemaining > 1 ? 's' : ''}` : 'Vencido'}
             </Badge>
         </TableCell>
     )
@@ -56,25 +56,25 @@ export default function IncidentsPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Incident Ticketing</CardTitle>
+            <CardTitle>Gestión de Incidencias</CardTitle>
             <CardDescription>
-              Log and manage unplanned incidents and service requests.
+              Registre y gestione incidencias no planificadas y solicitudes de servicio.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Report Incident
+            Reportar Incidencia
           </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Ticket ID</TableHead>
-                <TableHead>Vehicle</TableHead>
-                <TableHead>Issue</TableHead>
-                <TableHead>Assigned To</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>ID de Ticket</TableHead>
+                <TableHead>Vehículo</TableHead>
+                <TableHead>Problema</TableHead>
+                <TableHead>Asignado a</TableHead>
+                <TableHead>Estado</TableHead>
                 <TableHead>SLA</TableHead>
               </TableRow>
             </TableHeader>

@@ -2,15 +2,15 @@ export type Vehicle = {
   id: string;
   model: string;
   operator: string;
-  status: 'Active' | 'In Maintenance' | 'Decommissioned';
+  status: 'Activo' | 'En Mantenimiento' | 'Fuera de Servicio';
   vin: string;
 };
 
 export type Equipment = {
   id: string;
-  type: 'Validator' | 'Console' | 'GPS Module' | 'Router';
+  type: 'Validador' | 'Consola' | 'Módulo GPS' | 'Router';
   assignedVehicleId: string | null;
-  status: 'Operational' | 'Requires Repair' | 'In Stock';
+  status: 'Operativo' | 'Requiere Reparación' | 'En Stock';
   serialNumber: string;
 };
 
@@ -19,9 +19,9 @@ export type MaintenanceTask = {
   title: string;
   vehicleId: string;
   equipmentType: Equipment['type'];
-  frequency: 'Quarterly' | 'Biannually' | 'Annually';
+  frequency: 'Trimestral' | 'Semestral' | 'Anual';
   dueDate: Date;
-  status: 'Pending' | 'In Progress' | 'Completed';
+  status: 'Pendiente' | 'En Progreso' | 'Completado';
   technician?: string;
 };
 
@@ -31,7 +31,7 @@ export type Incident = {
   issue: string;
   reportedBy: string;
   assignedTo: string;
-  status: 'Open' | 'In Progress' | 'Resolved';
+  status: 'Abierto' | 'En Progreso' | 'Resuelto';
   reportedAt: Date;
   slaDays: number;
 };
@@ -40,7 +40,7 @@ export type InventoryItem = {
   id: string;
   name: string;
   sku: string;
-  category: 'Generic' | 'Free Stock' | 'Vendor Specific';
+  category: 'Genérico' | 'Stock Libre' | 'Específico del Proveedor';
   stock: number;
   location: string;
 };

@@ -45,14 +45,14 @@ import {
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: Bus },
-  { href: '/vehicles', label: 'Vehicles', icon: Truck },
-  { href: '/equipment', label: 'Equipment', icon: HardDrive },
-  { href: '/tasks', label: 'Tasks', icon: ClipboardList },
+  { href: '/', label: 'Panel de control', icon: Bus },
+  { href: '/vehicles', label: 'Vehículos', icon: Truck },
+  { href: '/equipment', label: 'Equipamiento', icon: HardDrive },
+  { href: '/tasks', label: 'Tareas', icon: ClipboardList },
   { href: '/checklists', label: 'Checklists', icon: CheckSquare },
-  { href: '/summarize', label: 'AI Summary', icon: Sparkles },
-  { href: '/incidents', label: 'Incidents', icon: Siren },
-  { href: '/inventory', label: 'Inventory', icon: Boxes },
+  { href: '/summarize', label: 'Resumen IA', icon: Sparkles },
+  { href: '/incidents', label: 'Incidencias', icon: Siren },
+  { href: '/inventory', label: 'Inventario', icon: Boxes },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -95,16 +95,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                            {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} />}
                            <AvatarFallback>U</AvatarFallback>
                          </Avatar>
-                         <span className="truncate">Maintenance Supervisor</span>
+                         <span className="truncate">Supervisor de Mantenimiento</span>
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent className="w-56 mb-2" side="top" align="start">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><User className="mr-2 h-4 w-4" /><span>Profile</span></DropdownMenuItem>
-                    <DropdownMenuItem><Settings className="mr-2 h-4 w-4" /><span>Settings</span></DropdownMenuItem>
+                    <DropdownMenuItem><User className="mr-2 h-4 w-4" /><span>Perfil</span></DropdownMenuItem>
+                    <DropdownMenuItem><Settings className="mr-2 h-4 w-4" /><span>Configuración</span></DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><LogOut className="mr-2 h-4 w-4" /><span>Log out</span></DropdownMenuItem>
+                    <DropdownMenuItem><LogOut className="mr-2 h-4 w-4" /><span>Cerrar sesión</span></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarFooter>
@@ -114,7 +114,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <SidebarTrigger className="md:hidden" />
           <div className="flex-1">
             <h2 className="text-2xl font-bold tracking-tight font-headline">
-              {navItems.find(item => item.href === pathname)?.label ?? 'Dashboard'}
+              {navItems.find(item => item.href === pathname)?.label ?? 'Panel de control'}
             </h2>
           </div>
           <DropdownMenu>
@@ -124,16 +124,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                            {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} />}
                            <AvatarFallback>U</AvatarFallback>
                          </Avatar>
-                         <span className="sr-only">Toggle user menu</span>
+                         <span className="sr-only">Menú de usuario</span>
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    <DropdownMenuItem>Perfil</DropdownMenuItem>
+                    <DropdownMenuItem>Configuración</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

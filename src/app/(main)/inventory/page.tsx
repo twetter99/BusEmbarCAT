@@ -19,35 +19,35 @@ import { mockInventory } from '@/lib/data';
 import { PlusCircle } from 'lucide-react';
 
 export default function InventoryPage() {
-    const genericItems = mockInventory.filter(i => i.category === 'Generic');
-    const freeStockItems = mockInventory.filter(i => i.category === 'Free Stock');
-    const vendorSpecificItems = mockInventory.filter(i => i.category === 'Vendor Specific');
+    const genericItems = mockInventory.filter(i => i.category === 'Genérico');
+    const freeStockItems = mockInventory.filter(i => i.category === 'Stock Libre');
+    const vendorSpecificItems = mockInventory.filter(i => i.category === 'Específico del Proveedor');
     
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <Tabs defaultValue="all">
              <div className="flex items-center justify-between">
                 <TabsList>
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="generic">Generic</TabsTrigger>
-                    <TabsTrigger value="free">Free Stock</TabsTrigger>
-                    <TabsTrigger value="vendor">Vendor Specific</TabsTrigger>
+                    <TabsTrigger value="all">Todos</TabsTrigger>
+                    <TabsTrigger value="generic">Genérico</TabsTrigger>
+                    <TabsTrigger value="free">Stock Libre</TabsTrigger>
+                    <TabsTrigger value="vendor">Específico del Proveedor</TabsTrigger>
                 </TabsList>
                 <div className="flex gap-2">
                      <Button size="sm" variant="outline">
-                        Log Movement
+                        Registrar Movimiento
                     </Button>
                     <Button size="sm">
                         <PlusCircle className="h-4 w-4 mr-2" />
-                        Add Item
+                        Añadir Artículo
                     </Button>
                 </div>
             </div>
             <Card className="mt-4">
                  <CardHeader>
-                    <CardTitle>Inventory Stock</CardTitle>
+                    <CardTitle>Stock de Inventario</CardTitle>
                     <CardDescription>
-                    Manage stock levels for all materials.
+                    Gestionar los niveles de stock de todos los materiales.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -74,11 +74,11 @@ const InventoryTable = ({ items }: { items: typeof mockInventory }) => (
     <Table>
         <TableHeader>
             <TableRow>
-                <TableHead>Item Name</TableHead>
+                <TableHead>Nombre del Artículo</TableHead>
                 <TableHead>SKU</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead className="text-right">Stock Level</TableHead>
+                <TableHead>Categoría</TableHead>
+                <TableHead>Ubicación</TableHead>
+                <TableHead className="text-right">Nivel de Stock</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>

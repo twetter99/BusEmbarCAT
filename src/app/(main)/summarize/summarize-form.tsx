@@ -12,20 +12,20 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const defaultLogs = `
-- Vehicle BC-456-Y: GPS module reset twice this week. Operator reported intermittent signal loss.
-- Vehicle BC-123-X: Replaced worn brake pads. Fluid levels topped up.
-- Vehicle BC-789-Z: Validator firmware updated to v2.3.1. One instance of a card read failure during testing, but could not replicate.
-- All vehicles: standard fluid and tire pressure checks completed.
+- Vehículo BC-456-Y: Módulo GPS reiniciado dos veces esta semana. El operador informó de una pérdida intermitente de la señal.
+- Vehículo BC-123-X: Pastillas de freno desgastadas reemplazadas. Niveles de líquido rellenados.
+- Vehículo BC-789-Z: Firmware del validador actualizado a v2.3.1. Un caso de fallo de lectura de tarjeta durante las pruebas, pero no se pudo replicar.
+- Todos los vehículos: revisiones estándar de líquidos y presión de neumáticos completadas.
 `.trim();
 
 const defaultChecklist = `
-- Inspect physical condition
-- Clean card reader
-- Verify firmware version
-- Run diagnostic test
-- Test with multiple card types
-- Check connections
-- Confirm transaction logging
+- Inspeccionar la condición física
+- Limpiar el lector de tarjetas
+- Verificar la versión del firmware
+- Ejecutar prueba de diagnóstico
+- Probar con múltiples tipos de tarjetas
+- Comprobar las conexiones
+- Confirmar el registro de transacciones
 `.trim();
 
 type FormData = {
@@ -57,8 +57,8 @@ export function SummarizeForm() {
       console.error(error);
       toast({
         variant: 'destructive',
-        title: 'Error Generating Summary',
-        description: 'An error occurred while processing the logs. Please try again.',
+        title: 'Error al Generar el Resumen',
+        description: 'Ocurrió un error al procesar los registros. Por favor, inténtalo de nuevo.',
       });
     } finally {
       setIsLoading(false);
@@ -69,33 +69,33 @@ export function SummarizeForm() {
     <div className="grid gap-8 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Maintenance Log Summarization</CardTitle>
+          <CardTitle>Resumen de Registros de Mantenimiento</CardTitle>
           <CardDescription>
-            Enter maintenance logs and an optional checklist to generate an AI-powered summary and identify potential failure points.
+            Introduce los registros de mantenimiento y una lista de verificación opcional para generar un resumen con IA e identificar posibles puntos de fallo.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="maintenanceLogs">Maintenance Logs</Label>
+              <Label htmlFor="maintenanceLogs">Registros de Mantenimiento</Label>
               <Textarea
                 id="maintenanceLogs"
                 rows={10}
-                placeholder="Paste maintenance logs here..."
+                placeholder="Pega aquí los registros de mantenimiento..."
                 {...register('maintenanceLogs')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="checklist">Maintenance Checklist (Optional)</Label>
+              <Label htmlFor="checklist">Checklist de Mantenimiento (Opcional)</Label>
               <Textarea
                 id="checklist"
                 rows={6}
-                placeholder="Provide checklist items for context..."
+                placeholder="Proporcione elementos de la lista de verificación para el contexto..."
                 {...register('checklist')}
               />
             </div>
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Generating...' : 'Generate Summary'}
+              {isLoading ? 'Generando...' : 'Generar Resumen'}
               {!isLoading && <Sparkles className="ml-2 h-4 w-4" />}
             </Button>
           </form>
@@ -109,8 +109,8 @@ export function SummarizeForm() {
                 <Bot className="w-6 h-6 text-primary" />
             </div>
             <div>
-                <CardTitle>AI Summary</CardTitle>
-                <CardDescription>A concise overview of the provided logs.</CardDescription>
+                <CardTitle>Resumen de IA</CardTitle>
+                <CardDescription>Un resumen conciso de los registros proporcionados.</CardDescription>
             </div>
           </CardHeader>
           <CardContent>
@@ -122,7 +122,7 @@ export function SummarizeForm() {
               </div>
             )}
             {summary && <p className="text-sm">{summary}</p>}
-            {!isLoading && !summary && <p className="text-sm text-muted-foreground">Summary will appear here after generation.</p>}
+            {!isLoading && !summary && <p className="text-sm text-muted-foreground">El resumen aparecerá aquí después de la generación.</p>}
           </CardContent>
         </Card>
 
@@ -132,8 +132,8 @@ export function SummarizeForm() {
                 <AlertTriangle className="w-6 h-6 text-destructive" />
             </div>
             <div>
-                <CardTitle>Potential Failure Points</CardTitle>
-                <CardDescription>AI-suggested areas to monitor.</CardDescription>
+                <CardTitle>Puntos de Fallo Potenciales</CardTitle>
+                <CardDescription>Áreas sugeridas por la IA para monitorear.</CardDescription>
             </div>
           </CardHeader>
           <CardContent>
@@ -144,7 +144,7 @@ export function SummarizeForm() {
               </div>
             )}
             {failurePoints && <p className="text-sm">{failurePoints}</p>}
-            {!isLoading && !failurePoints && <p className="text-sm text-muted-foreground">Potential failures will be identified here.</p>}
+            {!isLoading && !failurePoints && <p className="text-sm text-muted-foreground">Los fallos potenciales se identificarán aquí.</p>}
           </CardContent>
         </Card>
       </div>
