@@ -45,7 +45,16 @@ const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & {
 
 
 export const mockVehicles: Vehicle[] = rawVehicles.map(v => {
-  const operatorId = operatorMap.get(v.operator) || 'op-unknown';
+  const operatorId = operatorMap.get(v.operator);
+  if (!operatorId) {
+    console.warn(`Operador no encontrado para el vehículo con calca ${v.codBus}: ${v.operator}`);
+    return {
+      ...v,
+      uniqueId: generateUniqueId(v.codBus, v.operator),
+      operatorId: 'op-unknown',
+      operatorName: v.operator,
+    };
+  }
   return {
     ...v,
     uniqueId: generateUniqueId(v.codBus, v.operator),
@@ -113,52 +122,66 @@ const generateEquipment = (): Equipment[] => {
 
 export const mockEquipment: Equipment[] = generateEquipment();
 
+const getVehicleIdByUniqueId = (uniqueId: string) => {
+    return mockVehicles.find(v => v.uniqueId === uniqueId)?.id || 'ID no encontrado';
+}
+
+const findVehicleByOperatorAndIndex = (operatorId: string, index: number) => {
+    const vehiclesOfOperator = mockVehicles.filter(v => v.operatorId === operatorId);
+    return vehiclesOfOperator[index % vehiclesOfOperator.length];
+};
+
 export const mockTasks: MaintenanceTask[] = [
-    // Trimestrales
-    { id: 'MT-001', type: 'Preventivo', title: 'Revisión placa conexiones', vehicleId: '6916-HCR', equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 14 }), status: 'Pendiente', technician: 'Jordi' },
-    { id: 'MT-002', type: 'Preventivo', title: 'Revisión placa conexiones', vehicleId: '7001-HCR', equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'Pendiente', technician: 'Oriol' },
+    // Vencido
+    { id: 'MT-001', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 14 }), status: 'Pendiente', technician: 'Jordi' },
+    // Urgente
+    { id: 'MT-002', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'Pendiente', technician: 'Oriol' },
+    // Vencido
+    { id: 'MT-010', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-11',0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(new Date(), { days: 2 }), status: 'Pendiente' },
     
-    // Anuales
-    { id: 'MT-003', type: 'Preventivo', title: 'Limpieza pupitre y bornes', vehicleId: '4602-JKD', equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(new Date(), { days: 15 }), status: 'Pendiente', technician: 'Marc' },
-    { id: 'MT-004', type: 'Preventivo', title: 'Revisión soporte y barras', vehicleId: '4192-KFL', equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(new Date(), { days: 35 }), status: 'Pendiente' },
-    { id: 'MT-005', type: 'Preventivo', title: 'Limpieza general validadora', vehicleId: '5400-LFN', equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(new Date(), { days: 1 }), status: 'Pendiente', technician: 'Pau' },
-    { id: 'MT-011', type: 'Preventivo', title: 'Limpieza pupitre y bornes', vehicleId: '5993-LMS', equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(new Date(), { days: 90 }), status: 'Completado', technician: 'Pau' },
+    // Próximo
+    { id: 'MT-003', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03',0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(new Date(), { days: 7 }), status: 'Pendiente', technician: 'Marc' },
+    // Normal
+    { id: 'MT-004', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04',0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(new Date(), { days: 35 }), status: 'Pendiente' },
+    // Urgente
+    { id: 'MT-005', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-05',0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(new Date(), { days: 1 }), status: 'Pendiente', technician: 'Pau' },
+    // Normal
+    { id: 'MT-006', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-07',0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(new Date(), { days: 120 }), status: 'Pendiente' },
+    // Normal
+    { id: 'MT-007', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-08',0).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: add(new Date(), { days: 180 }), status: 'Pendiente', technician: 'Arnau' },
+    // Normal
+    { id: 'MT-009', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-10',0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(new Date(), { days: 90 }), status: 'Pendiente', technician: 'David' },
 
-    // Bianuales
-    { id: 'MT-006', type: 'Preventivo', title: 'Cambio baterías CPU', vehicleId: '3806-MBW', equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(new Date(), { days: 120 }), status: 'Pendiente' },
-    { id: 'MT-007', type: 'Preventivo', title: 'Revisión brida y antena', vehicleId: '3235-MCR', equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: add(new Date(), { days: 180 }), status: 'Pendiente', technician: 'Arnau' },
-    { id: 'MT-012', type: 'Preventivo', title: 'Cambio baterías CPU', vehicleId: '1399-MCY', equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(new Date(), { days: 30 }), status: 'En Progreso', technician: 'Arnau' },
-
-    // Tareas adicionales para tener más datos
-    { id: 'MT-008', type: 'Preventivo', title: 'Revisión placa conexiones', vehicleId: '1399-MCY', equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Xavier' },
-    { id: 'MT-009', type: 'Preventivo', title: 'Limpieza general validadora', vehicleId: '7907-MNZ', equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(new Date(), { days: 90 }), status: 'Pendiente', technician: 'David' },
-    { id: 'MT-010', type: 'Preventivo', title: 'Revisión soporte y barras', vehicleId: '0816-NDV', equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(new Date(), { days: 2 }), status: 'Pendiente' },
+    // En Progreso
+    { id: 'MT-012', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-09',0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(new Date(), { days: 30 }), status: 'En Progreso', technician: 'Arnau' },
+    
+    // Completado
+    { id: 'MT-011', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-06',0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(new Date(), { days: 90 }), status: 'Completado', technician: 'Pau' },
+    { id: 'MT-008', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-09',0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Xavier' },
 ];
 
 
 const now = new Date();
 export const mockIncidents: Incident[] = [
     // VENCIDAS (Rojas) - Abiertas
-    { id: 'AV-001', vehicleId: '6916-HCR', issue: 'Pantalla pupitre completamente negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Abierto', reportedAt: sub(now, { days: 5 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
-    { id: 'AV-002', vehicleId: '7001-HCR', issue: 'Sistema no arranca tras reinicio', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Abierto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
-    { id: 'AV-003', vehicleId: '4602-JKD', issue: 'Validadora INDRA sin respuesta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Abierto', reportedAt: sub(now, { days: 6 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
+    { id: 'AV-001', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, issue: 'Pantalla pupitre completamente negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Abierto', reportedAt: sub(now, { days: 5 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
+    { id: 'AV-002', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, issue: 'Sistema no arranca tras reinicio', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Abierto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
+    { id: 'AV-003', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, issue: 'Validadora INDRA sin respuesta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Abierto', reportedAt: sub(now, { days: 6 }), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
     
     // URGENTES (Naranjas) - Abiertas
-    { id: 'AV-004', vehicleId: '7907-MNZ', issue: 'Impresora tickets atascada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 20 }), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
-    { id: 'AV-005', vehicleId: '3806-MBW', issue: 'Cable de antena suelto', reportedBy: 'Técnico', assignedTo: 'Xavier', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 18 }), slaDays: 3, priority: 'Media', equipmentType: 'Antena' },
+    { id: 'AV-004', vehicleId: findVehicleByOperatorAndIndex('op-10', 0).id, issue: 'Impresora tickets atascada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 20 }), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    { id: 'AV-005', vehicleId: findVehicleByOperatorAndIndex('op-07', 0).id, issue: 'Cable de antena suelto', reportedBy: 'Técnico', assignedTo: 'Xavier', status: 'Abierto', reportedAt: sub(now, { days: 2, hours: 18 }), slaDays: 3, priority: 'Media', equipmentType: 'Antena' },
 
     // PRÓXIMAS (Amarillas) - Abiertas
-    { id: 'AV-006', vehicleId: '3235-MCR', issue: 'Lectura lenta de tarjetas', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Abierto', reportedAt: sub(now, { days: 1 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
-    
-    // NORMALES (Sin color especial) - Abiertas
-    { id: 'AV-008', vehicleId: '4192-KFL', issue: 'Error E041 en validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Abierto', reportedAt: sub(now, { hours: 12 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+    { id: 'AV-006', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, issue: 'Lectura lenta de tarjetas', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Abierto', reportedAt: sub(now, { days: 1 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
+    { id: 'AV-008', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, issue: 'Error E041 en validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Abierto', reportedAt: sub(now, { hours: 12 }), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
 
     // EN PROGRESO
-    { id: 'AV-007', vehicleId: '5400-LFN', issue: 'Luz LED intermitente', reportedBy: 'Técnico', assignedTo: 'Josep', status: 'En Progreso', reportedAt: sub(now, { days: 2 }), slaDays: 3, priority: 'Baja', equipmentType: 'Material auxiliar' },
-    { id: 'AV-009', vehicleId: '1399-MCY', issue: 'Sonido de validación bajo', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progreso', reportedAt: sub(now, { hours: 4 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
+    { id: 'AV-007', vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, issue: 'Luz LED intermitente', reportedBy: 'Técnico', assignedTo: 'Josep', status: 'En Progreso', reportedAt: sub(now, { days: 2 }), slaDays: 3, priority: 'Baja', equipmentType: 'Material auxiliar' },
+    { id: 'AV-009', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, issue: 'Sonido de validación bajo', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progreso', reportedAt: sub(now, { hours: 4 }), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
     
     // RESUELTAS
-    { id: 'AV-010', vehicleId: '0816-NDV', issue: 'Pantalla con píxeles muertos', reportedBy: 'Técnico', assignedTo: 'Bernat', status: 'Resuelto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Baja', equipmentType: 'Terminal de consulta INDRA' },
+    { id: 'AV-010', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, issue: 'Pantalla con píxeles muertos', reportedBy: 'Técnico', assignedTo: 'Bernat', status: 'Resuelto', reportedAt: sub(now, { days: 4 }), slaDays: 3, priority: 'Baja', equipmentType: 'Terminal de consulta INDRA' },
 ];
 
 
