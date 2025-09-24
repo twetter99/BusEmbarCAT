@@ -31,7 +31,8 @@ export type EquipmentType =
   | 'Validadora INDRA'
   | 'Validadora Inetum'
   | 'Terminal de consulta INDRA'
-  | 'Material auxiliar';
+  | 'Material auxiliar'
+  | 'Todos';
 
 export const equipmentTypeCategories: Record<string, EquipmentType[] | string> = {
     'Pupitre': ['Pupitre'],
@@ -79,7 +80,7 @@ export type MaintenanceTask = {
   title: string;
   vehicleId: string;
   equipmentType: Equipment['type'];
-  frequency: 'Trimestral' | 'Semestral' | 'Anual';
+  frequency: 'Trimestral' | 'Semestral' | 'Anual' | 'Bimensual';
   dueDate: Date;
   status: 'Pendiente' | 'En Progreso' | 'Completado';
   technician?: string;

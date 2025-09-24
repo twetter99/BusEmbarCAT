@@ -56,17 +56,17 @@ export const mockVehicles: Vehicle[] = rawVehicles.map(v => {
 
 export const mockEquipment: Equipment[] = [
   // Vehículo 1: VEH-ALSINAGR-300
-  { id: 'EQ-PUP-001', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: operatorNameMap.get('op-01')! },
-  { id: 'EQ-IND-001', type: 'Validadora INDRA', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-IND-001', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-PUP-001', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-PUP-001', operator: operatorNameMap.get('op-01')! },
+  { id: 'EQ-IND-001', type: 'Validadora INDRA', subType: undefined, assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-IND-001', operator: operatorNameMap.get('op-01')! },
   { id: 'EQ-MMC-001', type: 'Material auxiliar', subType: 'MMC', assignedVehicleUniqueId: 'VEH-ALSINAGR-300', status: 'Operativo', serialNumber: 'SN-MMC-001', operator: operatorNameMap.get('op-01')! },
   
   // Vehículo 2: VEH-AUTOCARE-302
-  { id: 'EQ-INE-001', type: 'Validadora Inetum', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: operatorNameMap.get('op-02')! },
+  { id: 'EQ-INE-001', type: 'Validadora Inetum', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-INE-001', operator: operatorNameMap.get('op-02')! },
   { id: 'EQ-CAB-001', type: 'Material auxiliar', subType: 'Cable de conexión', assignedVehicleUniqueId: 'VEH-AUTOCARE-302', status: 'Operativo', serialNumber: 'SN-CAB-001', operator: operatorNameMap.get('op-02')! },
 
   // Vehículo 3: VEH-AUTOCARS-326 (En Mantenimiento)
-  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-CON-001', operator: operatorNameMap.get('op-03')! },
-  { id: 'EQ-PUP-002', type: 'Pupitre', assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-PUP-002', operator: operatorNameMap.get('op-03')! },
+  { id: 'EQ-CON-001', type: 'Terminal de consulta INDRA', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-CON-001', operator: operatorNameMap.get('op-03')! },
+  { id: 'EQ-PUP-002', type: 'Pupitre', subType: undefined, assignedVehicleUniqueId: 'VEH-AUTOCARS-326', status: 'Requiere Reparación', serialNumber: 'SN-PUP-002', operator: operatorNameMap.get('op-03')! },
   
   // Vehículo 4: VEH-AUTOCARS-338
   { id: 'EQ-KIT-001', type: 'Material auxiliar', subType: 'Kit de conexión HARTING', assignedVehicleUniqueId: 'VEH-AUTOCARS-338', status: 'Operativo', serialNumber: 'SN-KIT-001', operator: operatorNameMap.get('op-04')! },
@@ -78,18 +78,22 @@ export const mockEquipment: Equipment[] = [
   { id: 'EQ-FUS-001', type: 'Material auxiliar', subType: 'Fusible', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-FUS-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
   { id: 'EQ-PER-001', type: 'Material auxiliar', subType: 'Perno', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-PER-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
   { id: 'EQ-BRI-001', type: 'Material auxiliar', subType: 'Brida', assignedVehicleUniqueId: null, status: 'En Stock', serialNumber: 'SN-BRI-001', location: 'Almacén Principal', operator: operatorNameMap.get('op-01')! },
-
-  // Equipo en reparación
-  { id: 'EQ-IND-002', type: 'Validadora INDRA', assignedVehicleUniqueId: null, status: 'Requiere Reparación', serialNumber: 'SN-IND-002', location: 'Taller Reparaciones Norte', operator: operatorNameMap.get('op-03')! },
+  { id: 'EQ-IND-002', type: 'Validadora INDRA', subType: undefined, assignedVehicleUniqueId: null, status: 'Requiere Reparación', serialNumber: 'SN-IND-002', location: 'Taller Reparaciones Norte', operator: operatorNameMap.get('op-03')! },
 ];
 
 export const mockTasks: MaintenanceTask[] = [
-  { id: 'MT-001', title: 'Revisión trimestral Pupitre', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Trimestral', dueDate: add(new Date(), { days: 10 }), status: 'Pendiente', technician: 'Alice' },
-  { id: 'MT-002', title: 'Mantenimiento semestral Validadora', vehicleId: '7001-HCR', equipmentType: 'Validadora Inetum', frequency: 'Semestral', dueDate: add(new Date(), { days: 25 }), status: 'Pendiente' },
-  { id: 'MT-003', title: 'Revisión anual MMC', vehicleId: '4602-JKD', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Bob' },
-  { id: 'MT-004', title: 'Chequeo de Antena', vehicleId: '4192-KFL', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'En Progreso', technician: 'Alice' },
-  { id: 'MT-005', title: 'Revisión de Kit de conexión', vehicleId: '5400-LFN', equipmentType: 'Material auxiliar', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
+  { id: 'MT-001', title: 'Limpieza y comprobación de pupitre', vehicleId: '6916-HCR', equipmentType: 'Pupitre', frequency: 'Trimestral', dueDate: add(new Date(), { days: 10 }), status: 'Pendiente', technician: 'Alice' },
+  { id: 'MT-002', title: 'Revisión semestral de anclajes', vehicleId: '7001-HCR', equipmentType: 'Validadora Inetum', frequency: 'Semestral', dueDate: add(new Date(), { days: 25 }), status: 'Pendiente' },
+  { id: 'MT-003', title: 'Revisión anual de cableado', vehicleId: '4602-JKD', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 5 }), status: 'Completado', technician: 'Bob' },
+  { id: 'MT-004', title: 'Limpieza de validadoras', vehicleId: '4192-KFL', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 2 }), status: 'En Progreso', technician: 'Alice' },
+  { id: 'MT-005', title: 'Revisión de conexiones de antena', vehicleId: '5400-LFN', equipmentType: 'Material auxiliar', frequency: 'Semestral', dueDate: add(new Date(), { days: 45 }), status: 'Pendiente' },
+  { id: 'MT-006', title: 'Sustitución de pilas CR-2032', vehicleId: '3806-MBW', equipmentType: 'Pupitre', frequency: 'Bimensual', dueDate: add(new Date(), { days: -2 }), status: 'Pendiente' },
+  { id: 'MT-007', title: 'Comprobación de bornes y brida', vehicleId: '3235-MCR', equipmentType: 'Material auxiliar', frequency: 'Trimestral', dueDate: add(new Date(), { days: 5 }), status: 'Pendiente', technician: 'Charlie' },
+  { id: 'MT-008', title: 'Inspección de fusibles', vehicleId: '1399-MCY', equipmentType: 'Material auxiliar', frequency: 'Anual', dueDate: sub(new Date(), { days: 20 }), status: 'Completado', technician: 'Bob' },
+  { id: 'MT-009', title: 'Revisión de base de pupitre', vehicleId: '7907-MNZ', equipmentType: 'Pupitre', frequency: 'Semestral', dueDate: add(new Date(), { days: 60 }), status: 'Pendiente' },
+  { id: 'MT-010', title: 'Identificación completa de equipos', vehicleId: '0816-NDV', equipmentType: 'Todos', frequency: 'Bimensual', dueDate: add(new Date(), { days: -15 }), status: 'En Progreso', technician: 'David' },
 ];
+
 
 export const mockIncidents: Incident[] = [
     { id: 'INC-001', vehicleId: '6916-HCR', issue: 'El pupitre no enciende la pantalla.', reportedBy: 'John Doe', assignedTo: 'Alice', status: 'Abierto', reportedAt: new Date('2024-07-28'), slaDays: 2 },
