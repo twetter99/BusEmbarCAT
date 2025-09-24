@@ -1,3 +1,4 @@
+
 import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
@@ -50,9 +51,8 @@ const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & {
   { codBus: '445', id: '4444-HCR', vin: 'WEB62809013122444', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/06/22', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
   { codBus: '412', id: '5555-LMS', vin: 'SUU241163MB023555', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/06/22', operator: "AUTOCARS VENDRELL, SL", status: 'Fuera de Servicio' },
   { codBus: '334', id: '6666-MCY', vin: 'WEB62852510616666', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/23', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
-  { codBus: '301', id: '7777-HCR', vin: 'WEB62809013122777', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/06/22', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-  { codBus: '303', id: '8888-HCR', vin: 'WEB62808313122888', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/06/22', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-  { codBus: '351', id: '9999-MCR', vin: 'WEB62805610616999', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/23', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
+  { codBus: '304', id: '8889-HCR', vin: 'WEB62808313122889', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/06/22', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
+  { codBus: '352', id: '9990-MCR', vin: 'WEB62805610616990', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/23', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
   { codBus: '288', id: '1112-KFL', vin: 'NLRTMLA20HA001112', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/06/22', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
   { codBus: '369', id: '0817-NDV', vin: 'WEB2852511L621421', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/24', operator: "TUS, SCCL", status: 'Activo' },
   { codBus: '204', id: '2223-JKD', vin: 'WEB62852313704223', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/06/22', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Activo' },
@@ -60,9 +60,6 @@ const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & {
   { codBus: '446', id: '4445-HCR', vin: 'WEB62809013122445', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/06/22', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
   { codBus: '413', id: '5556-LMS', vin: 'SUU241163MB023556', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/06/22', operator: "AUTOCARS VENDRELL, SL", status: 'Fuera de Servicio' },
   { codBus: '335', id: '6667-MCY', vin: 'WEB62852510616667', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/23', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
-  { codBus: '302', id: '7778-HCR', vin: 'WEB62809013122778', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/06/22', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-  { codBus: '304', id: '8889-HCR', vin: 'WEB62808313122889', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/06/22', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-  { codBus: '352', id: '9990-MCR', vin: 'WEB62805610616990', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/23', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
   { codBus: '289', id: '1113-KFL', vin: 'NLRTMLA20HA001113', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/06/22', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
   { codBus: '370', id: '0818-NDV', vin: 'WEB2852511L621422', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/24', operator: "TUS, SCCL", status: 'Activo' },
   { codBus: '205', id: '2224-JKD', vin: 'WEB62852313704224', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/06/22', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Activo' },
@@ -246,3 +243,5 @@ export const mockChecklist: Checklist = {
     { id: 'item-7', text: 'Confirmar que las transacciones se registran correctamente', completed: false },
   ],
 };
+
+    
