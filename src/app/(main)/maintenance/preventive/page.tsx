@@ -18,7 +18,7 @@ import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { FilterControls } from './filter-controls';
+import { FilterControls } from '@/components/layout/filter-controls';
 import { cn } from '@/lib/utils';
 
 
@@ -153,7 +153,7 @@ export default function PreventivePage() {
     const [filters, setFilters] = React.useState({
       operator: 'all',
       technician: 'all',
-      frequency: 'all',
+      category: 'all',
     });
 
     const technicians = React.useMemo(() => {
@@ -177,6 +177,11 @@ export default function PreventivePage() {
         'Normal': 4,
     };
 
+    const getPendingTabTitle = () => {
+        const pending = allTasksByStatus['Pendiente'];
+        return `Pendiente (${pending.length})`;
+    }
+
     const filteredTasks = React.useMemo(() => {
         const tasks = mockTasks.filter(task => {
             const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
@@ -186,7 +191,7 @@ export default function PreventivePage() {
                 || (filters.technician === 'unassigned' && !task.technician)
                 || task.technician === filters.technician;
                 
-            const frequencyMatch = filters.frequency === 'all' || task.frequency === filters.frequency;
+            const frequencyMatch = filters.category === 'all' || task.frequency === filters.category;
             
             const statusMatch = task.status === activeTab;
 
@@ -220,7 +225,7 @@ export default function PreventivePage() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex items-center justify-between mb-4">
                  <TabsList className="grid w-full max-w-2xl grid-cols-3">
-                    <TabsTrigger value="Pendiente">Pendiente ({allTasksByStatus['Pendiente'].length})</TabsTrigger>
+                    <TabsTrigger value="Pendiente">{getPendingTabTitle()}</TabsTrigger>
                     <TabsTrigger value="En Progreso">En Progreso ({allTasksByStatus['En Progreso'].length})</TabsTrigger>
                     <TabsTrigger value="Completado">Completado ({allTasksByStatus['Completado'].length})</TabsTrigger>
                 </TabsList>
@@ -230,7 +235,8 @@ export default function PreventivePage() {
                 filters={filters}
                 onFilterChange={setFilters}
                 technicians={technicians}
-                frequencies={frequencies}
+                categories={frequencies}
+                categoryLabel="Frecuencia"
                 operators={mockOperators}
             />
 

@@ -11,11 +11,12 @@ interface FilterControlsProps {
   filters: {
     operator: string;
     technician: string;
-    frequency: string;
+    category: string;
   };
   onFilterChange: (filters: FilterControlsProps['filters']) => void;
   technicians: string[];
-  frequencies: string[];
+  categories: string[];
+  categoryLabel: string;
   operators: Operator[];
 }
 
@@ -23,7 +24,8 @@ export function FilterControls({
   filters,
   onFilterChange,
   technicians,
-  frequencies,
+  categories,
+  categoryLabel,
   operators,
 }: FilterControlsProps) {
 
@@ -35,7 +37,7 @@ export function FilterControls({
     onFilterChange({
         operator: 'all',
         technician: 'all',
-        frequency: 'all',
+        category: 'all',
     });
   }
 
@@ -85,19 +87,19 @@ export function FilterControls({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="frequency-filter">Frecuencia</Label>
+            <Label htmlFor="category-filter">{categoryLabel}</Label>
             <Select
-              value={filters.frequency}
-              onValueChange={(value) => handleFilterChange('frequency', value)}
+              value={filters.category}
+              onValueChange={(value) => handleFilterChange('category', value)}
             >
-              <SelectTrigger id="frequency-filter">
-                <SelectValue placeholder="Filtrar por frecuencia" />
+              <SelectTrigger id="category-filter">
+                <SelectValue placeholder={`Filtrar por ${categoryLabel.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                 <SelectItem value="all">Todas las frecuencias</SelectItem>
-                {frequencies.map((freq) => (
-                  <SelectItem key={freq} value={freq}>
-                    {freq}
+                 <SelectItem value="all">Todas</SelectItem>
+                {categories.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat}
                   </SelectItem>
                 ))}
               </SelectContent>

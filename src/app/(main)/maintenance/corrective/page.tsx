@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,12 +12,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockIncidents, mockVehicles } from '@/lib/data';
+import { mockIncidents, mockVehicles, mockOperators } from '@/lib/data';
 import type { Incident } from '@/lib/types';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { User, Calendar, Wrench, Truck } from 'lucide-react';
 import Link from 'next/link';
+import { FilterControls } from '@/components/layout/filter-controls';
 
 const statusVariant: { [key in Incident['status']]: 'destructive' | 'secondary' | 'outline' } = {
     'Abierto': 'destructive',
@@ -82,38 +84,79 @@ const IncidentCard = ({ incident }: { incident: Incident }) => {
 }
 
 export default function CorrectivePage() {
-    const openIncidents = mockIncidents.filter(i => i.status === 'Abierto');
-    const inProgressIncidents = mockIncidents.filter(i => i.status === 'En Progreso');
-    const resolvedIncidents = mockIncidents.filter(i => i.status === 'Resuelto');
+    const [activeTab, setActiveTab] = React.useState('Abierto');
+    const [filters, setFilters] = React.useState({
+      operator: 'all',
+      technician: 'all',
+      category: 'all',
+    });
+
+    const technicians = React.useMemo(() => {
+        const techSet = new Set<string>();
+        mockIncidents.forEach(task => {
+            if(task.assignedTo) techSet.add(task.assignedTo);
+        });
+        return Array.from(techSet).sort();
+    }, []);
+
+    const priorities = React.useMemo(() => {
+        const prioritySet = new Set<Incident['priority']>();
+        mockIncidents.forEach(task => prioritySet.add(task.priority));
+        return Array.from(prioritySet);
+    }, []);
     
+    const filteredIncidents = React.useMemo(() => {
+        return mockIncidents.filter(incident => {
+            const vehicle = mockVehicles.find(v => v.id === incident.vehicleId);
+            const operatorMatch = filters.operator === 'all' || vehicle?.operatorId === filters.operator;
+            
+            const technicianMatch = filters.technician === 'all' 
+                || (filters.technician === 'unassigned' && !incident.assignedTo)
+                || incident.assignedTo === filters.technician;
+                
+            const priorityMatch = filters.category === 'all' || incident.priority === filters.category;
+            
+            const statusMatch = incident.status === activeTab;
+
+            return operatorMatch && technicianMatch && priorityMatch && statusMatch;
+        });
+    }, [filters, activeTab]);
+
+    const allIncidentsByStatus = {
+        'Abierto': mockIncidents.filter(i => i.status === 'Abierto'),
+        'En Progreso': mockIncidents.filter(i => i.status === 'En Progreso'),
+        'Resuelto': mockIncidents.filter(i => i.status === 'Resuelto'),
+    }
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <Tabs defaultValue="open">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
              <div className="flex items-center justify-between mb-4">
                  <TabsList className="grid w-full max-w-md grid-cols-3">
-                    <TabsTrigger value="open">Abiertas ({openIncidents.length})</TabsTrigger>
-                    <TabsTrigger value="in-progress">En Reparación ({inProgressIncidents.length})</TabsTrigger>
-                    <TabsTrigger value="resolved">Resueltas ({resolvedIncidents.length})</TabsTrigger>
+                    <TabsTrigger value="Abierto">Abiertas ({allIncidentsByStatus['Abierto'].length})</TabsTrigger>
+                    <TabsTrigger value="En Progreso">En Reparación ({allIncidentsByStatus['En Progreso'].length})</TabsTrigger>
+                    <TabsTrigger value="Resuelto">Resueltas ({allIncidentsByStatus['Resuelto'].length})</TabsTrigger>
                 </TabsList>
             </div>
-            <TabsContent value="open">
-                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {openIncidents.map(incident => <IncidentCard key={incident.id} incident={incident} />)}
-                </div>
-                 {openIncidents.length === 0 && <p className="text-muted-foreground text-center py-8">No hay averías abiertas.</p>}
-            </TabsContent>
-            <TabsContent value="in-progress">
-                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {inProgressIncidents.map(incident => <IncidentCard key={incident.id} incident={incident} />)}
-                </div>
-                 {inProgressIncidents.length === 0 && <p className="text-muted-foreground text-center py-8">No hay averías en reparación.</p>}
-            </TabsContent>
-            <TabsContent value="resolved">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {resolvedIncidents.map(incident => <IncidentCard key={incident.id} incident={incident} />)}
-                </div>
-                 {resolvedIncidents.length === 0 && <p className="text-muted-foreground text-center py-8">No hay averías resueltas.</p>}
-            </TabsContent>
+            
+            <FilterControls
+                filters={filters}
+                onFilterChange={setFilters}
+                technicians={technicians}
+                categories={priorities}
+                categoryLabel="Prioridad"
+                operators={mockOperators}
+            />
+
+            <div className="mt-4">
+                {filteredIncidents.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {filteredIncidents.map(incident => <IncidentCard key={incident.id} incident={incident} />)}
+                    </div>
+                ) : (
+                     <p className="text-muted-foreground text-center py-8">No hay averías que coincidan con los filtros seleccionados para el estado "{activeTab}".</p>
+                )}
+            </div>
         </Tabs>
     </main>
   );
