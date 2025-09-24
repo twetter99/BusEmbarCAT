@@ -9,6 +9,7 @@ export type User = {
 };
 
 export type Vehicle = {
+  uniqueId: string; // ID único del vehículo (ej. VEH-ALSINA-300)
   id: string; // Matrícula
   model: string;
   operator: string;
@@ -24,20 +25,17 @@ export type EquipmentType =
   | 'Validadora INDRA'
   | 'Validadora Inetum'
   | 'Terminal de consulta INDRA'
-  | 'MMC'
-  | 'Placa de conexión'
-  | 'Soporte'
-  | 'Antena'
-  | 'Cambio de IP'
-  | 'Kit de conexión HARTING'
-  | 'Cable de conexión'
-  | 'Conector'
-  | 'Material diverso';
+  | 'Material auxiliar';
 
-export const equipmentTypeCategories: Record<string, EquipmentType[] | EquipmentType> = {
+export const equipmentTypeCategories: Record<string, EquipmentType[] | string> = {
     'Pupitre': 'Pupitre',
     'Terminal de validación': ['Validadora INDRA', 'Validadora Inetum'],
     'Terminal de consulta': ['Terminal de consulta INDRA'],
+    'Material auxiliar': 'Material auxiliar'
+};
+
+
+export const equipmentSubTypes = {
     'Material auxiliar': [
         'MMC',
         'Placa de conexión',
@@ -49,11 +47,12 @@ export const equipmentTypeCategories: Record<string, EquipmentType[] | Equipment
         'Conector',
         'Material diverso'
     ]
-};
+} as const;
 
 export type Equipment = {
   id: string;
   type: EquipmentType;
+  subType?: string;
   assignedVehicleId: string | null;
   status: 'Operativo' | 'Requiere Reparación' | 'En Stock';
   serialNumber: string;

@@ -45,6 +45,7 @@ export default function VehiclesPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>ID Único</TableHead>
                 <TableHead>Número de Calca</TableHead>
                 <TableHead>Matrícula</TableHead>
                 <TableHead>Número de Chasis</TableHead>
@@ -57,8 +58,9 @@ export default function VehiclesPage() {
             </TableHeader>
             <TableBody>
               {mockVehicles.map((vehicle) => (
-                <TableRow key={vehicle.id}>
-                  <TableCell className="font-medium">{vehicle.codBus}</TableCell>
+                <TableRow key={vehicle.uniqueId}>
+                  <TableCell className="font-medium">{vehicle.uniqueId}</TableCell>
+                  <TableCell>{vehicle.codBus}</TableCell>
                   <TableCell>{vehicle.id}</TableCell>
                   <TableCell>{vehicle.vin}</TableCell>
                   <TableCell>{vehicle.model}</TableCell>
