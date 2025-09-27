@@ -3,17 +3,17 @@ import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
-    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA' },
-    { id: 'op-02', name: 'AUTOCARES JULIA, SL' },
-    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA' },
-    { id: 'op-04', name: 'AUTOCARS PRAT, SA' },
-    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU' },
-    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL' },
-    { id: 'op-07', name: 'AUTOCORB, SA' },
-    { id: 'op-08', name: 'HISPANO LLACUNENSE, SL' },
-    { id: 'op-09', name: 'MONTFERRI HERMANOS, SL' },
-    { id: 'op-10', name: 'TRANSPORTES MIR' },
-    { id: 'op-11', name: 'TUS, SCCL' }
+    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', status: 'Activo' },
+    { id: 'op-02', name: 'AUTOCARES JULIA, SL', status: 'Activo' },
+    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA', status: 'Activo' },
+    { id: 'op-04', name: 'AUTOCARS PRAT, SA', status: 'Activo' },
+    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU', status: 'Inactivo' },
+    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL', status: 'Activo' },
+    { id: 'op-07', name: 'AUTOCORB, SA', status: 'Activo' },
+    { id: 'op-08', name: 'HISPANO LLACUNENSE, SL', status: 'Activo' },
+    { id: 'op-09', name: 'MONTFERRI HERMANOS, SL', status: 'Activo' },
+    { id: 'op-10', name: 'TRANSPORTES MIR', status: 'Inactivo' },
+    { id: 'op-11', name: 'TUS, SCCL', status: 'Activo' }
 ];
 
 export const mockUsers: User[] = [
@@ -163,22 +163,22 @@ const today = new Date('2026-01-15T15:00:00');
 export const mockTasks: MaintenanceTask[] = [
     // === PENDIENTE (10) ===
     // 4 Vencidos (rojos)
-    { id: 'MT-P01', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 12 }), status: 'Pendiente' },
-    { id: 'MT-P02', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 8 }), status: 'Pendiente' },
-    { id: 'MT-P03', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { days: 3 }), status: 'Pendiente' },
-    { id: 'MT-P04', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 1 }), status: 'Pendiente' },
+    { id: 'MT-P01', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-03T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P02', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: new Date('2026-01-07T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P03', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: new Date('2026-01-12T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P04', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2025-12-20T15:00:00'), status: 'Pendiente' },
     
     // 2 Urgentes (naranjas)
-    { id: 'MT-P05', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'Pendiente' },
-    { id: 'MT-P06', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 3 }), status: 'Pendiente' },
+    { id: 'MT-P05', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-01-16T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P06', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('_2026-01-18T15:00:00'), status: 'Pendiente' },
 
     // 3 Próximos (amarillos)
-    { id: 'MT-P07', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 8 }), status: 'Pendiente' },
-    { id: 'MT-P08', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: add(today, { days: 14 }), status: 'Pendiente' },
+    { id: 'MT-P07', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: new Date('2026-01-23T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P08', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: new Date('2026-01-30T15:00:00'), status: 'Pendiente' },
     
     // 1 Normal (default)
-    { id: 'MT-P09', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-06', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 25 }), status: 'Pendiente' },
-    { id: 'MT-P10', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { months: 2 }), status: 'Pendiente' },
+    { id: 'MT-P09', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-06', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-02-05T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P10', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-03-15T15:00:00'), status: 'Pendiente' },
 
 
     // === EN PROGRESO (10) ===
