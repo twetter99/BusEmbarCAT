@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import type { MaintenanceTask } from '@/lib/types';
-import { format, formatDistanceToNowStrict, differenceInDays } from 'date-fns';
+import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } from 'lucide-react';
 import Link from 'next/link';
@@ -93,15 +93,11 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
     const UrgencyIcon = urgencyIcons[urgency];
     const today = new Date('2026-01-15T15:00:00');
 
-    const formattedDistance = formatDistanceToNowStrict(task.dueDate, {
-        addSuffix: true,
-        locale: es,
-    });
-    
     const isOverdue = differenceInDays(task.dueDate, today) < 0;
-    const dateText = isOverdue 
-        ? `Vencido ${formattedDistance}`.replace('hace','hace')
-        : formattedDistance;
+    
+    const dateText = isOverdue
+      ? `Vencido ${formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })}`.replace('hace aproximadamente', 'hace')
+      : formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es });
 
 
     return (

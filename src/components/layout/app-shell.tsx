@@ -72,7 +72,7 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
                     <SidebarMenuItem key={subItem.href}>
                         <SidebarMenuSubButton asChild isActive={currentPath === subItem.href}>
                             <Link href={subItem.href}>
-                                <subItem.icon />
+                                {subItem.icon && <subItem.icon />}
                                 <span>{subItem.label}</span>
                             </Link>
                         </SidebarMenuSubButton>
@@ -125,6 +125,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         if (subItem) return subItem.label;
       }
     }
+    // Specific check for detail pages
+    if (pathname.startsWith('/vehicles/')) return 'Ficha del Vehículo';
+    if (pathname.startsWith('/maintenance/preventive/')) return 'Ficha de Mantenimiento';
+    
     return 'Panel de control';
   }
 
