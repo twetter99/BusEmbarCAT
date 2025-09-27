@@ -42,14 +42,14 @@ export const navItems: NavConfig = {
       { id: 'operators', href: '/operators', label: 'Operadores', icon: Group },
       { id: 'fleet', href: '/vehicles', label: 'Control de Flota', icon: Truck },
       { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
-      { id: 'installations', href: '/installations', label: 'Instalaciones (LOT 2)', icon: Replace },
+      { id: 'installations', href: '/installations', label: 'Instalaciones', icon: Replace },
       { 
         id: 'maintenance', 
         href: '/maintenance', 
         label: 'Mantenimientos', 
         icon: Wrench,
         subItems: [
-            { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo (LOT 1)', icon: CalendarCheck },
+            { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo', icon: CalendarCheck },
             { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo (Averías)', icon: Siren },
         ]
       },
