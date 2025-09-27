@@ -54,7 +54,7 @@ export const navItems: NavConfig = {
         ]
       },
       { id: 'inventory', href: '/inventory', label: 'Inventario y Stock', icon: Boxes },
-      { id: 'reports', href: '/summarize', label: 'Reportes y Analítica', icon: FileText },
+      { id: 'reports', href: '/reports', label: 'Reportes y Analítica', icon: FileText },
     ],
     config: [
         { id: 'users', href: '/users', label: 'Usuarios y Roles', icon: Users },
@@ -78,7 +78,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     },
     'Operador': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
             'fleet', 'reports', 'access'
         ],
         write: [
@@ -87,7 +87,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     },
     'Sermetra': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
             'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters'
         ],
         write: [],
