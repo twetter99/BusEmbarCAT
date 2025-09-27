@@ -1,3 +1,6 @@
+'use client';
+
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,10 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockEquipment, mockVehicles } from '@/lib/data';
+import { mockEquipment, mockVehicles, mockOperators } from '@/lib/data';
 import type { Equipment, EquipmentStatus } from '@/lib/types';
 import { PlusCircle, Link as LinkIcon, Package, Wrench } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth';
 
 const statusVariant: { [key in EquipmentStatus]: 'default' | 'secondary' | 'destructive' } = {
     'Operativo': 'default',
@@ -52,6 +56,17 @@ const LocationCell = ({ item }: { item: Equipment }) => {
 };
 
 export default function EquipmentPage() {
+    const { user } = useAuth();
+
+    const userEquipment = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            const operatorName = mockOperators.find(op => op.id === user.operatorId)?.name;
+            return mockEquipment.filter(e => e.operator === operatorName);
+        }
+        return mockEquipment;
+    }, [user]);
+
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
@@ -79,7 +94,7 @@ export default function EquipmentPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockEquipment.map((item) => (
+              {userEquipment.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.serialNumber}</TableCell>
                   <TableCell>

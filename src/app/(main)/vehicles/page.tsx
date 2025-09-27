@@ -1,3 +1,6 @@
+'use client';
+
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +22,7 @@ import { mockVehicles } from '@/lib/data';
 import type { Vehicle } from '@/lib/types';
 import { PlusCircle, FileText } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth';
 
 const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'destructive' } = {
     'Activo': 'default',
@@ -27,6 +31,15 @@ const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'de
 }
 
 export default function VehiclesPage() {
+    const { user } = useAuth();
+    
+    const userVehicles = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockVehicles.filter(v => v.operatorId === user.operatorId);
+        }
+        return mockVehicles;
+    }, [user]);
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
@@ -59,7 +72,7 @@ export default function VehiclesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockVehicles.map((vehicle) => (
+              {userVehicles.map((vehicle) => (
                 <TableRow key={vehicle.uniqueId}>
                   <TableCell className="font-medium">{vehicle.uniqueId}</TableCell>
                   <TableCell>{vehicle.codBus}</TableCell>

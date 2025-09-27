@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { NewInstallationForm, NewDecommissioningForm, NewTransferForm } from './forms';
+import { useAuth } from '@/hooks/use-auth';
 
 
 const statusVariant: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' | 'warning' } = {
@@ -178,13 +179,36 @@ const TransferCard = ({ item }: { item: Transfer }) => {
 
 
 export default function InstallationsPage() {
-  const newInstallationsCount = mockInstallations.length;
-  const decommissioningsCount = mockDecommissionings.length;
-  const transfersCount = mockTransfers.length;
-  const [isInstallationFormOpen, setInstallationFormOpen] = React.useState(false);
-  const [isDecommissioningFormOpen, setDecommissioningFormOpen] = React.useState(false);
-  const [isTransferFormOpen, setTransferFormOpen] = React.useState(false);
+    const { user } = useAuth();
+    const [isInstallationFormOpen, setInstallationFormOpen] = React.useState(false);
+    const [isDecommissioningFormOpen, setDecommissioningFormOpen] = React.useState(false);
+    const [isTransferFormOpen, setTransferFormOpen] = React.useState(false);
+    
+    const userInstallations = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockInstallations.filter(i => i.operatorId === user.operatorId);
+        }
+        return mockInstallations;
+    }, [user]);
 
+    const userDecommissionings = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockDecommissionings.filter(d => d.operatorId === user.operatorId);
+        }
+        return mockDecommissionings;
+    }, [user]);
+
+    const userTransfers = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockTransfers.filter(t => t.operatorId === user.operatorId);
+        }
+        return mockTransfers;
+    }, [user]);
+    
+
+  const newInstallationsCount = userInstallations.length;
+  const decommissioningsCount = userDecommissionings.length;
+  const transfersCount = userTransfers.length;
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -258,17 +282,17 @@ export default function InstallationsPage() {
         
         <TabsContent value="new-installations" className="mt-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {mockInstallations.map(item => <InstallationCard key={item.id} item={item} />)}
+            {userInstallations.map(item => <InstallationCard key={item.id} item={item} />)}
           </div>
         </TabsContent>
         <TabsContent value="decommissioning" className="mt-4">
            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {mockDecommissionings.map(item => <DecommissioningCard key={item.id} item={item} />)}
+            {userDecommissionings.map(item => <DecommissioningCard key={item.id} item={item} />)}
           </div>
         </TabsContent>
         <TabsContent value="transfers" className="mt-4">
            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {mockTransfers.map(item => <TransferCard key={item.id} item={item} />)}
+            {userTransfers.map(item => <TransferCard key={item.id} item={item} />)}
           </div>
         </TabsContent>
         <TabsContent value="history" className="mt-4">

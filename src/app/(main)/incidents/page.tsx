@@ -1,3 +1,6 @@
+'use client';
+
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,10 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockIncidents } from '@/lib/data';
+import { mockIncidents, mockVehicles } from '@/lib/data';
 import type { Incident } from '@/lib/types';
 import { add, differenceInDays } from 'date-fns';
 import { PlusCircle } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const statusVariant: { [key in Incident['status']]: 'destructive' | 'secondary' | 'outline' } = {
     'Abierto': 'destructive',
@@ -62,6 +66,16 @@ const SlaCell = ({ incident }: { incident: Incident }) => {
 }
 
 export default function IncidentsPage() {
+  const { user } = useAuth();
+  
+  const userIncidents = React.useMemo(() => {
+    if (user?.role === 'Operador') {
+        const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
+        return mockIncidents.filter(i => operatorVehicles.includes(i.vehicleId));
+    }
+    return mockIncidents;
+  }, [user]);
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <Card>
@@ -90,7 +104,7 @@ export default function IncidentsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockIncidents.map((incident) => (
+              {userIncidents.map((incident) => (
                 <TableRow key={incident.id}>
                   <TableCell className="font-medium">{incident.id}</TableCell>
                   <TableCell>{incident.vehicleId}</TableCell>
