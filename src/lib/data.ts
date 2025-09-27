@@ -293,7 +293,6 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
         mantenimientosVencidos: 1,
         incidenciasAbiertas: 3,
         incidenciasEscaladas: 0,
-        penalizacionesMes: 0,
         stockCritico: false,
     },
     {
@@ -314,7 +313,6 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
         mantenimientosVencidos: 5,
         incidenciasAbiertas: 8,
         incidenciasEscaladas: 2,
-        penalizacionesMes: 1500,
         stockCritico: true,
     },
     {
@@ -335,7 +333,6 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
         mantenimientosVencidos: 2,
         incidenciasAbiertas: 4,
         incidenciasEscaladas: 1,
-        penalizacionesMes: 250,
         stockCritico: false,
     },
     {
@@ -356,9 +353,6 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
         mantenimientosVencidos: 0,
         incidenciasAbiertas: 0,
         incidenciasEscaladas: 0,
-        penalizacionesMes: 0,
         stockCritico: false,
     }
 ];
-
-    

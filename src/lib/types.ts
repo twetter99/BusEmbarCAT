@@ -1,6 +1,5 @@
 
 
-
 export type Role = 'Administrador' | 'Operador' | 'Sermetra';
 
 export type User = {
@@ -216,8 +215,5 @@ export interface OperatorMetrics {
   mantenimientosVencidos: number;
   incidenciasAbiertas: number;
   incidenciasEscaladas: number;
-  penalizacionesMes: number;
   stockCritico: boolean;
 }
-
-    

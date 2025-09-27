@@ -27,7 +27,6 @@ import {
   Siren,
   Bell,
   MapPin,
-  CircleDollarSign
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
@@ -162,7 +161,6 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
                 <AlertItem icon={Calendar} label="Vencidos" value={operator.mantenimientosVencidos} />
                 <AlertItem icon={Siren} label="Abiertas" value={operator.incidenciasAbiertas} variant="warning"/>
                 <AlertItem icon={Bell} label="Escaladas" value={operator.incidenciasEscaladas} />
-                <AlertItem icon={CircleDollarSign} label="Penalizaciones" value={operator.penalizacionesMes > 0 ? `${operator.penalizacionesMes}€` : 0} />
             </div>
             {operator.stockCritico && <AlertItem icon={TriangleAlert} label="Stock Crítico" value="Requiere atención" variant="warning" />}
         </div>
