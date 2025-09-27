@@ -18,6 +18,8 @@ import {
   Settings,
   Calendar,
   Download,
+  Eye,
+  Sliders,
 } from 'lucide-react';
 
 const kpis = [
@@ -26,6 +28,10 @@ const kpis = [
     { label: "Mantenimientos Pendientes", value: "45" },
     { label: "Operadores Críticos", value: "3" },
     { label: "Material Stock Crítico", value: "8 artículos" },
+    { label: "Vencimientos Próximos", value: "12 esta semana" },
+    { label: "Presupuestos Pendientes", value: "5 esperando aprobación" },
+    { label: "Cumplimiento Intervalos", value: "94% preventivos al día"},
+    { label: "Bossa Disponible", value: "€45,000 restantes"},
 ];
 
 const operationalReports = [
@@ -35,6 +41,9 @@ const operationalReports = [
     "Incidencias por Operador",
     "Estado de Flota Global",
     "Consumo de Material por Operador",
+    "Control de Bossa d'Adquisició",
+    "Tiempo de Resolución vs SLA",
+    "Cumplimiento Intervalos Mantenimiento"
 ]
 
 const predictiveAnalytics = [
@@ -42,6 +51,9 @@ const predictiveAnalytics = [
     "Análisis de Patrones de Averías",
     "Optimización de Recursos",
     "Proyección de Demanda de Material",
+    "Predicción de Consumo de Material",
+    "Análisis de Eficiencia por Zona",
+    "Alertas Tempranas de Vencimientos"
 ]
 
 export default function ReportsPage() {
@@ -69,10 +81,12 @@ export default function ReportsPage() {
                 <p className="font-semibold text-green-600">Generado automáticamente</p>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-end gap-2 border-t pt-6">
-            <Button variant="outline"><Calendar className="mr-2 h-4 w-4" /> Ver Anteriores</Button>
-            <Button variant="outline"><Settings className="mr-2 h-4 w-4" /> Programar Envío</Button>
-            <Button><Download className="mr-2 h-4 w-4" /> Generar Reporte</Button>
+          <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-end gap-2 border-t pt-6 flex-wrap">
+            <Button variant="outline"><Calendar className="mr-2 h-4 w-4" /> Anteriores</Button>
+            <Button variant="outline"><Eye className="mr-2 h-4 w-4" /> Preview</Button>
+            <Button variant="outline"><Sliders className="mr-2 h-4 w-4" /> Personalizar</Button>
+            <Button variant="outline"><Settings className="mr-2 h-4 w-4" /> Programar</Button>
+            <Button><Download className="mr-2 h-4 w-4" /> Generar</Button>
           </CardFooter>
         </Card>
 
@@ -88,7 +102,7 @@ export default function ReportsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
                 {kpis.map(kpi => (
                     <div key={kpi.label}>
                         <p className="text-sm text-muted-foreground">{kpi.label}</p>
