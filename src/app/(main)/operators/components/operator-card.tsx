@@ -189,5 +189,3 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
     </Card>
   );
 };
-
-    

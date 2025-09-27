@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, ListFilter, Search } from 'lucide-react';
+import { PlusCircle, Search } from 'lucide-react';
 import { mockOperatorMetrics } from '@/lib/data';
 import { OperatorCard } from './components/operator-card';
 import type { OperatorMetrics } from '@/lib/types';
@@ -14,24 +14,19 @@ import { Input } from '@/components/ui/input';
 const OperatorFilters = ({
   filters,
   onFilterChange,
-  locations,
-  qualityLevels,
-  statuses
+  complianceStatuses
 }: {
   filters: {
     query: string;
-    status: string;
-    quality: string;
+    compliance: 'all' | 'critical' | 'at_risk' | 'normal';
   };
   onFilterChange: (key: string, value: string) => void;
-  locations: string[];
-  qualityLevels: string[];
-  statuses: string[];
+  complianceStatuses: { value: 'critical' | 'at_risk' | 'normal'; label: string }[];
 }) => {
   return (
     <Card className="mb-6">
       <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
           <div className="lg:col-span-2">
             <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
               Buscar Operador
@@ -49,36 +44,19 @@ const OperatorFilters = ({
             </div>
           </div>
           <div>
-            <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
-              Estado del Operador
+            <label htmlFor="compliance-filter" className="block text-sm font-medium text-gray-700 mb-1">
+              Estado de Cumplimiento
             </label>
             <Select
-              value={filters.status}
-              onValueChange={(value) => onFilterChange('status', value)}
+              value={filters.compliance}
+              onValueChange={(value) => onFilterChange('compliance', value)}
             >
-              <SelectTrigger id="status-filter">
-                <SelectValue placeholder="Filtrar por estado" />
+              <SelectTrigger id="compliance-filter">
+                <SelectValue placeholder="Filtrar por cumplimiento" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos los estados</SelectItem>
-                {statuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-           <div>
-            <label htmlFor="quality-filter" className="block text-sm font-medium text-gray-700 mb-1">
-              Calidad de Servicio
-            </label>
-            <Select
-              value={filters.quality}
-              onValueChange={(value) => onFilterChange('quality', value)}
-            >
-              <SelectTrigger id="quality-filter">
-                <SelectValue placeholder="Filtrar por calidad" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas las calidades</SelectItem>
-                 {qualityLevels.map(q => <SelectItem key={q} value={q}>Calidad {q}</SelectItem>)}
+                {complianceStatuses.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -92,29 +70,29 @@ const OperatorFilters = ({
 export default function OperatorsPage() {
   const [filters, setFilters] = React.useState({
     query: '',
-    status: 'all',
-    quality: 'all'
+    compliance: 'all' as 'all' | 'critical' | 'at_risk' | 'normal',
   });
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  const operatorStatuses = React.useMemo(() => [...new Set(mockOperatorMetrics.map(op => op.estado))], []);
-  const qualityLevels = React.useMemo(() => [...new Set(mockOperatorMetrics.map(op => op.calidadServicio))].sort(), []);
-  const locations = React.useMemo(() => [...new Set(mockOperatorMetrics.map(op => op.ubicacionPrincipal))].sort(), []);
+  const complianceStatuses = [
+    { value: 'critical', label: 'Crítico' },
+    { value: 'at_risk', label: 'En Riesgo' },
+    { value: 'normal', label: 'Normal' },
+  ] as const;
 
-
-  const getOverallStatus = (operator: OperatorMetrics): 'success' | 'warning' | 'destructive' => {
+  const getOverallStatus = (operator: OperatorMetrics): 'critical' | 'at_risk' | 'normal' => {
       let score = 0;
       if (operator.mantenimientosVencidos > 0) score += 3;
       if (operator.incidenciasAbiertas > 5) score += 2;
       if (operator.cumplimientoPreventivos < 90) score += 1;
       if (operator.slaCorrectivos > 3) score += 1;
 
-      if (score >= 4) return 'destructive';
-      if (score >= 2) return 'warning';
-      return 'success';
+      if (score >= 4) return 'critical';
+      if (score >= 2) return 'at_risk';
+      return 'normal';
   }
 
   const filteredOperators = React.useMemo(() => {
@@ -123,11 +101,9 @@ export default function OperatorsPage() {
     if (filters.query) {
       operators = operators.filter(op => op.nombre.toLowerCase().includes(filters.query.toLowerCase()));
     }
-    if (filters.status !== 'all') {
-      operators = operators.filter(op => op.estado === filters.status);
-    }
-     if (filters.quality !== 'all') {
-      operators = operators.filter(op => op.calidadServicio === filters.quality);
+    
+    if (filters.compliance !== 'all') {
+      operators = operators.filter(op => getOverallStatus(op) === filters.compliance);
     }
 
     return operators;
@@ -151,13 +127,10 @@ export default function OperatorsPage() {
        <OperatorFilters 
         filters={filters}
         onFilterChange={handleFilterChange}
-        locations={locations}
-        qualityLevels={qualityLevels}
-        statuses={operatorStatuses}
+        complianceStatuses={complianceStatuses}
       />
       
       <p className="text-sm text-muted-foreground">{filteredOperators.length} operadores encontrados.</p>
-
 
       {filteredOperators.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
