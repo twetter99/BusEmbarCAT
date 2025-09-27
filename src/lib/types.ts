@@ -1,4 +1,5 @@
 
+
 export type Role = 'Administrador' | 'Operador' | 'Sermetra';
 
 export type User = {
@@ -172,3 +173,21 @@ export type Transfer = {
     phase2_status: 'Pendiente' | 'Completada';
     phase2_date: string;
 };
+
+export type OperatorMetric = {
+    operatorName: string;
+    activeVehicles: number;
+    maintenanceVehicles: number;
+    slaCompliance: number;
+}
+
+export type DashboardData = {
+    kpis: {
+        slaCompliance: number;
+        criticalIncidents: number;
+        criticalStockItems: number;
+        totalVehicles: number;
+    },
+    maintenanceChartData: { month: string; planned: number; completed: number; }[];
+    operatorMetrics: OperatorMetric[];
+}

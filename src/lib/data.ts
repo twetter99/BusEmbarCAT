@@ -1,5 +1,5 @@
 
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Checklist, Operator, Installation, Decommissioning, Transfer } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -147,18 +147,14 @@ const generateEquipment = (): Equipment[] => {
 
 export const mockEquipment: Equipment[] = generateEquipment();
 
-const getVehicleIdByUniqueId = (uniqueId: string) => {
-    return mockVehicles.find(v => v.uniqueId === uniqueId)?.id || 'ID no encontrado';
-}
-
-const findVehicleByOperatorAndIndex = (operatorId: string, index: number): (Vehicle | { id: string }) => {
+const findVehicleByOperatorAndIndex = (operatorId: string, index: number): Vehicle => {
     const vehiclesOfOperator = mockVehicles.filter(v => v.operatorId === operatorId);
     if (vehiclesOfOperator.length > 0) {
         return vehiclesOfOperator[index % vehiclesOfOperator.length];
     }
     // Fallback if no vehicle for operator is found
     const fallbackVehicle = mockVehicles[index % mockVehicles.length];
-    return fallbackVehicle || { id: `UNKNOWN-VEHICLE-${index}` };
+    return fallbackVehicle;
 };
 
 const technicians = ['Jordi', 'Pau', 'Marc', 'Oriol', 'Xavier', 'Miquel', 'Josep', 'Carles', 'David', 'Bernat', 'Quim', 'Toni', 'Ramon', 'Ferran', 'Albert'];
@@ -256,4 +252,25 @@ export const mockTransfers: Transfer[] = [
 ];
     
 
-    
+export const mockDashboardData: DashboardData = {
+    kpis: {
+        slaCompliance: 98.2,
+        criticalIncidents: 3,
+        criticalStockItems: 2,
+        totalVehicles: 2500,
+    },
+    maintenanceChartData: [
+      { month: 'Ago', planned: 220, completed: 180 },
+      { month: 'Sep', planned: 210, completed: 190 },
+      { month: 'Oct', planned: 250, completed: 230 },
+      { month: 'Nov', planned: 240, completed: 240 },
+      { month: 'Dic', planned: 300, completed: 280 },
+      { month: 'Ene', planned: 150, completed: 90 },
+    ],
+    operatorMetrics: mockOperators.slice(0, 5).map(op => ({
+        operatorName: op.name,
+        activeVehicles: Math.floor(Math.random() * 50) + 100,
+        maintenanceVehicles: Math.floor(Math.random() * 10),
+        slaCompliance: Math.floor(Math.random() * 6) + 94,
+    }))
+};

@@ -1,5 +1,6 @@
 import type { Role } from './types';
 import {
+  AreaChart,
   Bus,
   Truck,
   HardDrive,
@@ -16,6 +17,9 @@ import {
   CalendarCheck,
   ShieldCheck,
   Replace,
+  Group,
+  FileText,
+  Settings,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -27,28 +31,24 @@ export type NavItem = {
 }
 
 export type NavConfig = {
-    production: NavItem[];
-    configuration: NavItem[];
+    main: NavItem[];
+    config: NavItem[];
 }
 
 export const navItems: NavConfig = {
-    production: [
-      { id: 'dashboard', href: '/', label: 'Panel de control', icon: Bus },
-      { id: 'vehicles', href: '/vehicles', label: 'Vehículos', icon: Truck },
-      { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
-      { id: 'installations', href: '/installations', label: 'Instalaciones y Traspasos', icon: Replace },
-      { id: 'maintenance', href: '#', label: 'Mantenimiento y averías', icon: Wrench, subItems: [
-        { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo', icon: CalendarCheck },
-        { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo', icon: ShieldCheck },
-      ]},
-      { id: 'summarize', href: '/summarize', label: 'Resumen IA', icon: Sparkles },
-      { id: 'inventory', href: '/inventory', label: 'Inventario', icon: Boxes },
+    main: [
+      { id: 'dashboard', href: '/', label: 'Dashboard Principal', icon: AreaChart },
+      { id: 'operators', href: '/operators', label: 'Gestión de Operadores', icon: Group },
+      { id: 'fleet', href: '/vehicles', label: 'Control de Flota', icon: Truck },
+      { id: 'maintenance', href: '/maintenance/preventive', label: 'Mantenimientos (LOT 1)', icon: Wrench },
+      { id: 'installations', href: '/installations', label: 'Instalaciones (LOT 2)', icon: Replace },
+      { id: 'inventory', href: '/inventory', label: 'Inventario y Stock', icon: Boxes },
+      { id: 'reports', href: '/summarize', label: 'Reportes y Analítica', icon: FileText },
     ],
-    configuration: [
+    config: [
+        { id: 'system-config', href: '/parameters', label: 'Config. del Sistema', icon: Settings },
         { id: 'users', href: '/users', label: 'Usuarios y Roles', icon: Users },
-        { id: 'operators', href: '/operators', label: 'Operadores', icon: Building },
-        { id: 'parameters', href: '/parameters', label: 'Parámetros', icon: SlidersHorizontal },
-        { id: 'access', href: '/access', label: 'Accesos', icon: KeyRound },
+        { id: 'access', href: '/access', label: 'Mi Acceso', icon: KeyRound },
     ]
 }
 
@@ -59,7 +59,8 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     },
     'Operador': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
+            'fleet', 'reports', 'system-config', 'users', 'access'
         ],
         write: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns', 'installations'
@@ -67,7 +68,8 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     },
     'Sermetra': {
         read: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
+            'operators', 'fleet', 'reports', 'system-config', 'users', 'access'
         ],
         write: [],
     }

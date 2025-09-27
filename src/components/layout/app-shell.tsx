@@ -115,7 +115,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
   
   const getNavTitle = () => {
-    const allItems = [...navItems.production, ...navItems.configuration];
+    const allItems = [...navItems.main, ...navItems.config];
     for (const item of allItems) {
       if (item.href === pathname) {
         return item.label;
@@ -144,15 +144,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarContent>
             <SidebarMenu>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Producción</SidebarGroupLabel>
-                    {renderNavItems(navItems.production, user.role, pathname)}
+                    <SidebarGroupLabel>Principal</SidebarGroupLabel>
+                    {renderNavItems(navItems.main, user.role, pathname)}
                 </SidebarGroup>
 
                 <SidebarSeparator />
 
                 <SidebarGroup>
                     <SidebarGroupLabel>Configuración</SidebarGroupLabel>
-                     {renderNavItems(navItems.configuration, user.role, pathname)}
+                     {renderNavItems(navItems.config, user.role, pathname)}
                 </SidebarGroup>
             </SidebarMenu>
         </SidebarContent>
