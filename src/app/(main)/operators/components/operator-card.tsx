@@ -27,12 +27,14 @@ import {
   Siren,
   Bell,
   MapPin,
+  ChevronDown
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { differenceInDays, format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const statusVariant: { [key in OperatorMetrics['estado']]: 'default' | 'destructive' | 'secondary' | 'success' } = {
   Activo: 'success',
@@ -99,91 +101,103 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
       'success': 'border-l-4 border-success'
   }
 
+  const totalAlerts = operator.mantenimientosVencidos + operator.incidenciasEscaladas + (operator.stockCritico ? 1 : 0);
+  const alertBadgeVariant = totalAlerts > 3 ? 'destructive' : totalAlerts > 0 ? 'warning' : 'default';
+
   return (
-    <Card className={cn("flex flex-col", overallStatusBorder[overallStatus])}>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-            <div>
-                <CardTitle className="text-lg">{operator.nombre}</CardTitle>
-                <CardDescription>ID: {operator.id}</CardDescription>
-            </div>
-          <Badge variant={statusVariant[operator.estado]}>{operator.estado}</Badge>
-        </div>
-        <div className="flex items-center text-xs text-muted-foreground pt-1">
-            <MapPin className="h-3 w-3 mr-1" />
-            {operator.ubicacionPrincipal}
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4 flex-grow">
-        
-        <Separator />
-
-        <div className="space-y-2">
-            <h4 className="font-semibold text-sm">Flota y Equipamiento</h4>
-            <MetricItem icon={Truck} label="Vehículos Operativos" value={`${operator.vehiculosOperativos} / ${operator.vehiculosTotal}`} />
-            <MetricItem icon={Wrench} label="En Mantenimiento" value={operator.vehiculosMantenimiento} />
-            <MetricItem icon={HardDrive} label="Equipos T-mobilitat" value={operator.equiposTMobilitat} />
-            <MetricItem icon={Calendar} label="Próximo Mant." value={
-                <Badge variant={nextMaintenanceDays < 7 ? 'warning' : 'outline'}>
-                    {format(new Date(operator.proximoMantenimiento), 'dd/MM/yyyy')}
-                </Badge>
-            } />
-        </div>
-
-        <Separator />
-        
-        <div className="space-y-2">
-            <h4 className="font-semibold text-sm">Cumplimiento y SLA</h4>
-            <MetricItem icon={ShieldCheck} label="SLA Correctivos" value={
-                <Badge variant={slaVariant(operator.slaCorrectivos, 3)}>{operator.slaCorrectivos.toFixed(1)} días</Badge>
-            } />
-            <MetricItem icon={ShieldCheck} label="SLA Instalaciones" value={
-                <Badge variant={slaVariant(operator.slaInstalaciones, 4)}>{operator.slaInstalaciones.toFixed(1)} días</Badge>
-            } />
-            <MetricItem icon={BarChart} label="Calidad Servicio" value={
-                 <Badge variant={operator.calidadServicio === 'A' ? 'success' : operator.calidadServicio === 'B' ? 'warning' : 'destructive'}>{operator.calidadServicio}</Badge>
-            }/>
-            <div>
-                <div className="flex justify-between mb-1 text-sm text-muted-foreground">
-                    <span>Mant. Preventivos</span>
-                    <span className="font-semibold">{operator.cumplimientoPreventivos}%</span>
+    <Collapsible asChild>
+        <Card className={cn("transition-all duration-300 ease-in-out", overallStatusBorder[overallStatus])}>
+            <CollapsibleTrigger className="w-full text-left p-4 data-[state=open]:border-b">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                         <MapPin className="h-5 w-5 text-muted-foreground"/>
+                         <h3 className="text-lg font-semibold">{operator.nombre}</h3>
+                    </div>
+                     <div className="flex items-center gap-2">
+                        <Badge variant={statusVariant[operator.estado]}>{operator.estado}</Badge>
+                        {totalAlerts > 0 && <Badge variant={alertBadgeVariant}>{totalAlerts} Alertas</Badge>}
+                        <Badge variant="outline">{operator.vehiculosOperativos}/{operator.vehiculosTotal} Veh.</Badge>
+                        <ChevronDown className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                    </div>
                 </div>
-                <Progress value={operator.cumplimientoPreventivos} className="h-2" />
-            </div>
-        </div>
-
-        <Separator />
-        
-        <div className="space-y-2">
-            <h4 className="font-semibold text-sm">Alertas Críticas</h4>
-            <div className="grid grid-cols-2 gap-2">
-                <AlertItem icon={Calendar} label="Vencidos" value={operator.mantenimientosVencidos} />
-                <AlertItem icon={Siren} label="Abiertas" value={operator.incidenciasAbiertas} variant="warning"/>
-                <AlertItem icon={Bell} label="Escaladas" value={operator.incidenciasEscaladas} />
-            </div>
-            {operator.stockCritico && <AlertItem icon={TriangleAlert} label="Stock Crítico" value="Requiere atención" variant="warning" />}
-        </div>
-      
-      </CardContent>
-      <CardFooter className="flex-col !p-2 space-y-2">
-            <div className="grid grid-cols-3 gap-2 w-full">
-                <Button variant="secondary" size="sm"><FileText className="h-4 w-4 mr-1"/>Reporte</Button>
-                <Button variant="secondary" size="sm"><Truck className="h-4 w-4 mr-1"/>Flota</Button>
-                <Button variant="secondary" size="sm"><Wrench className="h-4 w-4 mr-1"/>Mant.</Button>
-            </div>
-             <Separator />
-            <div className="flex justify-end gap-2 w-full">
-                <Button variant="ghost" size="sm">
-                <Edit className="h-4 w-4 mr-2" />
-                Editar
-                </Button>
-                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                <Trash2 className="h-4 w-4 mr-2" />
-                Eliminar
-                </Button>
-            </div>
-      </CardFooter>
-    </Card>
+                 <div className="flex items-center gap-x-4 gap-y-1 text-xs text-muted-foreground mt-2 flex-wrap">
+                    <span>ID: {operator.id}</span>
+                    <Separator orientation="vertical" className="h-4" />
+                    <span>Ubicación: {operator.ubicacionPrincipal}</span>
+                     <Separator orientation="vertical" className="h-4" />
+                    <span>Próx. Mant: {format(new Date(operator.proximoMantenimiento), 'dd/MM/yy')}</span>
+                     <Separator orientation="vertical" className="h-4" />
+                    <span>SLA Correctivos: {operator.slaCorrectivos.toFixed(1)}d</span>
+                     <Separator orientation="vertical" className="h-4" />
+                    <span>Calidad: {operator.calidadServicio}</span>
+                </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent asChild>
+                <div className="p-4 flex flex-col">
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div className="space-y-4">
+                            <h4 className="font-semibold text-sm">Flota y Equipamiento</h4>
+                            <MetricItem icon={Truck} label="Vehículos Operativos" value={`${operator.vehiculosOperativos} / ${operator.vehiculosTotal}`} />
+                            <MetricItem icon={Wrench} label="En Mantenimiento" value={operator.vehiculosMantenimiento} />
+                            <MetricItem icon={HardDrive} label="Equipos T-mobilitat" value={operator.equiposTMobilitat} />
+                            <MetricItem icon={Calendar} label="Próximo Mant." value={
+                                <Badge variant={nextMaintenanceDays < 7 ? 'warning' : 'outline'}>
+                                    {format(new Date(operator.proximoMantenimiento), 'dd/MM/yyyy')}
+                                </Badge>
+                            } />
+                        </div>
+                        
+                        <div className="space-y-4">
+                            <h4 className="font-semibold text-sm">Cumplimiento y SLA</h4>
+                            <MetricItem icon={ShieldCheck} label="SLA Correctivos" value={
+                                <Badge variant={slaVariant(operator.slaCorrectivos, 3)}>{operator.slaCorrectivos.toFixed(1)} días</Badge>
+                            } />
+                            <MetricItem icon={ShieldCheck} label="SLA Instalaciones" value={
+                                <Badge variant={slaVariant(operator.slaInstalaciones, 4)}>{operator.slaInstalaciones.toFixed(1)} días</Badge>
+                            } />
+                            <MetricItem icon={BarChart} label="Calidad Servicio" value={
+                                <Badge variant={operator.calidadServicio === 'A' ? 'success' : operator.calidadServicio === 'B' ? 'warning' : 'destructive'}>{operator.calidadServicio}</Badge>
+                            }/>
+                            <div>
+                                <div className="flex justify-between mb-1 text-sm text-muted-foreground">
+                                    <span>Mant. Preventivos</span>
+                                    <span className="font-semibold">{operator.cumplimientoPreventivos}%</span>
+                                </div>
+                                <Progress value={operator.cumplimientoPreventivos} className="h-2" />
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <h4 className="font-semibold text-sm">Alertas Críticas</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                                <AlertItem icon={Calendar} label="Vencidos" value={operator.mantenimientosVencidos} />
+                                <AlertItem icon={Siren} label="Abiertas" value={operator.incidenciasAbiertas} variant="warning"/>
+                                <AlertItem icon={Bell} label="Escaladas" value={operator.incidenciasEscaladas} />
+                            </div>
+                            {operator.stockCritico && <AlertItem icon={TriangleAlert} label="Stock Crítico" value="Requiere atención" variant="warning" />}
+                        </div>
+                    </div>
+                    <Separator className="my-4" />
+                    <div className="flex justify-between items-center">
+                        <div className="grid grid-cols-3 gap-2">
+                            <Button variant="secondary" size="sm"><FileText className="h-4 w-4 mr-1"/>Reporte</Button>
+                            <Button variant="secondary" size="sm"><Truck className="h-4 w-4 mr-1"/>Flota</Button>
+                            <Button variant="secondary" size="sm"><Wrench className="h-4 w-4 mr-1"/>Mant.</Button>
+                        </div>
+                        <div className="flex justify-end gap-2">
+                            <Button variant="ghost" size="sm">
+                            <Edit className="h-4 w-4 mr-2" />
+                            Editar
+                            </Button>
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Eliminar
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </CollapsibleContent>
+        </Card>
+    </Collapsible>
   );
 };

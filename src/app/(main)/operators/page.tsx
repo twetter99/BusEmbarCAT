@@ -133,7 +133,7 @@ export default function OperatorsPage() {
       <p className="text-sm text-muted-foreground">{filteredOperators.length} operadores encontrados.</p>
 
       {filteredOperators.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="space-y-2">
           {filteredOperators.map((operator) => (
             <OperatorCard key={operator.id} operator={operator} />
           ))}
