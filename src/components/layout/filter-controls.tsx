@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -13,7 +14,7 @@ interface FilterControlsProps {
     category: string;
     technician?: string;
   };
-  onFilterChange: (filters: FilterControlsProps['filters']) => void;
+  onFilterChange: (filters: Partial<FilterControlsProps['filters']>) => void;
   categories: string[];
   categoryLabel: string;
   operators: Operator[];
@@ -32,7 +33,7 @@ export function FilterControls({
 }: FilterControlsProps) {
 
   const handleFilterChange = (key: keyof FilterControlsProps['filters'], value: string) => {
-    onFilterChange({ ...filters, [key]: value });
+    onFilterChange({ [key]: value });
   };
   
   const clearFilters = () => {
@@ -118,3 +119,5 @@ export function FilterControls({
     </Card>
   );
 }
+
+    
