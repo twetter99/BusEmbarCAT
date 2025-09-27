@@ -59,7 +59,7 @@ const predictiveAnalytics = [
 export default function ReportsPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {/* Documento de Actividad Mensual */}
         <Card className="flex flex-col">
           <CardHeader>
@@ -102,7 +102,7 @@ export default function ReportsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6">
                 {kpis.map(kpi => (
                     <div key={kpi.label}>
                         <p className="text-sm text-muted-foreground">{kpi.label}</p>
