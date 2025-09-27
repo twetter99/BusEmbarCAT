@@ -7,9 +7,6 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import {
   Table,
@@ -28,6 +25,31 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { format, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Label } from '@/components/ui/label';
+
+type MaintenanceStatus = 'Vencido' | 'Vence esta semana' | 'Próximo' | 'Al día';
+
+const getMaintenanceStatus = (vehicleId: string): MaintenanceStatus => {
+    const today = new Date('2026-01-15T15:00:00');
+    today.setHours(0,0,0,0);
+
+    const overdueTasks = mockTasks.filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && new Date(t.dueDate) < today);
+    if (overdueTasks.length > 0) return 'Vencido';
+
+    const upcomingTasks = mockTasks
+        .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && new Date(t.dueDate) >= today)
+        .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+
+    if (upcomingTasks.length > 0) {
+        const nextTaskDate = new Date(upcomingTasks[0].dueDate);
+        const daysUntilDue = differenceInDays(nextTaskDate, today);
+        if (daysUntilDue <= 7) return 'Vence esta semana';
+        return 'Próximo';
+    }
+
+    return 'Al día';
+}
+
 
 const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'destructive' } = {
     'Activo': 'default',
@@ -51,7 +73,7 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
     }
 
     if (upcomingTasks.length === 0) {
-        return <span className="text-muted-foreground">Al día</span>;
+        return <Badge variant='outline'>Al día</Badge>;
     }
     
     const nextTask = upcomingTasks[0];
@@ -67,56 +89,80 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
     return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy', {locale: es})}</Badge>;
 }
 
-const VehicleFilters = ({
+const FilterControls = ({
   filters,
   onFilterChange,
   operators,
   statuses,
+  maintenanceStatuses,
 }: {
-  filters: { query: string; operator: string; status: string };
-  onFilterChange: (key: string, value: string) => void;
+  filters: { query: string; operator: string; status: string; maintenance: string; };
+  onFilterChange: (newFilters: { query: string; operator: string; status: string; maintenance: string; }) => void;
   operators: Operator[];
   statuses: Vehicle['status'][];
+  maintenanceStatuses: MaintenanceStatus[];
 }) => {
+
+  const handleFilterChange = (key: keyof typeof filters, value: string) => {
+    onFilterChange({ ...filters, [key]: value });
+  };
+  
+  const clearFilters = () => {
+    onFilterChange({ query: '', operator: 'all', status: 'all', maintenance: 'all' });
+  }
+
   return (
     <Card className="mb-4">
         <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div className="md:col-span-2 relative">
-                     <label htmlFor="search" className="sr-only">Buscar</label>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+                <div className="lg:col-span-2 relative">
+                     <Label htmlFor="search" className="sr-only">Buscar</Label>
                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                      <Input 
                         id="search"
                         placeholder="Buscar por ID, matrícula, modelo..."
                         value={filters.query}
-                        onChange={(e) => onFilterChange('query', e.target.value)}
+                        onChange={(e) => handleFilterChange('query', e.target.value)}
                         className="pl-10"
                     />
                 </div>
                 <div>
-                     <label htmlFor="operator" className="sr-only">Operador</label>
-                     <Select value={filters.operator} onValueChange={(value) => onFilterChange('operator', value)}>
+                     <Label htmlFor="operator" className="text-sm font-medium">Operador</Label>
+                     <Select value={filters.operator} onValueChange={(value) => handleFilterChange('operator', value)}>
                         <SelectTrigger id="operator">
                             <SelectValue placeholder="Filtrar por operador..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos los Operadores</SelectItem>
+                            <SelectItem value="all">Todos</SelectItem>
                             {operators.map(op => <SelectItem key={op.id} value={op.id}>{op.name}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
                 <div>
-                     <label htmlFor="status" className="sr-only">Estado</label>
-                     <Select value={filters.status} onValueChange={(value) => onFilterChange('status', value)}>
+                     <Label htmlFor="status" className="text-sm font-medium">Estado Vehículo</Label>
+                     <Select value={filters.status} onValueChange={(value) => handleFilterChange('status', value)}>
                         <SelectTrigger id="status">
                             <SelectValue placeholder="Filtrar por estado..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos los Estados</SelectItem>
+                            <SelectItem value="all">Todos</SelectItem>
                             {statuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
+                <div>
+                     <Label htmlFor="maintenance" className="text-sm font-medium">Mantenimiento</Label>
+                     <Select value={filters.maintenance} onValueChange={(value) => handleFilterChange('maintenance', value)}>
+                        <SelectTrigger id="maintenance">
+                            <SelectValue placeholder="Filtrar por mant..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Todos</SelectItem>
+                            {maintenanceStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                     </Select>
+                </div>
+                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end lg:col-start-5">Limpiar Filtros</Button>
             </div>
         </CardContent>
     </Card>
@@ -129,11 +175,8 @@ export default function VehiclesPage() {
         query: '',
         operator: 'all',
         status: 'all',
+        maintenance: 'all',
     });
-
-    const handleFilterChange = (key: string, value: string) => {
-        setFilters(prev => ({ ...prev, [key]: value }));
-    };
     
     const userVehicles = React.useMemo(() => {
         if (user?.role === 'Operador') {
@@ -153,6 +196,8 @@ export default function VehiclesPage() {
     const vehicleStatuses = React.useMemo(() => {
         return Array.from(new Set(userVehicles.map(v => v.status)));
     }, [userVehicles]);
+    
+    const maintenanceStatuses: MaintenanceStatus[] = ['Vencido', 'Vence esta semana', 'Próximo', 'Al día'];
 
     const filteredVehicles = React.useMemo(() => {
         return userVehicles.filter(vehicle => {
@@ -165,7 +210,9 @@ export default function VehiclesPage() {
 
             const statusMatch = filters.status === 'all' || vehicle.status === filters.status;
 
-            return queryMatch && operatorMatch && statusMatch;
+            const maintenanceMatch = filters.maintenance === 'all' || getMaintenanceStatus(vehicle.id) === filters.maintenance;
+
+            return queryMatch && operatorMatch && statusMatch && maintenanceMatch;
         });
     }, [userVehicles, filters]);
 
@@ -175,7 +222,7 @@ export default function VehiclesPage() {
           <div>
             <h1 className="text-2xl font-bold">Listado Completo de Vehículos</h1>
             <p className="text-muted-foreground">
-              Todos los vehículos de la flota por operador. {filteredVehicles.length} de {userVehicles.length} mostrados.
+              {filteredVehicles.length} de {userVehicles.length} vehículos mostrados.
             </p>
           </div>
           <Button size="sm" className="gap-1">
@@ -184,11 +231,12 @@ export default function VehiclesPage() {
           </Button>
         </div>
 
-      <VehicleFilters 
+      <FilterControls 
         filters={filters}
-        onFilterChange={handleFilterChange}
+        onFilterChange={setFilters}
         operators={availableOperators}
         statuses={vehicleStatuses}
+        maintenanceStatuses={maintenanceStatuses}
       />
 
       <Card>
