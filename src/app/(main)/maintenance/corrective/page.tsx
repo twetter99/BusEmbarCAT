@@ -20,6 +20,7 @@ import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } fr
 import Link from 'next/link';
 import { FilterControls } from '@/components/layout/filter-controls';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/use-auth';
 
 type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
 
@@ -167,6 +168,7 @@ const IncidentCard = ({ incident }: { incident: Incident }) => {
 }
 
 export default function CorrectivePage() {
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = React.useState('Abierto');
     const [filters, setFilters] = React.useState({
       operator: 'all',
@@ -174,19 +176,38 @@ export default function CorrectivePage() {
       category: 'all',
     });
 
+    const userIncidents = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
+            return mockIncidents.filter(i => operatorVehicles.includes(i.vehicleId));
+        }
+        return mockIncidents;
+    }, [user]);
+
     const technicians = React.useMemo(() => {
         const techSet = new Set<string>();
-        mockIncidents.forEach(task => {
+        userIncidents.forEach(task => {
             if(task.assignedTo) techSet.add(task.assignedTo);
         });
         return Array.from(techSet).sort();
-    }, []);
+    }, [userIncidents]);
 
     const priorities = React.useMemo(() => {
         const prioritySet = new Set<Incident['priority']>();
-        mockIncidents.forEach(task => prioritySet.add(task.priority));
+        userIncidents.forEach(task => prioritySet.add(task.priority));
         return Array.from(prioritySet);
-    }, []);
+    }, [userIncidents]);
+
+    const availableOperators = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockOperators.filter(op => op.id === user.operatorId);
+        }
+        const operatorIds = new Set(userIncidents.map(i => {
+            const vehicle = mockVehicles.find(v => v.id === i.vehicleId);
+            return vehicle?.operatorId;
+        }));
+        return mockOperators.filter(op => operatorIds.has(op.id));
+    }, [user, userIncidents]);
 
     const urgencyOrder: Record<UrgencyStatus, number> = {
         'Vencido': 1,
@@ -195,8 +216,16 @@ export default function CorrectivePage() {
         'Normal': 4,
     };
     
+    const allIncidentsByStatus = React.useMemo(() => ({
+        'Abierto': userIncidents.filter(i => i.status === 'Abierto'),
+        'En Progreso': userIncidents.filter(i => i.status === 'En Progreso'),
+        'Resuelto': userIncidents.filter(i => i.status === 'Resuelto'),
+    }),[userIncidents]);
+
     const filteredIncidents = React.useMemo(() => {
-        const incidents = mockIncidents.filter(incident => {
+        const incidents = allIncidentsByStatus[activeTab as keyof typeof allIncidentsByStatus] || [];
+        
+        const filtered = incidents.filter(incident => {
             const vehicle = mockVehicles.find(v => v.id === incident.vehicleId);
             const operatorMatch = filters.operator === 'all' || vehicle?.operatorId === filters.operator;
             
@@ -206,13 +235,11 @@ export default function CorrectivePage() {
                 
             const priorityMatch = filters.category === 'all' || incident.priority === filters.category;
             
-            const statusMatch = incident.status === activeTab;
-
-            return operatorMatch && technicianMatch && priorityMatch && statusMatch;
+            return operatorMatch && technicianMatch && priorityMatch;
         });
 
         if (activeTab === 'Abierto') {
-            incidents.sort((a, b) => {
+            filtered.sort((a, b) => {
                 const urgencyA = getUrgency(a);
                 const urgencyB = getUrgency(b);
                 if (urgencyOrder[urgencyA] !== urgencyOrder[urgencyB]) {
@@ -224,14 +251,8 @@ export default function CorrectivePage() {
             });
         }
 
-        return incidents;
-    }, [filters, activeTab, urgencyOrder]);
-
-    const allIncidentsByStatus = {
-        'Abierto': mockIncidents.filter(i => i.status === 'Abierto'),
-        'En Progreso': mockIncidents.filter(i => i.status === 'En Progreso'),
-        'Resuelto': mockIncidents.filter(i => i.status === 'Resuelto'),
-    }
+        return filtered;
+    }, [filters, activeTab, allIncidentsByStatus, urgencyOrder]);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -248,9 +269,10 @@ export default function CorrectivePage() {
                 filters={filters}
                 onFilterChange={setFilters}
                 technicians={technicians}
+                showTechnicianFilter
                 categories={priorities}
                 categoryLabel="Prioridad"
-                operators={mockOperators}
+                operators={availableOperators}
             />
 
             <div className="mt-4">

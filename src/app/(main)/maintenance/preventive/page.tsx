@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { FilterControls } from '@/components/layout/filter-controls';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/hooks/use-auth';
 
 
 type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
@@ -97,7 +98,7 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
     
     const dateText = isOverdue
       ? `Vencido ${formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })}`.replace('hace aproximadamente', 'hace')
-      : formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es });
+      : `Vence ${formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })}`;
 
 
     return (
@@ -166,17 +167,37 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
 }
 
 export default function PreventivePage() {
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = React.useState('Pendiente');
     const [filters, setFilters] = React.useState({
       operator: 'all',
       category: 'all',
     });
 
+    const userTasks = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
+            return mockTasks.filter(t => operatorVehicles.includes(t.vehicleId));
+        }
+        return mockTasks;
+    }, [user]);
+
     const frequencies = React.useMemo(() => {
         const freqSet = new Set<string>();
-        mockTasks.forEach(task => freqSet.add(task.frequency));
+        userTasks.forEach(task => freqSet.add(task.frequency));
         return Array.from(freqSet).sort();
-    }, []);
+    }, [userTasks]);
+    
+    const availableOperators = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockOperators.filter(op => op.id === user.operatorId);
+        }
+        const operatorIds = new Set(userTasks.map(t => {
+            const vehicle = mockVehicles.find(v => v.id === t.vehicleId);
+            return vehicle?.operatorId;
+        }));
+        return mockOperators.filter(op => operatorIds.has(op.id));
+    }, [user, userTasks]);
 
     const urgencyOrder: Record<UrgencyStatus, number> = {
         'Vencido': 1,
@@ -186,27 +207,28 @@ export default function PreventivePage() {
     };
     
     const allTasksByStatus = React.useMemo(() => ({
-        'Pendiente': mockTasks.filter(t => t.status === 'Pendiente'),
-        'En Progreso': mockTasks.filter(t => t.status === 'En Progreso'),
-        'Completado': mockTasks.filter(t => t.status === 'Completado'),
-    }), []);
+        'Pendiente': userTasks.filter(t => t.status === 'Pendiente'),
+        'En Progreso': userTasks.filter(t => t.status === 'En Progreso'),
+        'Completado': userTasks.filter(t => t.status === 'Completado'),
+    }), [userTasks]);
 
     const getPendingTabTitle = () => {
         return `Pendiente (${allTasksByStatus['Pendiente'].length})`;
     }
 
     const filteredTasks = React.useMemo(() => {
-        const tasks = mockTasks.filter(task => {
+        const tasks = allTasksByStatus[activeTab as keyof typeof allTasksByStatus] || [];
+
+        const filtered = tasks.filter(task => {
             const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
             const operatorMatch = filters.operator === 'all' || vehicle?.operatorId === filters.operator;
             const frequencyMatch = filters.category === 'all' || task.frequency === filters.category;
-            const statusMatch = task.status === activeTab;
-
-            return operatorMatch && frequencyMatch && statusMatch;
+            
+            return operatorMatch && frequencyMatch;
         });
 
         if (activeTab === 'Pendiente') {
-            tasks.sort((a, b) => {
+            filtered.sort((a, b) => {
                 const urgencyA = getUrgency(a.dueDate);
                 const urgencyB = getUrgency(b.dueDate);
                 if (urgencyOrder[urgencyA] !== urgencyOrder[urgencyB]) {
@@ -216,8 +238,8 @@ export default function PreventivePage() {
             });
         }
         
-        return tasks;
-    }, [filters, activeTab, urgencyOrder]);
+        return filtered;
+    }, [filters, activeTab, allTasksByStatus, urgencyOrder]);
     
     const displayedTasks = filteredTasks;
 
@@ -237,7 +259,7 @@ export default function PreventivePage() {
                 onFilterChange={(newFilters) => setFilters(f => ({...f, ...newFilters}))}
                 categories={frequencies}
                 categoryLabel="Frecuencia"
-                operators={mockOperators}
+                operators={availableOperators}
             />
 
             <div className="mt-4">
