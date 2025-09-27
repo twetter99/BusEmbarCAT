@@ -70,16 +70,18 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
 const VehicleFilters = ({
   filters,
   onFilterChange,
-  operators
+  operators,
+  statuses,
 }: {
-  filters: { query: string; operator: string; };
+  filters: { query: string; operator: string; status: string };
   onFilterChange: (key: string, value: string) => void;
   operators: Operator[];
+  statuses: Vehicle['status'][];
 }) => {
   return (
     <Card className="mb-4">
         <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div className="md:col-span-2 relative">
                      <label htmlFor="search" className="sr-only">Buscar</label>
                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -103,6 +105,18 @@ const VehicleFilters = ({
                         </SelectContent>
                      </Select>
                 </div>
+                <div>
+                     <label htmlFor="status" className="sr-only">Estado</label>
+                     <Select value={filters.status} onValueChange={(value) => onFilterChange('status', value)}>
+                        <SelectTrigger id="status">
+                            <SelectValue placeholder="Filtrar por estado..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Todos los Estados</SelectItem>
+                            {statuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                     </Select>
+                </div>
             </div>
         </CardContent>
     </Card>
@@ -114,6 +128,7 @@ export default function VehiclesPage() {
     const [filters, setFilters] = React.useState({
         query: '',
         operator: 'all',
+        status: 'all',
     });
 
     const handleFilterChange = (key: string, value: string) => {
@@ -135,6 +150,10 @@ export default function VehiclesPage() {
         return mockOperators.filter(op => operatorIds.has(op.id));
     }, [user, userVehicles]);
 
+    const vehicleStatuses = React.useMemo(() => {
+        return Array.from(new Set(userVehicles.map(v => v.status)));
+    }, [userVehicles]);
+
     const filteredVehicles = React.useMemo(() => {
         return userVehicles.filter(vehicle => {
             const queryMatch = filters.query.toLowerCase() === '' ||
@@ -144,7 +163,9 @@ export default function VehiclesPage() {
             
             const operatorMatch = filters.operator === 'all' || vehicle.operatorId === filters.operator;
 
-            return queryMatch && operatorMatch;
+            const statusMatch = filters.status === 'all' || vehicle.status === filters.status;
+
+            return queryMatch && operatorMatch && statusMatch;
         });
     }, [userVehicles, filters]);
 
@@ -167,6 +188,7 @@ export default function VehiclesPage() {
         filters={filters}
         onFilterChange={handleFilterChange}
         operators={availableOperators}
+        statuses={vehicleStatuses}
       />
 
       <Card>
