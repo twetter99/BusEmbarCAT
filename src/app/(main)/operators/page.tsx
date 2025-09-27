@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { mockOperators, mockVehicles, mockTasks, mockIncidents } from '@/lib/data';
 import type { Operator } from '@/lib/types';
-import { PlusCircle, Edit, Trash2, Truck, Wrench, Siren } from 'lucide-react';
+import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 
