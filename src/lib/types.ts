@@ -1,5 +1,6 @@
 
 
+
 export type Role = 'Administrador' | 'Operador' | 'Sermetra';
 
 export type User = {
@@ -192,3 +193,31 @@ export type DashboardData = {
     maintenanceChartData: { month: string; planned: number; completed: number; }[];
     operatorMetrics: OperatorMetric[];
 }
+
+export interface OperatorMetrics {
+  nombre: string;
+  id: string;
+  estado: 'Activo' | 'Inactivo' | 'Suspendido';
+  ubicacionPrincipal: string;
+  
+  vehiculosOperativos: number;
+  vehiculosTotal: number;
+  vehiculosMantenimiento: number;
+  vehiculosBaja: number;
+  
+  equiposTMobilitat: number;
+  proximoMantenimiento: string; 
+  
+  slaCorrectivos: number; 
+  slaInstalaciones: number; 
+  cumplimientoPreventivos: number; 
+  calidadServicio: 'A' | 'B' | 'C';
+  
+  mantenimientosVencidos: number;
+  incidenciasAbiertas: number;
+  incidenciasEscaladas: number;
+  penalizacionesMes: number;
+  stockCritico: boolean;
+}
+
+    

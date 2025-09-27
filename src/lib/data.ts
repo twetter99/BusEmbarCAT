@@ -1,5 +1,5 @@
 
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData, OperatorMetrics } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -170,7 +170,7 @@ export const mockTasks: MaintenanceTask[] = [
     
     // 2 Urgentes (naranjas)
     { id: 'MT-P05', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-01-16T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P06', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('_2026-01-18T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P06', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-18T15:00:00'), status: 'Pendiente' },
 
     // 3 Próximos (amarillos)
     { id: 'MT-P07', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: new Date('2026-01-23T15:00:00'), status: 'Pendiente' },
@@ -251,7 +251,6 @@ export const mockTransfers: Transfer[] = [
     { id: 'TRANS-002', originVehicleId: 'VEH-ORIGEN-190', destinationVehicleId: 'VEH-DESTINO-490', originVehicleModel: 'Otokar Vectio', destinationVehicleModel: 'Solaris Urbino', operatorId: 'op-04', status: 'Programada', phase1_status: 'Pendiente', phase1_date: '27/01/2026', phase2_status: 'Pendiente', phase2_date: '05/02/2026' },
 ];
     
-
 export const mockDashboardData: DashboardData = {
     kpis: {
         slaCompliance: 98.2,
@@ -274,3 +273,92 @@ export const mockDashboardData: DashboardData = {
         slaCompliance: Math.floor(Math.random() * 6) + 94,
     }))
 };
+
+export const mockOperatorMetrics: OperatorMetrics[] = [
+    {
+        nombre: 'ALSINA GRAELLS',
+        id: 'op-01',
+        estado: 'Activo',
+        ubicacionPrincipal: 'Barcelona',
+        vehiculosOperativos: 48,
+        vehiculosTotal: 50,
+        vehiculosMantenimiento: 2,
+        vehiculosBaja: 0,
+        equiposTMobilitat: 150,
+        proximoMantenimiento: '2026-01-18T00:00:00.000Z',
+        slaCorrectivos: 2.1,
+        slaInstalaciones: 3.5,
+        cumplimientoPreventivos: 98,
+        calidadServicio: 'A',
+        mantenimientosVencidos: 1,
+        incidenciasAbiertas: 3,
+        incidenciasEscaladas: 0,
+        penalizacionesMes: 0,
+        stockCritico: false,
+    },
+    {
+        nombre: 'AUTOCARES JULIA',
+        id: 'op-02',
+        estado: 'Activo',
+        ubicacionPrincipal: 'Tarragona',
+        vehiculosOperativos: 65,
+        vehiculosTotal: 70,
+        vehiculosMantenimiento: 5,
+        vehiculosBaja: 0,
+        equiposTMobilitat: 210,
+        proximoMantenimiento: '2026-01-16T00:00:00.000Z',
+        slaCorrectivos: 3.2,
+        slaInstalaciones: 4.1,
+        cumplimientoPreventivos: 85,
+        calidadServicio: 'C',
+        mantenimientosVencidos: 5,
+        incidenciasAbiertas: 8,
+        incidenciasEscaladas: 2,
+        penalizacionesMes: 1500,
+        stockCritico: true,
+    },
+    {
+        nombre: 'AUTOCARS DEL PENEDÈS',
+        id: 'op-03',
+        estado: 'Activo',
+        ubicacionPrincipal: 'Girona',
+        vehiculosOperativos: 28,
+        vehiculosTotal: 30,
+        vehiculosMantenimiento: 1,
+        vehiculosBaja: 1,
+        equiposTMobilitat: 90,
+        proximoMantenimiento: '2026-01-25T00:00:00.000Z',
+        slaCorrectivos: 2.8,
+        slaInstalaciones: 3.9,
+        cumplimientoPreventivos: 92,
+        calidadServicio: 'B',
+        mantenimientosVencidos: 2,
+        incidenciasAbiertas: 4,
+        incidenciasEscaladas: 1,
+        penalizacionesMes: 250,
+        stockCritico: false,
+    },
+    {
+        nombre: 'AUTOCARS R. FONT',
+        id: 'op-05',
+        estado: 'Inactivo',
+        ubicacionPrincipal: 'Lleida',
+        vehiculosOperativos: 0,
+        vehiculosTotal: 15,
+        vehiculosMantenimiento: 0,
+        vehiculosBaja: 15,
+        equiposTMobilitat: 0,
+        proximoMantenimiento: new Date().toISOString(),
+        slaCorrectivos: 0,
+        slaInstalaciones: 0,
+        cumplimientoPreventivos: 100,
+        calidadServicio: 'A',
+        mantenimientosVencidos: 0,
+        incidenciasAbiertas: 0,
+        incidenciasEscaladas: 0,
+        penalizacionesMes: 0,
+        stockCritico: false,
+    }
+];
+
+    
