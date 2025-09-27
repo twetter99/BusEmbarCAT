@@ -53,7 +53,7 @@ export const navItems: NavConfig = {
             { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo (Averías)', icon: Siren },
         ]
       },
-      { id: 'inventory', href: '/inventory', label: 'Inventario y Stock', icon: Boxes },
+      { id: 'inventory', href: '/inventory', label: 'Inventario', icon: Boxes },
       { id: 'reports', href: '/reports', label: 'Reportes y Analítica', icon: FileText },
     ],
     config: [
