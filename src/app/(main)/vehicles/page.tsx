@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -18,16 +19,48 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockVehicles } from '@/lib/data';
+import { mockVehicles, mockTasks } from '@/lib/data';
 import type { Vehicle } from '@/lib/types';
 import { PlusCircle, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
+import { format, differenceInDays } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'destructive' } = {
     'Activo': 'default',
     'En Mantenimiento': 'secondary',
     'Fuera de Servicio': 'destructive',
+}
+
+const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
+    const today = new Date('2026-01-15T15:00:00');
+    const nextTask = mockTasks
+        .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && t.dueDate > today)
+        .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())[0];
+
+    if (!nextTask) {
+        const overdueTask = mockTasks
+            .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente')
+            .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())[0];
+        
+        if (overdueTask) {
+             return <Badge variant="destructive">Vencido</Badge>
+        }
+
+        return <span className="text-muted-foreground">N/A</span>;
+    }
+
+    const daysUntilDue = differenceInDays(nextTask.dueDate, today);
+    let variant: 'warning' | 'attention' | 'default' = 'default';
+
+    if (daysUntilDue <= 7) {
+        variant = 'warning';
+    } else if (daysUntilDue <= 30) {
+        variant = 'attention';
+    }
+
+    return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy')}</Badge>;
 }
 
 export default function VehiclesPage() {
@@ -60,14 +93,11 @@ export default function VehiclesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>ID Único</TableHead>
-                <TableHead>Número de Calca</TableHead>
                 <TableHead>Matrícula</TableHead>
-                <TableHead>Número de Chasis</TableHead>
                 <TableHead>Modelo</TableHead>
-                <TableHead>Carrocería</TableHead>
-                <TableHead>Fecha Instalación</TableHead>
                 <TableHead>Operador</TableHead>
                 <TableHead>Estado</TableHead>
+                <TableHead>Próx. Mant.</TableHead>
                 <TableHead>Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -75,15 +105,14 @@ export default function VehiclesPage() {
               {userVehicles.map((vehicle) => (
                 <TableRow key={vehicle.uniqueId}>
                   <TableCell className="font-medium">{vehicle.uniqueId}</TableCell>
-                  <TableCell>{vehicle.codBus}</TableCell>
                   <TableCell>{vehicle.id}</TableCell>
-                  <TableCell>{vehicle.vin}</TableCell>
                   <TableCell>{vehicle.model}</TableCell>
-                  <TableCell>{vehicle.bodywork}</TableCell>
-                  <TableCell>{vehicle.preInstallationDate || 'N/A'}</TableCell>
                   <TableCell>{vehicle.operatorName}</TableCell>
                   <TableCell>
                     <Badge variant={statusVariant[vehicle.status]}>{vehicle.status}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <NextMaintenanceCell vehicleId={vehicle.id} />
                   </TableCell>
                   <TableCell>
                     <Button asChild variant="outline" size="sm">
@@ -102,3 +131,4 @@ export default function VehiclesPage() {
     </main>
   );
 }
+
