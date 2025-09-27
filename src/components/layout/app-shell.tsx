@@ -52,7 +52,7 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
   return items.map((item) => {
     if (!hasPermission(userRole, item.id)) return null;
 
-    if (item.subItems) {
+    if (item.subItems && item.subItems.length > 0) {
       const isParentActive = item.subItems.some(sub => currentPath.startsWith(sub.href));
       return (
         <SidebarMenuItem key={item.label} className="!p-0">

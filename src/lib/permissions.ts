@@ -39,6 +39,7 @@ export type NavConfig = {
 export const navItems: NavConfig = {
     main: [
       { id: 'dashboard', href: '/', label: 'Dashboard Principal', icon: AreaChart },
+      { id: 'operators', href: '/operators', label: 'Operadores', icon: Group },
       { id: 'fleet', href: '/vehicles', label: 'Control de Flota', icon: Truck },
       { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
       { id: 'installations', href: '/installations', label: 'Instalaciones (LOT 2)', icon: Replace },
@@ -56,17 +57,16 @@ export const navItems: NavConfig = {
       { id: 'reports', href: '/summarize', label: 'Reportes y Analítica', icon: FileText },
     ],
     config: [
+        { id: 'users', href: '/users', label: 'Usuarios y Roles', icon: Users },
         { 
             id: 'system-config', 
             href: '/config', 
-            label: 'Config. del Sistema', 
+            label: 'Configuración', 
             icon: Settings,
             subItems: [
-                 { id: 'operators', href: '/operators', label: 'Operadores', icon: Group },
                  { id: 'parameters', href: '/parameters', label: 'Parámetros', icon: SlidersHorizontal },
             ]
         },
-        { id: 'users', href: '/users', label: 'Usuarios y Roles', icon: Users },
         { id: 'access', href: '/access', label: 'Mi Acceso', icon: KeyRound },
     ]
 }
@@ -88,7 +88,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Sermetra': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'operators', 'fleet', 'reports', 'system-config', 'users', 'access'
+            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters'
         ],
         write: [],
     }
@@ -106,7 +106,15 @@ export const hasPermission = (role: Role, itemId: string, accessType: 'read' | '
     const canAccess = (list: string[]) => list.includes('*') || list.includes(itemId);
 
     if (accessType === 'read') {
-        return canAccess(rolePermissions.read);
+        // Check main item
+        if (canAccess(rolePermissions.read)) return true;
+        
+        // Check sub-items
+        const allItems = [...navItems.main, ...navItems.config];
+        const parentItem = allItems.find(item => item.subItems?.some(sub => sub.id === itemId));
+        if (parentItem && canAccess(rolePermissions.read)) return true;
+
+        return false;
     }
 
     if (accessType === 'write') {
