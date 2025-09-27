@@ -1,3 +1,4 @@
+
 import type { Role } from './types';
 import {
   AreaChart,
@@ -40,6 +41,7 @@ export const navItems: NavConfig = {
       { id: 'dashboard', href: '/', label: 'Dashboard Principal', icon: AreaChart },
       { id: 'fleet', href: '/vehicles', label: 'Control de Flota', icon: Truck },
       { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
+      { id: 'installations', href: '/installations', label: 'Instalaciones (LOT 2)', icon: Replace },
       { 
         id: 'maintenance', 
         href: '/maintenance', 
@@ -50,7 +52,6 @@ export const navItems: NavConfig = {
             { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo (Averías)', icon: Siren },
         ]
       },
-      { id: 'installations', href: '/installations', label: 'Instalaciones (LOT 2)', icon: Replace },
       { id: 'inventory', href: '/inventory', label: 'Inventario y Stock', icon: Boxes },
       { id: 'reports', href: '/summarize', label: 'Reportes y Analítica', icon: FileText },
     ],
@@ -78,7 +79,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Operador': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'summarize', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'fleet', 'reports', 'system-config', 'users', 'access'
+            'fleet', 'reports', 'access'
         ],
         write: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns', 'installations'

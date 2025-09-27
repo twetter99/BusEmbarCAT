@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -60,7 +61,7 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
                <SidebarMenuButton
                 isActive={isParentActive}
                 icon={<item.icon />}
-                className="justify-between"
+                className="justify-between group"
                 >
                 <span>{item.label}</span>
                 <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />
