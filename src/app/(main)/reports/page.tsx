@@ -19,7 +19,6 @@ import {
   Calendar,
   Download,
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 
 const kpis = [
     { label: "Total Vehículos", value: "2,500" },
@@ -113,7 +112,7 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
-                {operationalReports.map((report, index) => (
+                {operationalReports.map((report) => (
                    <li key={report} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
                        <span>{report}</span>
                        <Button variant="ghost" size="sm">Ver</Button>
@@ -136,7 +135,7 @@ export default function ReportsPage() {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2 text-sm">
-                {predictiveAnalytics.map((tool, index) => (
+                {predictiveAnalytics.map((tool) => (
                    <li key={tool} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
                        <span>{tool}</span>
                        <Button variant="ghost" size="sm">Analizar</Button>
