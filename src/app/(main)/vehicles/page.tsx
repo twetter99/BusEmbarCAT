@@ -36,7 +36,7 @@ const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'de
 const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
     const today = new Date('2026-01-15T15:00:00');
     const nextTask = mockTasks
-        .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && t.dueDate > today)
+        .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && t.dueDate >= today)
         .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())[0];
 
     if (!nextTask) {
@@ -60,7 +60,7 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
         variant = 'attention';
     }
 
-    return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy')}</Badge>;
+    return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy', {locale: es})}</Badge>;
 }
 
 export default function VehiclesPage() {
@@ -131,4 +131,3 @@ export default function VehiclesPage() {
     </main>
   );
 }
-
