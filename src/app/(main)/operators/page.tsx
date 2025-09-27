@@ -15,6 +15,7 @@ import { mockOperators, mockVehicles, mockTasks, mockIncidents } from '@/lib/dat
 import type { Operator } from '@/lib/types';
 import { PlusCircle, Edit, Trash2, Truck, Wrench, Siren } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
 
 const statusVariant: { [key in Operator['status']]: 'default' | 'destructive' } = {
     'Activo': 'default',
@@ -22,14 +23,17 @@ const statusVariant: { [key in Operator['status']]: 'default' | 'destructive' } 
 }
 
 const OperatorCard = ({ operator }: { operator: Operator }) => {
-    const vehicleCount = mockVehicles.filter(v => v.operatorId === operator.id).length;
-    const pendingTasks = mockTasks.filter(t => {
-        const vehicle = mockVehicles.find(v => v.id === t.vehicleId);
-        return vehicle?.operatorId === operator.id && t.status === 'Pendiente';
-    }).length;
+    const operatorVehicles = mockVehicles.filter(v => v.operatorId === operator.id);
+    const vehicleCount = operatorVehicles.length;
+    
+    const operatorVehicleIds = operatorVehicles.map(v => v.id);
+
+    const operatorTasks = mockTasks.filter(t => operatorVehicleIds.includes(t.vehicleId));
+    const completedTasks = operatorTasks.filter(t => t.status === 'Completado').length;
+    const maintenanceCompliance = operatorTasks.length > 0 ? Math.round((completedTasks / operatorTasks.length) * 100) : 100;
+    
     const openIncidents = mockIncidents.filter(i => {
-        const vehicle = mockVehicles.find(v => v.id === i.vehicleId);
-        return vehicle?.operatorId === operator.id && i.status === 'Abierto';
+        return operatorVehicleIds.includes(i.vehicleId) && i.status === 'Abierto';
     }).length;
 
     return (
@@ -42,22 +46,21 @@ const OperatorCard = ({ operator }: { operator: Operator }) => {
                 <CardDescription>ID: {operator.id}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <Separator />
-                <div className="flex justify-around text-center">
-                    <div>
-                        <Truck className="mx-auto h-6 w-6 text-muted-foreground mb-1"/>
-                        <p className="text-xl font-bold">{vehicleCount}</p>
-                        <p className="text-xs text-muted-foreground">Vehículos</p>
+                <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                        <span>Vehículos</span>
+                        <span className="font-semibold">{vehicleCount}</span>
+                    </div>
+                     <div className="flex justify-between">
+                        <span>Incidencias Abiertas</span>
+                        <span className="font-semibold">{openIncidents}</span>
                     </div>
                     <div>
-                        <Wrench className="mx-auto h-6 w-6 text-muted-foreground mb-1"/>
-                        <p className="text-xl font-bold">{pendingTasks}</p>
-                        <p className="text-xs text-muted-foreground">Mant. Pendientes</p>
-                    </div>
-                    <div>
-                        <Siren className="mx-auto h-6 w-6 text-muted-foreground mb-1"/>
-                        <p className="text-xl font-bold">{openIncidents}</p>
-                        <p className="text-xs text-muted-foreground">Incidencias Abiertas</p>
+                        <div className="flex justify-between mb-1">
+                            <span>Cumplimiento Mant.</span>
+                            <span className="font-semibold">{maintenanceCompliance}%</span>
+                        </div>
+                        <Progress value={maintenanceCompliance} className="h-2" />
                     </div>
                 </div>
                  <Separator />
