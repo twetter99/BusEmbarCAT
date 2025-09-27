@@ -19,9 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockVehicles, mockTasks } from '@/lib/data';
-import type { Vehicle } from '@/lib/types';
-import { PlusCircle, FileText } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { mockVehicles, mockTasks, mockOperators } from '@/lib/data';
+import type { Vehicle, Operator } from '@/lib/types';
+import { PlusCircle, FileText, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { format, differenceInDays } from 'date-fns';
@@ -35,22 +37,24 @@ const statusVariant: { [key in Vehicle['status']]: 'default' | 'secondary' | 'de
 
 const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
     const today = new Date('2026-01-15T15:00:00');
-    const nextTask = mockTasks
+    
+    const upcomingTasks = mockTasks
         .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && t.dueDate >= today)
-        .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())[0];
+        .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 
-    if (!nextTask) {
-        const overdueTask = mockTasks
-            .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente')
-            .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())[0];
+    const overdueTasks = mockTasks
+        .filter(t => t.vehicleId === vehicleId && t.status === 'Pendiente' && t.dueDate < today)
+        .sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime());
         
-        if (overdueTask) {
-             return <Badge variant="destructive">Vencido</Badge>
-        }
-
-        return <span className="text-muted-foreground">N/A</span>;
+    if (overdueTasks.length > 0) {
+        return <Badge variant="destructive">Vencido</Badge>
     }
 
+    if (upcomingTasks.length === 0) {
+        return <span className="text-muted-foreground">Al día</span>;
+    }
+    
+    const nextTask = upcomingTasks[0];
     const daysUntilDue = differenceInDays(nextTask.dueDate, today);
     let variant: 'warning' | 'attention' | 'default' = 'default';
 
@@ -63,8 +67,58 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
     return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy', {locale: es})}</Badge>;
 }
 
+const VehicleFilters = ({
+  filters,
+  onFilterChange,
+  operators
+}: {
+  filters: { query: string; operator: string; };
+  onFilterChange: (key: string, value: string) => void;
+  operators: Operator[];
+}) => {
+  return (
+    <Card className="mb-4">
+        <CardContent className="pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div className="md:col-span-2 relative">
+                     <label htmlFor="search" className="sr-only">Buscar</label>
+                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                     <Input 
+                        id="search"
+                        placeholder="Buscar por ID, matrícula, modelo..."
+                        value={filters.query}
+                        onChange={(e) => onFilterChange('query', e.target.value)}
+                        className="pl-10"
+                    />
+                </div>
+                <div>
+                     <label htmlFor="operator" className="sr-only">Operador</label>
+                     <Select value={filters.operator} onValueChange={(value) => onFilterChange('operator', value)}>
+                        <SelectTrigger id="operator">
+                            <SelectValue placeholder="Filtrar por operador..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Todos los Operadores</SelectItem>
+                            {operators.map(op => <SelectItem key={op.id} value={op.id}>{op.name}</SelectItem>)}
+                        </SelectContent>
+                     </Select>
+                </div>
+            </div>
+        </CardContent>
+    </Card>
+  )
+}
+
 export default function VehiclesPage() {
     const { user } = useAuth();
+    const [filters, setFilters] = React.useState({
+        query: '',
+        operator: 'all',
+    });
+
+    const handleFilterChange = (key: string, value: string) => {
+        setFilters(prev => ({ ...prev, [key]: value }));
+    };
     
     const userVehicles = React.useMemo(() => {
         if (user?.role === 'Operador') {
@@ -73,22 +127,50 @@ export default function VehiclesPage() {
         return mockVehicles;
     }, [user]);
 
+    const availableOperators = React.useMemo(() => {
+        if (user?.role === 'Operador') {
+            return mockOperators.filter(op => op.id === user.operatorId);
+        }
+        const operatorIds = new Set(userVehicles.map(v => v.operatorId));
+        return mockOperators.filter(op => operatorIds.has(op.id));
+    }, [user, userVehicles]);
+
+    const filteredVehicles = React.useMemo(() => {
+        return userVehicles.filter(vehicle => {
+            const queryMatch = filters.query.toLowerCase() === '' ||
+                vehicle.uniqueId.toLowerCase().includes(filters.query.toLowerCase()) ||
+                vehicle.id.toLowerCase().includes(filters.query.toLowerCase()) ||
+                vehicle.model.toLowerCase().includes(filters.query.toLowerCase());
+            
+            const operatorMatch = filters.operator === 'all' || vehicle.operatorId === filters.operator;
+
+            return queryMatch && operatorMatch;
+        });
+    }, [userVehicles, filters]);
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+      <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Listado Completo de Vehículos</CardTitle>
-            <CardDescription>
-              Todos los vehículos de la flota por operador.
-            </CardDescription>
+            <h1 className="text-2xl font-bold">Listado Completo de Vehículos</h1>
+            <p className="text-muted-foreground">
+              Todos los vehículos de la flota por operador. {filteredVehicles.length} de {userVehicles.length} mostrados.
+            </p>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
             Añadir Vehículo
           </Button>
-        </CardHeader>
-        <CardContent>
+        </div>
+
+      <VehicleFilters 
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        operators={availableOperators}
+      />
+
+      <Card>
+        <CardContent className="pt-6">
           <Table>
             <TableHeader>
               <TableRow>
@@ -102,7 +184,7 @@ export default function VehiclesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {userVehicles.map((vehicle) => (
+              {filteredVehicles.map((vehicle) => (
                 <TableRow key={vehicle.uniqueId}>
                   <TableCell className="font-medium">{vehicle.uniqueId}</TableCell>
                   <TableCell>{vehicle.id}</TableCell>
