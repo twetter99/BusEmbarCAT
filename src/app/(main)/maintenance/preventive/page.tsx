@@ -27,7 +27,7 @@ import { useAuth } from '@/hooks/use-auth';
 type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
 
 const getUrgency = (dueDate: Date): UrgencyStatus => {
-    const today = new Date('2026-01-15T15:00:00');
+    const today = new Date();
     today.setHours(0, 0, 0, 0);
     const taskDate = new Date(dueDate);
     taskDate.setHours(0, 0, 0, 0);
@@ -92,7 +92,7 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
     const operator = mockOperators.find(o => o.id === vehicle?.operatorId);
     const urgency = task.status === 'Pendiente' ? getUrgency(task.dueDate) : 'Normal';
     const UrgencyIcon = urgencyIcons[urgency];
-    const today = new Date('2026-01-15T15:00:00');
+    const today = new Date();
 
     const isOverdue = differenceInDays(task.dueDate, today) < 0;
     
