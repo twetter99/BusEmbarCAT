@@ -16,7 +16,7 @@ import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import type { MaintenanceTask } from '@/lib/types';
 import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building, PlayCircle } from 'lucide-react';
+import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
@@ -211,7 +211,7 @@ export default function DuePage() {
 
         <FilterControls
             filters={filters}
-            onFilterChange={setFilters}
+            onFilterChange={(newFilters) => setFilters(prev => ({...prev, ...newFilters}))}
             categories={frequencies}
             categoryLabel="Frecuencia"
             operators={availableOperators}
