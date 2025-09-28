@@ -21,6 +21,13 @@ import {
   Group,
   FileText,
   Settings,
+  LayoutDashboard,
+  CalendarClock,
+  PlayCircle,
+  History,
+  ShieldAlert,
+  BarChart3,
+  Calendar as CalendarIcon,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -42,18 +49,24 @@ export const navItems: NavConfig = {
       { id: 'operators', href: '/operators', label: 'Operadores', icon: Group },
       { id: 'fleet', href: '/vehicles', label: 'Control de Flota', icon: Truck },
       { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
-      { id: 'installations', href: '/installations', label: 'Instalaciones', icon: Replace },
+      { id: 'installations', href: '/installations', label: 'Instalaciones y Traspasos', icon: Replace },
       { 
         id: 'maintenance', 
-        href: '/maintenance', 
-        label: 'Mantenimientos', 
+        href: '#', 
+        label: 'Mantenimiento', 
         icon: Wrench,
         subItems: [
-            { id: 'preventive', href: '/maintenance/preventive', label: 'Preventivo', icon: CalendarCheck },
+            { id: 'preventive-dashboard', href: '/maintenance/preventive', label: 'Dashboard Preventivo', icon: LayoutDashboard },
+            { id: 'planning', href: '/maintenance/preventive/planning', label: 'Planificación', icon: CalendarIcon },
+            { id: 'active', href: '/maintenance/preventive/active', label: 'Intervenciones Activas', icon: PlayCircle },
+            { id: 'history', href: '/maintenance/preventive/history', label: 'Historial y Trazabilidad', icon: History },
+            { id: 'due', href: '/maintenance/preventive/due', label: 'Control de Vencimientos', icon: ShieldAlert },
+            { id: 'analysis', href: '/maintenance/preventive/analysis', label: 'Análisis e Informes', icon: BarChart3 },
+            { id: 'plan-config', href: '/maintenance/preventive/config', label: 'Configuración del Plan', icon: Settings },
             { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo (Averías)', icon: Siren },
         ]
       },
-      { id: 'inventory', href: '/inventory', label: 'Inventario', icon: Boxes },
+      { id: 'inventory', href: '/inventory', label: 'Inventario y Stock', icon: Boxes },
       { id: 'reports', href: '/reports', label: 'Reportes y Analítica', icon: FileText },
     ],
     config: [
@@ -64,7 +77,7 @@ export const navItems: NavConfig = {
             label: 'Configuración', 
             icon: Settings,
             subItems: [
-                 { id: 'parameters', href: '/parameters', label: 'Parámetros', icon: SlidersHorizontal },
+                 { id: 'parameters', href: '/parameters', label: 'Parámetros Generales', icon: SlidersHorizontal },
             ]
         },
         { id: 'access', href: '/access', label: 'Mi Acceso', icon: KeyRound },
@@ -79,7 +92,9 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Operador': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'fleet', 'reports', 'access'
+            'fleet', 'reports', 'access',
+            // Grant access to new submodules
+            'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
         write: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns', 'installations'
@@ -88,7 +103,9 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Sermetra': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters'
+            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters',
+            // Grant access to new submodules
+            'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
         write: [],
     }

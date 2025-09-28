@@ -54,12 +54,14 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
 
     if (item.subItems && item.subItems.length > 0) {
       const isParentActive = item.subItems.some(sub => currentPath.startsWith(sub.href));
+      const Trigger = item.href === '#' ? SidebarMenuButton : Link;
+      
       return (
         <SidebarMenuItem key={item.label} className="!p-0">
           <Collapsible defaultOpen={isParentActive}>
             <CollapsibleTrigger asChild className="w-full">
-               <SidebarMenuButton
-                isActive={isParentActive}
+              <SidebarMenuButton
+                isActive={isParentActive && !item.subItems.some(sub => sub.href === currentPath)}
                 icon={<item.icon />}
                 className="justify-between group"
                 >
@@ -118,17 +120,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const getNavTitle = () => {
     const allItems = [...navItems.main, ...navItems.config];
     for (const item of allItems) {
-      if (item.href === pathname) {
+      if (item.href === pathname && item.href !== '#') {
         return item.label;
       }
       if (item.subItems) {
-        const subItem = item.subItems.find(sub => pathname.startsWith(sub.href));
+        const subItem = item.subItems.find(sub => pathname === sub.href);
         if (subItem) return subItem.label;
       }
     }
     // Specific check for detail pages
     if (pathname.startsWith('/vehicles/')) return 'Ficha del Vehículo';
-    if (pathname.startsWith('/maintenance/preventive/')) return 'Ficha de Mantenimiento';
+    if (pathname.startsWith('/maintenance/preventive/')) {
+        const parts = pathname.split('/');
+        const subPage = parts[parts.length - 1];
+        const subItem = navItems.main.find(i => i.id === 'maintenance')?.subItems?.find(s => s.href.endsWith(subPage));
+        if (subItem) return subItem.label;
+        return 'Mantenimiento Preventivo';
+    }
     
     return 'Panel de control';
   }
