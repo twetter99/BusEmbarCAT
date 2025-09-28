@@ -1,3 +1,4 @@
+
 export type ChecklistItemData = {
   id: string;
   text: string;
@@ -151,3 +152,5 @@ export const getChecklistData = (frequency: 'Trimestral' | 'Anual' | 'Bianual'):
             return null;
     }
 }
+
+    
