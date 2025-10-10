@@ -145,10 +145,27 @@ export default function ActiveInterventionsPage() {
             const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
             tasks = tasks.filter(t => operatorVehicles.includes(t.vehicleId));
         }
-        return tasks;
+        // Limitar a 4 tecnicos unicos
+        const technicians = new Set<string>();
+        const filteredTasks: MaintenanceTask[] = [];
+        for (const task of tasks) {
+            if (technicians.size < 4 && task.technician && !technicians.has(task.technician)) {
+                technicians.add(task.technician);
+                filteredTasks.push(task);
+            } else if (task.technician && technicians.has(task.technician)) {
+                // Allows a technician to have multiple tasks, but we only want 4 unique techs.
+                // To keep this logic simple, we will just show the first task for each of the 4 techs.
+            }
+        }
+        // If we want exactly 4 tasks for 4 techs, we ensure we only take 4 tasks for the first 4 unique techs.
+        const uniqueTechs = new Set(filteredTasks.map(t => t.technician));
+        return tasks.filter(t => t.technician && uniqueTechs.has(t.technician)).slice(0, 4);
+
     }, [user]);
 
-    const activeTechnicians = 4;
+    const activeTechnicians = React.useMemo(() => {
+        return new Set(activeInterventions.map(t => t.technician)).size;
+    }, [activeInterventions]);
     
     const activeVehicles = React.useMemo(() => {
         return new Set(activeInterventions.map(t => t.vehicleId)).size;
