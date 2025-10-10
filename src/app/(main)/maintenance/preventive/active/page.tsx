@@ -162,6 +162,7 @@ export default function ActiveInterventionsPage() {
             const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
             tasks = tasks.filter(t => operatorVehicles.includes(t.vehicleId));
         }
+        // Ordena por fecha de vencimiento más próxima primero
         return tasks.sort((a,b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
     }, [user]);
 
@@ -169,9 +170,12 @@ export default function ActiveInterventionsPage() {
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold">Intervenciones Activas</h1>
+                    <h1 className="text-2xl font-bold">Centro de Control Operacional</h1>
                     <p className="text-muted-foreground">
-                        {activeInterventions.length} mantenimiento(s) preventivo(s) en curso.
+                        {activeInterventions.length > 0 
+                            ? `${activeInterventions.length} mantenimiento(s) preventivo(s) en curso.`
+                            : 'No hay intervenciones activas en este momento.'
+                        }
                     </p>
                 </div>
             </div>
@@ -189,7 +193,7 @@ export default function ActiveInterventionsPage() {
                             <PlayCircle className="h-16 w-16 text-muted-foreground mb-4" />
                             <h3 className="text-xl font-semibold">No hay intervenciones activas</h3>
                             <p className="text-muted-foreground mt-2 max-w-sm">
-                                No hay ningún mantenimiento preventivo en estado "En Progreso" en este momento.
+                                No hay ningún mantenimiento preventivo en estado "En Progreso" en este momento. Las tareas activas aparecerán aquí en tiempo real.
                             </p>
                         </div>
                     </CardContent>
@@ -198,3 +202,5 @@ export default function ActiveInterventionsPage() {
         </main>
     );
 }
+
+    
