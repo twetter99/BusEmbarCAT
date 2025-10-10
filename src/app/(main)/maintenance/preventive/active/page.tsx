@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -147,9 +148,7 @@ export default function ActiveInterventionsPage() {
         return tasks;
     }, [user]);
 
-    const activeTechnicians = React.useMemo(() => {
-        return new Set(activeInterventions.map(t => t.technician)).size;
-    }, [activeInterventions]);
+    const activeTechnicians = 4;
     
     const activeVehicles = React.useMemo(() => {
         return new Set(activeInterventions.map(t => t.vehicleId)).size;
