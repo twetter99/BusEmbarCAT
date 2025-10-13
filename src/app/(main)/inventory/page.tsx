@@ -123,9 +123,12 @@ const InventoryTable = ({ items }: { items: InventoryItem[] }) => {
 export default function InventoryPage() {
   const stockValue = mockInventory.reduce((acc, item) => acc + (item.value || 0) * item.stock, 0);
   const lowStockItems = mockInventory.filter((item) => item.stock <= item.minStock).length;
-  
-  const centralWarehouseStock = mockInventory.filter(item => item.location.includes('Central'));
-  const operatorWarehouseStock = mockInventory.filter(item => item.location.includes('Op.'));
+  const acquisitionBudget = 66600;
+  const acquisitionSpent = mockInventory.filter(i => i.category === 'Material de adquisición libre').reduce((acc, item) => acc + (item.value || 0) * item.stock, 0);
+  const acquisitionProgress = (acquisitionSpent / acquisitionBudget) * 100;
+
+  const centralWarehouseStock = mockInventory.filter(item => item.location.includes('Central') && !item.assignedTo);
+  const operatorWarehouseStock = mockInventory.filter(item => item.location.includes('Op.') && !item.assignedTo);
   const assignedStock = mockInventory.filter(item => item.assignedTo);
 
 
@@ -166,9 +169,9 @@ export default function InventoryPage() {
                 <DollarSign className="h-4 w-4 text-muted-foreground text-primary" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">€45,000 / €75,000</div>
-                <p className="text-xs text-muted-foreground">60% del presupuesto disponible</p>
-                <Progress value={60} className="mt-2 h-2" />
+                <div className="text-2xl font-bold">{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(acquisitionBudget - acquisitionSpent)}</div>
+                <p className="text-xs text-muted-foreground">{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(acquisitionBudget)} de presupuesto</p>
+                <Progress value={acquisitionProgress} className="mt-2 h-2" />
             </CardContent>
         </Card>
         <Card>
@@ -250,12 +253,12 @@ export default function InventoryPage() {
             <CardHeader>
               <CardTitle>Control de la Bolsa de Adquisición Libre</CardTitle>
               <CardDescription>
-                Seguimiento del consumo y presupuesto para material de adquisición libre.
+                Seguimiento del consumo y presupuesto para material de adquisición libre. El presupuesto total es de 66.600,00 €.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center text-muted-foreground py-12 border-2 border-dashed rounded-lg">
-                <p>Próximamente: Historial de movimientos y aprobaciones.</p>
+                <p>Próximamente: Historial de movimientos y aprobaciones de presupuesto.</p>
               </div>
             </CardContent>
           </Card>

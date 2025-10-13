@@ -26,7 +26,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { mockOperators, mockVehicles } from '@/lib/data';
+import { mockOperators, mockVehicles, mockInventory } from '@/lib/data';
 import { toast } from '@/hooks/use-toast';
 import { CalendarIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -37,6 +37,14 @@ import { format } from 'date-fns';
 const technicians = ['Jordi', 'Pau', 'Marc', 'Oriol', 'Xavier', 'Miquel', 'Josep', 'Carles', 'David', 'Bernat', 'Quim', 'Toni', 'Ramon', 'Ferran', 'Albert'];
 const vehicleModels = ['Mercedes Citaro', 'Solaris Urbino', 'Otokar Vectio'];
 const warehouses = ['Almacén A', 'Almacén B', 'Almacén C'];
+
+const availableSpecificEquipment = mockInventory.filter(
+    item => item.category === 'Material específico SERMETRA' && item.stock > 0
+);
+const availablePupitres = availableSpecificEquipment.filter(item => item.name.includes('Pupitre'));
+const availableValidators = availableSpecificEquipment.filter(item => item.name.includes('Validadora'));
+const availableConsultTerminals = availableSpecificEquipment.filter(item => item.name.includes('Terminal de consulta'));
+
 
 // --- Installation Form ---
 const installationSchema = z.object({
@@ -49,9 +57,9 @@ const installationSchema = z.object({
   technician: z.string().min(1, 'Técnico es requerido'),
   priority: z.enum(['Normal', 'Urgente']),
   materials: z.object({
-    pupitre: z.boolean(),
-    validators: z.string().optional(),
-    consultTerminal: z.boolean(),
+    pupitre: z.string().optional(),
+    validators: z.array(z.string()).optional(),
+    consultTerminal: z.string().optional(),
     auxMaterial: z.boolean(),
     wiring: z.string().optional(),
   }),
@@ -66,8 +74,6 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
     defaultValues: {
         priority: 'Normal',
         materials: {
-            pupitre: false,
-            consultTerminal: false,
             auxMaterial: false,
         }
     }
@@ -210,25 +216,59 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
             </div>
 
             <h3 className="font-semibold text-lg mt-4">Material Requerido</h3>
-            <div className="space-y-2">
+            <div className="space-y-4">
+                <div>
+                    <Label htmlFor="pupitre">Pupitre (Nº Serie)</Label>
+                    <Controller
+                        control={control}
+                        name="materials.pupitre"
+                        render={({ field }) => (
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar pupitre..." /></SelectTrigger>
+                            <SelectContent>
+                                {availablePupitres.map(p => <SelectItem key={p.id} value={p.serialNumber!}>{p.serialNumber}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                        )}
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="validators">Validadoras (Nº Serie)</Label>
+                    {/* This could be a multi-select component in a real app */}
+                    <Controller
+                        control={control}
+                        name="materials.validators"
+                        render={({ field }) => (
+                        <Select onValueChange={field.onChange} defaultValue={field.value?.[0]}>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar validadora..." /></SelectTrigger>
+                            <SelectContent>
+                                {availableValidators.map(v => <SelectItem key={v.id} value={v.serialNumber!}>{v.name} - {v.serialNumber}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                        )}
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="consultTerminal">Terminal de consulta (Nº Serie)</Label>
+                    <Controller
+                        control={control}
+                        name="materials.consultTerminal"
+                        render={({ field }) => (
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar terminal..." /></SelectTrigger>
+                            <SelectContent>
+                                {availableConsultTerminals.map(t => <SelectItem key={t.id} value={t.serialNumber!}>{t.serialNumber}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                        )}
+                    />
+                </div>
                  <div className="flex items-center space-x-2">
-                    <Checkbox id="pupitre" {...register('materials.pupitre')} />
-                    <Label htmlFor="pupitre">Pupitre</Label>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Label htmlFor="validators" className="whitespace-nowrap">Validadoras</Label>
-                    <Input id="validators" type="number" placeholder="Nº unidades" className="w-40" {...register('materials.validators')} />
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Checkbox id="consultTerminal" {...register('materials.consultTerminal')} />
-                    <Label htmlFor="consultTerminal">Terminal de consulta</Label>
-                </div>
-                <div className="flex items-center space-x-2">
                     <Checkbox id="auxMaterial" {...register('materials.auxMaterial')} />
-                    <Label htmlFor="auxMaterial">Material auxiliar completo</Label>
+                    <Label htmlFor="auxMaterial">Material auxiliar completo (cableado, conectores...)</Label>
                 </div>
                  <div>
-                    <Label htmlFor="wiring">Cableado</Label>
+                    <Label htmlFor="wiring">Estado Cableado</Label>
                     <Controller
                         control={control}
                         name="materials.wiring"
@@ -278,7 +318,11 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
 
   const onSubmit = (data: DecommissioningFormData) => {
     console.log(data);
-    toast({ title: 'Desinstalación programada', description: 'La nueva desinstalación ha sido registrada.' });
+    // Here you would trigger the logic to update inventory status
+    toast({ 
+        title: 'Desinstalación programada', 
+        description: `El material se devolverá a ${data.materialDestination}. El stock se actualizará al completar.`
+    });
     onOpenChange(false);
   };
 
@@ -367,7 +411,7 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                 </div>
 
                 <div>
-                    <Label htmlFor="materialDestination">Destino del material</Label>
+                    <Label htmlFor="materialDestination">Destino del material recuperado</Label>
                     <Controller
                         control={control}
                         name="materialDestination"
@@ -377,6 +421,7 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                             <SelectContent>
                                 {warehouses.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}
                                  <SelectItem value="Traspaso directo">Traspaso directo</SelectItem>
+                                 <SelectItem value="Taller de reparaciones">Taller de reparaciones</SelectItem>
                             </SelectContent>
                         </Select>
                         )}

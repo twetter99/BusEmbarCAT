@@ -247,6 +247,21 @@ export const mockInventory: InventoryItem[] = [
     category: 'Material específico SERMETRA', stock: 1, minStock: 0,
     location: 'Asignado', value: 1200, serialNumber: 'SRM-PUP-0089', assignedTo: mockVehicles[0].uniqueId
   },
+   {
+    id: 'INV-104', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
+    category: 'Material específico SERMETRA', stock: 1, minStock: 2,
+    location: 'Almacén Central (Cornellà)', value: 1200, serialNumber: 'SRM-PUP-0102'
+  },
+   {
+    id: 'INV-105', name: 'Validadora INDRA v3', sku: 'VAL-IND-V3-SRM',
+    category: 'Material específico SERMETRA', stock: 3, minStock: 2,
+    location: 'Almacén Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3001'
+  },
+   {
+    id: 'INV-106', name: 'Validadora INDRA v3', sku: 'VAL-IND-V3-SRM',
+    category: 'Material específico SERMETRA', stock: 3, minStock: 2,
+    location: 'Almacén Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3002'
+  },
 
   // Material de adquisición libre (controlado por bolsa)
   {
