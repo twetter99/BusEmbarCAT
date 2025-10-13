@@ -18,9 +18,9 @@ export const mockOperators: Operator[] = [
 ];
 
 export const mockUsers: User[] = [
-    { id: 'user-001', name: 'Admin User', email: 'admin@busembacat.com', role: 'Administrador' },
-    { id: 'user-002', name: 'Operator User', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'op-01' },
-    { id: 'user-003', name: 'Sermetra User', email: 'sermetra@busembacat.com', role: 'Sermetra' },
+    { id: 'user-001', name: 'Usuari Administrador', email: 'admin@busembacat.com', role: 'Administrador' },
+    { id: 'user-002', name: 'Usuari Operador', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'op-01' },
+    { id: 'user-003', name: 'Usuari Sermetra', email: 'sermetra@busembacat.com', role: 'Sermetra' },
 ];
 
 const operatorMap = new Map(mockOperators.map(op => [op.name, op.id]));
@@ -162,18 +162,18 @@ const technicians = ['Jordi', 'Pau', 'Marc', 'Oriol', 'Xavier', 'Miquel', 'Josep
 const today = new Date('2026-01-15T15:00:00');
 
 export const mockTasks: MaintenanceTask[] = [
-    // === PENDIENTE (10) ===
-    // 4 Vencidos (rojos)
+    // === PENDENT (10) ===
+    // 4 Vençuts (vermells)
     { id: 'MT-P01', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-03T15:00:00'), status: 'Pendent' },
     { id: 'MT-P02', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: new Date('2026-01-07T15:00:00'), status: 'Pendent' },
     { id: 'MT-P03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: new Date('2026-01-12T15:00:00'), status: 'Pendent' },
     { id: 'MT-P04', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2025-12-20T15:00:00'), status: 'Pendent' },
     
-    // 2 Urgentes (naranjas)
+    // 2 Urgents (taronges)
     { id: 'MT-P05', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-01-16T15:00:00'), status: 'Pendent' },
     { id: 'MT-P06', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-18T15:00:00'), status: 'Pendent' },
 
-    // 3 Próximos (amarillos)
+    // 3 Propers (grocs)
     { id: 'MT-P07', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: new Date('2026-01-23T15:00:00'), status: 'Pendent' },
     { id: 'MT-P08', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: new Date('2026-01-30T15:00:00'), status: 'Pendent' },
     
@@ -182,7 +182,7 @@ export const mockTasks: MaintenanceTask[] = [
     { id: 'MT-P10', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-03-15T15:00:00'), status: 'Pendent' },
 
 
-    // === EN PROGRESO (10) ===
+    // === EN PROGRÉS (10) ===
     { id: 'MT-IP01', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Pau' },
     { id: 'MT-IP02', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Xavier' },
     { id: 'MT-IP03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Miquel' },
@@ -194,7 +194,7 @@ export const mockTasks: MaintenanceTask[] = [
     { id: 'MT-IP09', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Toni' },
     { id: 'MT-IP10', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Ramon' },
 
-    // === COMPLETADO (10) ===
+    // === COMPLETAT (10) ===
     { id: 'MT-C01', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 4).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Completat', technician: 'Pau' },
     { id: 'MT-C02', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Xavier' },
     { id: 'MT-C03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 2).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { weeks: 3 }), status: 'Completat', technician: 'Miquel' },
@@ -208,16 +208,16 @@ export const mockTasks: MaintenanceTask[] = [
 ];
 
 export const mockIncidents: Incident[] = [
-    // VENCIDAS (Rojas) - Abiertas
+    // VENCIDOS (Rojos) - Abiertos
     { id: 'AV-001', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, issue: 'Pantalla pupitre completament negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Obert', reportedAt: new Date('2026-01-10T10:00:00'), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
     { id: 'AV-002', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, issue: 'Sistema no arrenca després de reinici', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Obert', reportedAt: new Date('2026-01-11T12:00:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
     { id: 'AV-003', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, issue: 'Validadora INDRA sense resposta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Obert', reportedAt: new Date('2026-01-09T08:00:00'), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
     
-    // URGENTES (Naranjas) - Abiertas
+    // URGENTES (Naranjas) - Abiertos
     { id: 'AV-004', vehicleId: findVehicleByOperatorAndIndex('op-10', 0).id, issue: 'Impressora de tiquets embussada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Obert', reportedAt: new Date('2026-01-12T19:00:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
     { id: 'AV-005', vehicleId: findVehicleByOperatorAndIndex('op-07', 0).id, issue: 'Cable d\'antena solt', reportedBy: 'Tècnic', assignedTo: 'Xavier', status: 'Obert', reportedAt: new Date('2026-01-12T21:00:00'), slaDays: 3, priority: 'Mitjana', equipmentType: 'Antena' },
 
-    // ABIERTAS NORMALES
+    // ABIERTOS NORMALES
     { id: 'AV-006', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, issue: 'Lectura lenta de targetes', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Obert', reportedAt: new Date('2026-01-14T09:00:00'), slaDays: 3, priority: 'Mitjana', equipmentType: 'Validadora Inetum' },
     { id: 'AV-008', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, issue: 'Error E041 a la validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Obert', reportedAt: new Date('2026-01-13T22:30:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
 
@@ -225,13 +225,13 @@ export const mockIncidents: Incident[] = [
     { id: 'AV-007', vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, issue: 'Llum LED intermitent', reportedBy: 'Tècnic', assignedTo: 'Josep', status: 'En Progrés', reportedAt: new Date('2026-01-13T10:00:00'), slaDays: 3, priority: 'Baixa', equipmentType: 'Material auxiliar' },
     { id: 'AV-009', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, issue: 'So de validació baix', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progrés', reportedAt: new Date('2026-01-15T11:00:00'), slaDays: 3, priority: 'Mitjana', equipmentType: 'Validadora Inetum' },
     
-    // RESUELTAS
+    // RESUELTOS
     { id: 'AV-010', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, issue: 'Pantalla amb píxels morts', reportedBy: 'Tècnic', assignedTo: 'Bernat', status: 'Resolt', reportedAt: new Date('2026-01-11T16:00:00'), slaDays: 3, priority: 'Baixa', equipmentType: 'Terminal de consulta INDRA' },
 ];
 
 
 export const mockInventory: InventoryItem[] = [
-  // Material específico SERMETRA (con trazabilidad)
+  // Material específico SERMETRA (amb traçabilitat)
   {
     id: 'INV-101', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
     category: 'Material específic SERMETRA', stock: 5, minStock: 2,
@@ -263,7 +263,7 @@ export const mockInventory: InventoryItem[] = [
     location: 'Magatzem Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3002'
   },
 
-  // Material de adquisición libre (controlado por bolsa)
+  // Material d'adquisició lliure (controlat per bossa)
   {
     id: 'INV-201', name: 'Antena 4G/GPS', sku: 'ANT-4G-GPS-GEN',
     category: 'Material de adquisició lliure', stock: 12, minStock: 10,
@@ -280,7 +280,7 @@ export const mockInventory: InventoryItem[] = [
     location: 'Magatzem Central (Cornellà)', value: 45
   },
 
-  // Material genérico (consumibles)
+  // Material genèric (consumibles)
   {
     id: 'INV-301', name: 'Rotlle Paper Tèrmic Pupitre', sku: 'PAP-PUP-58MM',
     category: 'Material genèric', stock: 250, minStock: 100,
@@ -438,3 +438,5 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
         stockCritico: false,
     }
 ];
+
+    
