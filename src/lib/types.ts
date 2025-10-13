@@ -86,29 +86,43 @@ export type Equipment = {
   operator: string;
 };
 
+export type MaintenanceFrequency = 'Trimestral' | 'Anual' | 'Bianual' | 'Mensual' | 'Semestral' | '10.000 km' | '20.000 km' | '30.000 km';
+export type MaintenanceStatus = 'Pendent' | 'En Progrés' | 'Completat' | 'Assignat' | 'Retardat' | 'Urgent' | 'Vençut';
+export type MaintenancePriority = 'Alta' | 'Normal' | 'Baixa';
+
 export type MaintenanceTask = {
   id: string;
   type: 'Preventiu' | 'Correctiu';
   title: string;
   vehicleId: string;
   equipmentType: EquipmentType;
-  frequency: 'Trimestral' | 'Anual' | 'Bianual';
+  frequency: MaintenanceFrequency;
   dueDate: Date;
-  status: 'Pendent' | 'En Progrés' | 'Completat';
+  status: MaintenanceStatus;
   technician?: string;
+  startDate?: Date;
+  estimatedEndDate?: Date;
+  priority?: MaintenancePriority;
+  location?: string;
+  operatorId: string;
+  lastMaintenanceDate?: Date;
+  km?: number;
 };
 
 export type Incident = {
   id: string;
   vehicleId: string;
   issue: string;
-  reportedBy: string;
-  assignedTo: string;
-  status: 'Obert' | 'En Progrés' | 'Resolt';
+  reportedBy?: string;
+  assignedTo: string | null;
+  status: 'Obert' | 'En Progrés' | 'En Reparació'| 'Resolt' | 'Tancat';
   reportedAt: Date;
-  slaDays: number;
-  priority: 'Crítica' | 'Alta' | 'Mitjana' | 'Baixa';
-  equipmentType: EquipmentType;
+  slaDays?: number;
+  priority: 'Alta' | 'Normal' | 'Baixa' | 'Crítica';
+  equipmentType?: EquipmentType;
+  estimatedEndDate?: Date;
+  location?: string;
+  operatorId: string;
 };
 
 export type InventoryCategory = 'Material genèric' | 'Material de adquisició lliure' | 'Material específic SERMETRA';
