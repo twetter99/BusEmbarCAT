@@ -162,16 +162,16 @@ const findVehicleByOperatorAndIndex = (operatorId: string, index: number): Vehic
     return operatorVehicles[index % operatorVehicles.length];
 }
 
-const preventiveTitles = [
-    'Manteniment General del Pupitre',
-    'Manteniment del Sistema de Validació',
-    'Manteniment del Sistema de Comunicacions',
-    'Manteniment del Sistema de Videovigilància (CCTV)',
-    "Manteniment del Sistema d'Informació a l'Usuari (Panells)",
-    'Manteniment del Sistema de Comptatge de Viatgers (APC)',
-    "Manteniment General d'Equipaments Auxiliars",
-    'Actualització de Versions de Software/Firmware',
-    'Substitució Programada de Components',
+const activeInterventionTitles = [
+    "Validadora no comunica",
+    "Pupitre no s'encén",
+    "Impressora no imprimeix tiquets",
+    "Curtcircuit en cablejat",
+    "Sistema KO",
+    "Validadora vandalitzada",
+    "Pupitre sense cobertura",
+    "Impressora no talla el paper",
+    "Fallada en fusibles",
 ];
 
 
@@ -180,27 +180,27 @@ const preventiveTitles = [
 // #############################################################
 const activeInterventions: MaintenanceTask[] = [
     // 5 "En Progrés"
-    { id: 'MT-ACT-001', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Jordi', operatorId: 'op-01', startDate: sub(today, { hours: 2 }), estimatedEndDate: add(today, { hours: 2 }), priority: 'Normal', location: 'Taller 1' },
-    { id: 'MT-ACT-002', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Placa conexiones', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Miquel', operatorId: 'op-02', startDate: sub(today, { hours: 4 }), estimatedEndDate: add(today, { hours: 4 }), priority: 'Normal', location: 'Taller 2' },
-    { id: 'MT-ACT-003', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Carles', operatorId: 'op-11', startDate: sub(today, { hours: 1 }), estimatedEndDate: add(today, { hours: 1 }), priority: 'Normal', location: 'Taller 1' },
-    { id: 'MT-ACT-004', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David', operatorId: 'op-03', startDate: sub(today, { hours: 3 }), estimatedEndDate: add(today, { hours: 5 }), priority: 'Normal', location: 'Taller 3' },
-    { id: 'MT-ACT-005', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Bernat', operatorId: 'op-01', startDate: sub(today, { hours: 5 }), estimatedEndDate: add(today, { hours: 3 }), priority: 'Normal', location: 'Taller 2' },
+    { id: 'MT-ACT-001', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Jordi', operatorId: 'op-01', startDate: sub(today, { hours: 2 }), estimatedEndDate: add(today, { hours: 2 }), priority: 'Normal', location: 'Taller 1' },
+    { id: 'MT-ACT-002', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Placa conexiones', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Miquel', operatorId: 'op-02', startDate: sub(today, { hours: 4 }), estimatedEndDate: add(today, { hours: 4 }), priority: 'Normal', location: 'Taller 2' },
+    { id: 'MT-ACT-003', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Carles', operatorId: 'op-11', startDate: sub(today, { hours: 1 }), estimatedEndDate: add(today, { hours: 1 }), priority: 'Normal', location: 'Taller 1' },
+    { id: 'MT-ACT-004', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David', operatorId: 'op-03', startDate: sub(today, { hours: 3 }), estimatedEndDate: add(today, { hours: 5 }), priority: 'Normal', location: 'Taller 3' },
+    { id: 'MT-ACT-005', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Bernat', operatorId: 'op-01', startDate: sub(today, { hours: 5 }), estimatedEndDate: add(today, { hours: 3 }), priority: 'Normal', location: 'Taller 2' },
     
     // 4 "Assignat"
-    { id: 'MT-ASG-001', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, equipmentType: 'Antena', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'Assignat', technician: 'Pau', operatorId: 'op-05', startDate: set(today, { hours: 9, minutes: 0, seconds: 0 }), estimatedEndDate: set(today, { hours: 17, minutes: 0, seconds: 0 }), priority: 'Alta', location: 'Taller 1' },
-    { id: 'MT-ASG-002', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: add(today, { days: 2 }), status: 'Assignat', technician: 'Toni', operatorId: 'op-02', startDate: add(today, { days: 1 }), estimatedEndDate: add(today, { days: 1, hours: 4 }), priority: 'Normal', location: 'Taller 3' },
-    { id: 'MT-ASG-003', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Todos', frequency: 'Semestral', dueDate: add(today, { days: 3 }), status: 'Assignat', technician: 'Ferran', operatorId: 'op-11', startDate: add(today, { days: 2 }), estimatedEndDate: add(today, { days: 2, hours: 8 }), priority: 'Normal', location: 'Taller 2' },
-    { id: 'MT-ASG-004', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(today, { days: 4 }), status: 'Assignat', technician: 'Ramon', operatorId: 'op-01', startDate: add(today, { days: 3 }), estimatedEndDate: add(today, { days: 3, hours: 2 }), priority: 'Baixa', location: 'Taller 1' },
+    { id: 'MT-ASG-001', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, equipmentType: 'Antena', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'Assignat', technician: 'Pau', operatorId: 'op-05', startDate: set(today, { hours: 9, minutes: 0, seconds: 0 }), estimatedEndDate: set(today, { hours: 17, minutes: 0, seconds: 0 }), priority: 'Alta', location: 'Taller 1' },
+    { id: 'MT-ASG-002', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: add(today, { days: 2 }), status: 'Assignat', technician: 'Toni', operatorId: 'op-02', startDate: add(today, { days: 1 }), estimatedEndDate: add(today, { days: 1, hours: 4 }), priority: 'Normal', location: 'Taller 3' },
+    { id: 'MT-ASG-003', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Todos', frequency: 'Semestral', dueDate: add(today, { days: 3 }), status: 'Assignat', technician: 'Ferran', operatorId: 'op-11', startDate: add(today, { days: 2 }), estimatedEndDate: add(today, { days: 2, hours: 8 }), priority: 'Normal', location: 'Taller 2' },
+    { id: 'MT-ASG-004', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Validadora INDRA', frequency: 'Trimestral', dueDate: add(today, { days: 4 }), status: 'Assignat', technician: 'Ramon', operatorId: 'op-01', startDate: add(today, { days: 3 }), estimatedEndDate: add(today, { days: 3, hours: 2 }), priority: 'Baixa', location: 'Taller 1' },
 
     // 3 "Pendent" (en flota)
-    { id: 'MT-PND-001', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 5 }), status: 'Pendent', technician: undefined, operatorId: 'op-03', priority: 'Normal', location: 'En Ruta' },
-    { id: 'MT-PND-002', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Limpieza Validadora', frequency: 'Mensual', dueDate: add(today, { days: 6 }), status: 'Pendent', technician: undefined, operatorId: 'op-02', priority: 'Normal', location: 'En Ruta' },
-    { id: 'MT-PND-003', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-11', 2).id, equipmentType: 'Todos', frequency: 'Anual', dueDate: add(today, { days: 7 }), status: 'Pendent', technician: undefined, operatorId: 'op-11', priority: 'Alta', location: 'En Ruta' },
+    { id: 'MT-PND-001', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 5 }), status: 'Pendent', technician: undefined, operatorId: 'op-03', priority: 'Normal', location: 'En Ruta' },
+    { id: 'MT-PND-002', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Limpieza Validadora', frequency: 'Mensual', dueDate: add(today, { days: 6 }), status: 'Pendent', technician: undefined, operatorId: 'op-02', priority: 'Normal', location: 'En Ruta' },
+    { id: 'MT-PND-003', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-11', 2).id, equipmentType: 'Todos', frequency: 'Anual', dueDate: add(today, { days: 7 }), status: 'Pendent', technician: undefined, operatorId: 'op-11', priority: 'Alta', location: 'En Ruta' },
     
     // 3 "Retardat"
-    { id: 'MT-RTD-001', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-05', 1).id, equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { days: 1 }), status: 'Retardat', technician: 'Josep', operatorId: 'op-05', startDate: sub(today, { days: 1, hours: 4 }), estimatedEndDate: sub(today, { hours: -4 }), priority: 'Alta', location: 'Taller 2' },
-    { id: 'MT-RTD-002', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 3).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: today, status: 'Retardat', technician: 'Marc', operatorId: 'op-01', startDate: sub(today, { hours: 6 }), estimatedEndDate: sub(today, { hours: 1 }), priority: 'Alta', location: 'Taller 1' },
-    { id: 'MT-RTD-003', type: 'Preventiu', title: getRandomItem(preventiveTitles), vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Retardat', technician: 'Oriol', operatorId: 'op-03', startDate: sub(today, { days: 2, hours: 8 }), estimatedEndDate: sub(today, { days: 1 }), priority: 'Alta', location: 'Taller 3' },
+    { id: 'MT-RTD-001', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-05', 1).id, equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { days: 1 }), status: 'Retardat', technician: 'Josep', operatorId: 'op-05', startDate: sub(today, { days: 1, hours: 4 }), estimatedEndDate: sub(today, { hours: -4 }), priority: 'Alta', location: 'Taller 2' },
+    { id: 'MT-RTD-002', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-01', 3).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: today, status: 'Retardat', technician: 'Marc', operatorId: 'op-01', startDate: sub(today, { hours: 6 }), estimatedEndDate: sub(today, { hours: 1 }), priority: 'Alta', location: 'Taller 1' },
+    { id: 'MT-RTD-003', type: 'Preventiu', title: getRandomItem(activeInterventionTitles), vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Retardat', technician: 'Oriol', operatorId: 'op-03', startDate: sub(today, { days: 2, hours: 8 }), estimatedEndDate: sub(today, { days: 1 }), priority: 'Alta', location: 'Taller 3' },
 ];
 
 
@@ -245,16 +245,16 @@ const dueTasks: MaintenanceTask[] = [
 // # 3. DATOS PARA HISTORIAL
 // #############################################################
 const completedTasks: MaintenanceTask[] = [
-    { id: 'MT-C01', type: 'Preventiu', title: 'Manteniment General del Pupitre', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 32 }), status: 'Completat', technician: 'Jordi' },
-    { id: 'MT-C02', type: 'Preventiu', title: 'Manteniment del Sistema de Validació', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: sub(today, { days: 80 }), status: 'Completat', technician: 'Miquel' },
-    { id: 'MT-C03', type: 'Preventiu', title: 'Manteniment del Sistema de Comunicacions', vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { months: 11 }), status: 'Completat', technician: 'Pau' },
-    { id: 'MT-C04', type: 'Preventiu', title: "Manteniment del Sistema d'Informació a l'Usuari (Panells)", vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { months: 5 }), status: 'Completat', technician: 'Carles' },
-    { id: 'MT-C05', type: 'Preventiu', title: 'Substitució Programada de Components', vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { months: 2 }), status: 'Completat', technician: 'Oriol' },
-    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment del Sistema de Comptatge de Viatgers (APC)', vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completat', technician: 'David' },
-    { id: 'MT-C07', type: 'Preventiu', title: 'Actualització de Versions de Software/Firmware', vehicleId: findVehicleByOperatorAndIndex('op-02', 5).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completat', technician: 'Bernat' },
-    { id: 'MT-C08', type: 'Preventiu', title: "Manteniment General d'Equipaments Auxiliars", vehicleId: findVehicleByOperatorAndIndex('op-01', 5).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completat', technician: 'Quim' },
-    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment del Sistema de Videovigilància (CCTV)', vehicleId: findVehicleByOperatorAndIndex('op-06', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Toni' },
-    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment General del Pupitre', vehicleId: findVehicleByOperatorAndIndex('op-09', 2).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completat', technician: 'Ramon' },
+    { id: 'MT-C01', type: 'Preventiu', title: "Sistema KO", vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 32 }), status: 'Completat', technician: 'Jordi' },
+    { id: 'MT-C02', type: 'Preventiu', title: "Validadora no comunica", vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: sub(today, { days: 80 }), status: 'Completat', technician: 'Miquel' },
+    { id: 'MT-C03', type: 'Preventiu', title: "Pupitre no s'encén", vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { months: 11 }), status: 'Completat', technician: 'Pau' },
+    { id: 'MT-C04', type: 'Preventiu', title: "Impressora no imprimeix", vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { months: 5 }), status: 'Completat', technician: 'Carles' },
+    { id: 'MT-C05', type: 'Preventiu', title: "Curtcircuit de cablejat", vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { months: 2 }), status: 'Completat', technician: 'Oriol' },
+    { id: 'MT-C06', type: 'Preventiu', title: "Validadora vandalitzada", vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completat', technician: 'David' },
+    { id: 'MT-C07', type: 'Preventiu', title: "Pupitre sense cobertura", vehicleId: findVehicleByOperatorAndIndex('op-02', 5).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completat', technician: 'Bernat' },
+    { id: 'MT-C08', type: 'Preventiu', title: "Impressora no talla tiquets", vehicleId: findVehicleByOperatorAndIndex('op-01', 5).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completat', technician: 'Quim' },
+    { id: 'MT-C09', type: 'Preventiu', title: "Fallada en fusibles", vehicleId: findVehicleByOperatorAndIndex('op-06', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Toni' },
+    { id: 'MT-C10', type: 'Preventiu', title: "Validadora no s'encén", vehicleId: findVehicleByOperatorAndIndex('op-09', 2).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completat', technician: 'Ramon' },
 ];
 
 export const mockTasks: MaintenanceTask[] = [...activeInterventions, ...dueTasks, ...completedTasks];
@@ -264,25 +264,18 @@ export const mockTasks: MaintenanceTask[] = [...activeInterventions, ...dueTasks
 // # 4. DATOS PARA AVERÍAS (CORRECTIVO)
 // #############################################################
 export const mockIncidents: Incident[] = [
-    // 4 Abiertas - ALTA / CRÍTICA
-    { id: 'AV-001', vehicleId: findVehicleByOperatorAndIndex('op-01', 6).id, issue: "El sistema de validació no descompta viatges T-mobilitat", priority: 'Crítica', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { hours: 2 }), slaDays: 1, equipmentType: 'Todos', location: 'Taller 1' },
-    { id: 'AV-002', vehicleId: findVehicleByOperatorAndIndex('op-02', 3).id, issue: "El pupitre no s'encén o no obre serveis", priority: 'Crítica', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { hours: 4 }), slaDays: 1, equipmentType: 'Pupitre', location: 'Taller 2' },
-    { id: 'AV-003', vehicleId: findVehicleByOperatorAndIndex('op-11', 4).id, issue: "El sistema de validació no comunica", priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-11', reportedAt: sub(today, { hours: 8 }), slaDays: 1, equipmentType: 'Validadora INDRA', location: 'Taller 1' },
-    { id: 'AV-004', vehicleId: findVehicleByOperatorAndIndex('op-03', 3).id, issue: "Fallo en els fusibles del sistema embarcat", priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-03', reportedAt: sub(today, { hours: 10 }), slaDays: 2, equipmentType: 'Validadora Inetum', location: 'Taller 3' },
-    
-    // 3 Abiertas - NORMAL
-    { id: 'AV-005', vehicleId: findVehicleByOperatorAndIndex('op-01', 7).id, issue: "La impressora del pupitre no imprimeix tiquets", priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { days: 1 }), slaDays: 3, equipmentType: 'Pupitre', location: 'En Ruta' },
-    { id: 'AV-006', vehicleId: findVehicleByOperatorAndIndex('op-05', 2).id, issue: "El pupitre no té cobertura 4G/GPS", priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-05', reportedAt: sub(today, { days: 1, hours: 2 }), slaDays: 3, equipmentType: 'Validadora Inetum', location: 'En Ruta' },
-    { id: 'AV-007', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, issue: "La impressora del pupitre no talla el paper", priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { days: 1, hours: 5 }), slaDays: 2, equipmentType: 'Antena', location: 'Taller 2' },
-    
-    // 3 En Progreso
-    { id: 'AV-008', vehicleId: findVehicleByOperatorAndIndex('op-11', 5).id, issue: 'Validadora vandalitzada', priority: 'Normal', status: 'En Progreso', assignedTo: 'Jordi', operatorId: 'op-11', reportedAt: sub(today, { days: 2 }), slaDays: 4, equipmentType: 'Pupitre', location: 'Taller 1' },
-    { id: 'AV-009', vehicleId: findVehicleByOperatorAndIndex('op-01', 8).id, issue: 'Curtcircuit en el cablejat de la validadora', priority: 'Baixa', status: 'En Progreso', assignedTo: 'Carles', operatorId: 'op-01', reportedAt: sub(today, { days: 2 }), slaDays: 5, equipmentType: 'Validadora INDRA', location: 'Taller 3' },
-    { id: 'AV-010', vehicleId: findVehicleByOperatorAndIndex('op-03', 4).id, issue: "El sistema de validació no llegeix targetes T-mobilitat", priority: 'Alta', status: 'En Progreso', assignedTo: 'Pau', operatorId: 'op-03', reportedAt: sub(today, { days: 1 }), slaDays: 2, equipmentType: 'Validadora INDRA', location: 'Taller 2' },
-    
-    // 2 Resueltos
-    { id: 'AV-011', vehicleId: findVehicleByOperatorAndIndex('op-02', 6).id, issue: "El sistema no s'inicia (Sistema KO)", priority: 'Alta', status: 'Resuelto', assignedTo: 'Miquel', operatorId: 'op-02', reportedAt: sub(today, { days: 3 }), slaDays: 2, equipmentType: 'Cableado', location: 'Taller 2' },
-    { id: 'AV-012', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, issue: "La validadora no s'encén", priority: 'Normal', status: 'Resuelto', assignedTo: 'David', operatorId: 'op-09', reportedAt: sub(today, { days: 4 }), slaDays: 5, equipmentType: 'Validadora INDRA', location: 'Cotxera' },
+    { id: 'AV-001', vehicleId: '6916-HCR', issue: "Validadora no comunica", priority: 'Crítica', status: 'Obert', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { hours: 2 }), slaDays: 1, equipmentType: 'Todos', location: 'Taller 1' },
+    { id: 'AV-002', vehicleId: '7001-HCR', issue: "Pupitre no s'encén", priority: 'Crítica', status: 'Obert', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { hours: 4 }), slaDays: 1, equipmentType: 'Pupitre', location: 'Taller 2' },
+    { id: 'AV-003', vehicleId: '0816-NDV', issue: "Impressora no imprimeix", priority: 'Alta', status: 'Obert', assignedTo: null, operatorId: 'op-11', reportedAt: sub(today, { hours: 8 }), slaDays: 1, equipmentType: 'Validadora INDRA', location: 'Taller 1' },
+    { id: 'AV-004', vehicleId: '4602-JKD', issue: "Curtcircuit de cablejat", priority: 'Alta', status: 'Obert', assignedTo: null, operatorId: 'op-03', reportedAt: sub(today, { hours: 10 }), slaDays: 2, equipmentType: 'Validadora Inetum', location: 'Taller 3' },
+    { id: 'AV-005', vehicleId: '6917-HCR', issue: "Sistema KO", priority: 'Normal', status: 'Obert', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { days: 1 }), slaDays: 3, equipmentType: 'Pupitre', location: 'En Ruta' },
+    { id: 'AV-006', vehicleId: '5400-LFN', issue: "Validadora vandalitzada", priority: 'Normal', status: 'Obert', assignedTo: null, operatorId: 'op-05', reportedAt: sub(today, { days: 1, hours: 2 }), slaDays: 3, equipmentType: 'Validadora Inetum', location: 'En Ruta' },
+    { id: 'AV-007', vehicleId: '7002-HCR', issue: "Pupitre sense cobertura", priority: 'Normal', status: 'Obert', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { days: 1, hours: 5 }), slaDays: 2, equipmentType: 'Antena', location: 'Taller 2' },
+    { id: 'AV-008', vehicleId: '3806-MBW', issue: 'Impressora no talla tiquets', priority: 'Normal', status: 'En Reparació', assignedTo: 'Jordi', operatorId: 'op-11', reportedAt: sub(today, { days: 2 }), slaDays: 4, equipmentType: 'Pupitre', location: 'Taller 1' },
+    { id: 'AV-009', vehicleId: '3235-MCR', issue: 'Fallada en fusibles', priority: 'Baixa', status: 'En Reparació', assignedTo: 'Carles', operatorId: 'op-01', reportedAt: sub(today, { days: 2 }), slaDays: 5, equipmentType: 'Validadora INDRA', location: 'Taller 3' },
+    { id: 'AV-010', vehicleId: '1399-MCY', issue: "Validadora no s'encén", priority: 'Alta', status: 'En Reparació', assignedTo: 'Pau', operatorId: 'op-03', reportedAt: sub(today, { days: 1 }), slaDays: 2, equipmentType: 'Validadora INDRA', location: 'Taller 2' },
+    { id: 'AV-011', vehicleId: '7907-MNZ', issue: "El sistema no s'inicia (Sistema KO)", priority: 'Alta', status: 'Resolt', assignedTo: 'Miquel', operatorId: 'op-02', reportedAt: sub(today, { days: 3 }), slaDays: 2, equipmentType: 'Cablejat', location: 'Taller 2' },
+    { id: 'AV-012', vehicleId: '0816-NDV', issue: "La validadora no s'encén", priority: 'Normal', status: 'Resolt', assignedTo: 'David', operatorId: 'op-09', reportedAt: sub(today, { days: 4 }), slaDays: 5, equipmentType: 'Validadora INDRA', location: 'Cotxera' },
 ];
 
 
