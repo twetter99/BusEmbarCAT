@@ -1,5 +1,5 @@
 
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData, OperatorMetrics, InventoryCategory } from '@/lib/types';
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData, OperatorMetrics } from '@/lib/types';
 import { add, sub, set } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -221,16 +221,16 @@ const dueTasks: MaintenanceTask[] = [
 // # 3. DATOS PARA HISTORIAL
 // #############################################################
 const completedTasks: MaintenanceTask[] = [
-    { id: 'MT-C01', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 32 }), status: 'Completado', technician: 'Jordi' },
-    { id: 'MT-C02', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: sub(today, { days: 80 }), status: 'Completado', technician: 'Miquel' },
-    { id: 'MT-C03', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { months: 11 }), status: 'Completado', technician: 'Pau' },
-    { id: 'MT-C04', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { months: 5 }), status: 'Completado', technician: 'Carles' },
-    { id: 'MT-C05', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Baterías CPU', frequency: '10.000 km', dueDate: sub(today, { months: 2 }), status: 'Completado', technician: 'Oriol' },
-    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completado', technician: 'David' },
-    { id: 'MT-C07', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completado', technician: 'Bernat' },
-    { id: 'MT-C08', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completado', technician: 'Quim' },
-    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Toni' },
-    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completado', technician: 'Ramon' },
+    { id: 'MT-C01', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 32 }), status: 'Completat', technician: 'Jordi' },
+    { id: 'MT-C02', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: sub(today, { days: 80 }), status: 'Completat', technician: 'Miquel' },
+    { id: 'MT-C03', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { months: 11 }), status: 'Completat', technician: 'Pau' },
+    { id: 'MT-C04', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { months: 5 }), status: 'Completat', technician: 'Carles' },
+    { id: 'MT-C05', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Baterías CPU', frequency: '10.000 km', dueDate: sub(today, { months: 2 }), status: 'Completat', technician: 'Oriol' },
+    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completat', technician: 'David' },
+    { id: 'MT-C07', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completat', technician: 'Bernat' },
+    { id: 'MT-C08', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completat', technician: 'Quim' },
+    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Toni' },
+    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completat', technician: 'Ramon' },
 ];
 
 export const mockTasks: MaintenanceTask[] = [...activeInterventions, ...dueTasks, ...completedTasks];
@@ -241,24 +241,24 @@ export const mockTasks: MaintenanceTask[] = [...activeInterventions, ...dueTasks
 // #############################################################
 export const mockIncidents: Incident[] = [
     // 4 Abiertas - ALTA
-    { id: 'AV-001', vehicleId: getRandomBusIdForOperator('op-01'), issue: 'Fallada total del sistema de frens ABS', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { hours: 2 }), slaDays: 1, location: 'Taller 1' },
-    { id: 'AV-002', vehicleId: getRandomBusIdForOperator('op-02'), issue: 'Avaria greu de motor, fum negre', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { hours: 4 }), slaDays: 1, location: 'Taller 2' },
-    { id: 'AV-003', vehicleId: getRandomBusIdForOperator('op-11'), issue: 'Pèrdua de direcció assistida', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-11', reportedAt: sub(today, { hours: 8 }), slaDays: 1, location: 'Taller 1' },
-    { id: 'AV-004', vehicleId: getRandomBusIdForOperator('op-03'), issue: 'La porta principal no tanca correctament', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-03', reportedAt: sub(today, { hours: 10 }), slaDays: 2, location: 'Taller 3' },
+    { id: 'AV-001', vehicleId: 'VEH-ALSINAGR-300', issue: 'Fallada total del sistema de frens ABS', priority: 'Crítica', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { hours: 2 }), slaDays: 1, equipmentType: 'Todos', location: 'Taller 1' },
+    { id: 'AV-002', vehicleId: 'VEH-AUTOCARE-302', issue: 'Avaria greu de motor, fum negre', priority: 'Crítica', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { hours: 4 }), slaDays: 1, equipmentType: 'Todos', location: 'Taller 2' },
+    { id: 'AV-003', vehicleId: 'VEH-TUS-368', issue: 'Pèrdua de direcció assistida', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-11', reportedAt: sub(today, { hours: 8 }), slaDays: 1, equipmentType: 'Todos', location: 'Taller 1' },
+    { id: 'AV-004', vehicleId: 'VEH-AUTOCARS-326', issue: 'La porta principal no tanca correctament', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-03', reportedAt: sub(today, { hours: 10 }), slaDays: 2, equipmentType: 'Todos', location: 'Taller 3' },
     
     // 3 Abiertas - NORMAL
-    { id: 'AV-005', vehicleId: getRandomBusIdForOperator('op-01'), issue: 'El sistema de climatització no funciona', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { days: 1 }), slaDays: 3, location: 'En Ruta' },
-    { id: 'AV-006', vehicleId: getRandomBusIdForOperator('op-05'), issue: 'Fallada en una de les llums de posició', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-05', reportedAt: sub(today, { days: 1, hours: 2 }), slaDays: 3, location: 'En Ruta' },
-    { id: 'AV-007', vehicleId: getRandomBusIdForOperator('op-02'), issue: 'La rampa per a cadires de rodes no es desplega', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { days: 1, hours: 5 }), slaDays: 2, location: 'Taller 2' },
+    { id: 'AV-005', vehicleId: 'VEH-ALSINAGR-301', issue: 'El sistema de climatització no funciona', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { days: 1 }), slaDays: 3, equipmentType: 'Todos', location: 'En Ruta' },
+    { id: 'AV-006', vehicleId: 'VEH-AUTOCARS-342', issue: 'Fallada en una de les llums de posició', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-05', reportedAt: sub(today, { days: 1, hours: 2 }), slaDays: 3, equipmentType: 'Todos', location: 'En Ruta' },
+    { id: 'AV-007', vehicleId: 'VEH-AUTOCARE-303', issue: 'La rampa per a cadires de rodes no es desplega', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { days: 1, hours: 5 }), slaDays: 2, equipmentType: 'Todos', location: 'Taller 2' },
     
     // 3 En Reparación
-    { id: 'AV-008', vehicleId: getRandomBusIdForOperator('op-11'), issue: 'Revisió de la caixa de canvis automàtica', priority: 'Normal', status: 'En Progreso', assignedTo: 'Jordi', operatorId: 'op-11', reportedAt: sub(today, { days: 2 }), slaDays: 4, location: 'Taller 1' },
-    { id: 'AV-009', vehicleId: getRandomBusIdForOperator('op-01'), issue: 'Canvi de pneumàtics de l\'eix davanter', priority: 'Baixa', status: 'En Progreso', assignedTo: 'Carles', operatorId: 'op-01', reportedAt: sub(today, { days: 2 }), slaDays: 5, location: 'Taller 3' },
-    { id: 'AV-010', vehicleId: getRandomBusIdForOperator('op-03'), issue: 'Reparació del sistema de validació de bitllets', priority: 'Alta', status: 'En Progreso', assignedTo: 'Pau', operatorId: 'op-03', reportedAt: sub(today, { days: 1 }), slaDays: 2, location: 'Taller 2' },
+    { id: 'AV-008', vehicleId: 'VEH-TUS-369', issue: 'Revisió de la caixa de canvis automàtica', priority: 'Normal', status: 'En Progreso', assignedTo: 'Jordi', operatorId: 'op-11', reportedAt: sub(today, { days: 2 }), slaDays: 4, equipmentType: 'Todos', location: 'Taller 1' },
+    { id: 'AV-009', vehicleId: 'VEH-ALSINAGR-445', issue: 'Canvi de pneumàtics de l\'eix davanter', priority: 'Baixa', status: 'En Progreso', assignedTo: 'Carles', operatorId: 'op-01', reportedAt: sub(today, { days: 2 }), slaDays: 5, equipmentType: 'Todos', location: 'Taller 3' },
+    { id: 'AV-010', vehicleId: 'VEH-AUTOCARS-203', issue: 'Reparació del sistema de validació de bitllets', priority: 'Alta', status: 'En Progreso', assignedTo: 'Pau', operatorId: 'op-03', reportedAt: sub(today, { days: 1 }), slaDays: 2, equipmentType: 'Validadora INDRA', location: 'Taller 2' },
     
     // 2 Resueltos
-    { id: 'AV-011', vehicleId: getRandomBusIdForOperator('op-02'), issue: 'Substitució de vidre lateral trencat', priority: 'Alta', status: 'Resuelto', assignedTo: 'Miquel', operatorId: 'op-02', reportedAt: sub(today, { days: 3 }), slaDays: 2, location: 'Taller 2' },
-    { id: 'AV-012', vehicleId: getRandomBusIdForOperator('op-05'), issue: 'Neteja i desinfecció interior completa', priority: 'Baixa', status: 'Resuelto', assignedTo: 'David', operatorId: 'op-05', reportedAt: sub(today, { days: 4 }), slaDays: 5, location: 'Cotxera' },
+    { id: 'AV-011', vehicleId: 'VEH-AUTOCARE-159', issue: 'Substitució de vidre lateral trencat', priority: 'Alta', status: 'Resuelto', assignedTo: 'Miquel', operatorId: 'op-02', reportedAt: sub(today, { days: 3 }), slaDays: 2, equipmentType: 'Todos', location: 'Taller 2' },
+    { id: 'AV-012', vehicleId: 'VEH-MONTFERR-334', issue: 'Neteja i desinfecció interior completa', priority: 'Baixa', status: 'Resuelto', assignedTo: 'David', operatorId: 'op-09', reportedAt: sub(today, { days: 4 }), slaDays: 5, equipmentType: 'Todos', location: 'Cotxera' },
 ];
 
 
