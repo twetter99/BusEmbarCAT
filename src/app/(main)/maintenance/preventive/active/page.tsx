@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -40,37 +39,40 @@ import { format } from 'date-fns';
 import { ca } from 'date-fns/locale';
 
 // Simulación de datos en tiempo real para el progreso
-const useInterventionProgress = (taskId: string) => {
+const useInterventionProgress = (task: MaintenanceTask) => {
     const [progress, setProgress] = React.useState(0);
     const [startTime, setStartTime] = React.useState<Date | null>(null);
 
     React.useEffect(() => {
-        // Simula un progreso que aumenta con el tiempo
-        const randomStart = Math.random() * 50; // Inicia con algo de progreso
+        if (task.status !== 'En Progrés') {
+            setProgress(0);
+            setStartTime(null);
+            return;
+        }
+
+        const randomStart = Math.random() * 50; 
         setProgress(randomStart);
-        setStartTime(new Date(Date.now() - Math.random() * 3 * 60 * 60 * 1000)); // Empezó en las últimas 3h
+        setStartTime(task.startDate || new Date(Date.now() - Math.random() * 3 * 60 * 60 * 1000));
 
         const interval = setInterval(() => {
             setProgress(prev => {
                 const newProgress = prev + Math.random() * 5;
                 return newProgress > 100 ? 100 : newProgress;
             });
-        }, 15000); // Actualiza cada 15 segundos
+        }, 15000); 
 
         return () => clearInterval(interval);
-    }, [taskId]);
+    }, [task.id, task.status, task.startDate]);
     
     return { progress, startTime };
 };
 
 const InterventionRow = ({ task }: { task: MaintenanceTask }) => {
-    const { progress, startTime } = useInterventionProgress(task.id);
+    const { progress, startTime } = useInterventionProgress(task);
     const vehicle = mockVehicles.find(v => v.id === task.vehicleId);
     const operator = mockOperators.find(o => o.id === vehicle?.operatorId);
 
-    const estimatedDurationHours = task.frequency === 'Bianual' ? 4 : task.frequency === 'Anual' ? 2 : 1;
-    const estimatedEndTime = startTime ? new Date(startTime.getTime() + estimatedDurationHours * 60 * 60 * 1000) : null;
-    const isDelayed = estimatedEndTime ? estimatedEndTime < new Date() : false;
+    const isDelayed = task.status === 'Retardat';
 
     return (
         <TableRow className={isDelayed ? "bg-destructive/10 hover:bg-destructive/20" : ""}>
@@ -100,19 +102,30 @@ const InterventionRow = ({ task }: { task: MaintenanceTask }) => {
                 </div>
             </TableCell>
             <TableCell>
-                <div className="flex items-center gap-2">
-                    <div className="w-24">
-                         <Progress value={progress} className="h-2" />
+                {task.status === 'En Progrés' ? (
+                    <div className="flex items-center gap-2">
+                        <div className="w-24">
+                            <Progress value={progress} className="h-2" />
+                        </div>
+                        <span className="text-xs font-mono w-10 text-right">{Math.floor(progress)}%</span>
                     </div>
-                    <span className="text-xs font-mono w-10 text-right">{Math.floor(progress)}%</span>
-                </div>
+                ) : (
+                     <Badge variant='outline'>{task.status}</Badge>
+                )}
             </TableCell>
             <TableCell>
                  <div className="flex items-center gap-2 text-sm">
                     <Clock className={`h-4 w-4 ${isDelayed ? 'text-destructive' : 'text-muted-foreground'}`} />
                     <div>
-                        {startTime && <div>Inici: <span className="font-mono">{format(startTime, 'HH:mm')}</span></div>}
-                        {estimatedEndTime && <div>Fi est: <span className="font-mono">{format(estimatedEndTime, 'HH:mm')}</span></div>}
+                        {startTime && task.estimatedEndDate && (
+                            <>
+                                <div>Inici: <span className="font-mono">{format(startTime, 'HH:mm')}</span></div>
+                                <div>Fi est: <span className="font-mono">{format(task.estimatedEndDate, 'HH:mm')}</span></div>
+                            </>
+                        )}
+                         {task.status === 'Assignat' && task.startDate && (
+                             <div>Programat: <span className="font-mono">{format(task.startDate, 'dd/MM HH:mm')}</span></div>
+                         )}
                     </div>
                  </div>
             </TableCell>
@@ -140,43 +153,23 @@ export default function ActiveInterventionsPage() {
     const { user } = useAuth();
 
     const activeInterventions = React.useMemo(() => {
-        let tasks = mockTasks.filter(t => t.status === 'En Progreso' && t.technician);
+        let tasks = mockTasks.filter(t => ['En Progrés', 'Assignat', 'Retardat'].includes(t.status));
         if (user?.role === 'Operador') {
             const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
             tasks = tasks.filter(t => operatorVehicles.includes(t.vehicleId));
         }
-        // Limitar a 4 tecnicos unicos
-        const technicians = new Set<string>();
-        const filteredTasks: MaintenanceTask[] = [];
-        for (const task of tasks) {
-            if (technicians.size < 4 && task.technician && !technicians.has(task.technician)) {
-                technicians.add(task.technician);
-                filteredTasks.push(task);
-            } else if (task.technician && technicians.has(task.technician)) {
-                // Allows a technician to have multiple tasks, but we only want 4 unique techs.
-                // To keep this logic simple, we will just show the first task for each of the 4 techs.
-            }
-        }
-        // If we want exactly 4 tasks for 4 techs, we ensure we only take 4 tasks for the first 4 unique techs.
-        const uniqueTechs = new Set(filteredTasks.map(t => t.technician));
-        return tasks.filter(t => t.technician && uniqueTechs.has(t.technician)).slice(0, 4);
-
+        return tasks;
     }, [user]);
 
     const activeTechnicians = React.useMemo(() => {
-        return new Set(activeInterventions.map(t => t.technician)).size;
+        return new Set(activeInterventions.map(t => t.technician).filter(Boolean)).size;
     }, [activeInterventions]);
     
     const activeVehicles = React.useMemo(() => {
         return new Set(activeInterventions.map(t => t.vehicleId)).size;
     }, [activeInterventions]);
 
-    const delayedTasks = activeInterventions.filter(task => {
-        const startTime = new Date(Date.now() - Math.random() * 3 * 60 * 60 * 1000);
-        const estimatedDurationHours = task.frequency === 'Bianual' ? 4 : task.frequency === 'Anual' ? 2 : 1;
-        const estimatedEndTime = new Date(startTime.getTime() + estimatedDurationHours * 60 * 60 * 1000);
-        return estimatedEndTime < new Date();
-    }).length;
+    const delayedTasks = activeInterventions.filter(task => task.status === 'Retardat').length;
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -188,7 +181,7 @@ export default function ActiveInterventionsPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{activeInterventions.length}</div>
-                        <p className="text-xs text-muted-foreground">Tasques "En Progrés" actualment.</p>
+                        <p className="text-xs text-muted-foreground">Tasques "En Progrés", "Assignades" o "Retardades".</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -256,7 +249,7 @@ export default function ActiveInterventionsPage() {
                             <PlayCircle className="h-16 w-16 text-muted-foreground mb-4" />
                             <h3 className="text-xl font-semibold">No hi ha intervencions actives</h3>
                             <p className="text-muted-foreground mt-2 max-w-sm">
-                                No hi ha cap manteniment preventiu en estat "En Progrés" en aquest moment. Les tasques actives apareixeran aquí en temps real.
+                                No hi ha cap manteniment preventiu actiu en aquest moment. Les tasques actives apareixeran aquí en temps real.
                             </p>
                         </div>
                     )}

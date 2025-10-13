@@ -1,5 +1,4 @@
 
-
 import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData, OperatorMetrics, InventoryCategory } from '@/lib/types';
 import { add, sub, set } from 'date-fns';
 
@@ -148,76 +147,118 @@ const generateEquipment = (): Equipment[] => {
 
 export const mockEquipment: Equipment[] = generateEquipment();
 
+const today = new Date('2026-01-15T15:00:00'); // Consistent date for mocks
+
 const technicians = ['Jordi', 'Pau', 'Marc', 'Oriol', 'Xavier', 'Miquel', 'Josep', 'Carles', 'David', 'Bernat', 'Quim', 'Toni', 'Ramon', 'Ferran', 'Albert'];
 const validOperatorIds = ['op-01', 'op-02', 'op-03', 'op-05', 'op-11'];
-const today = new Date();
-
 const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
-const getRandomBusId = () => `BUS-${Math.floor(Math.random() * 410) + 1001}`;
+const getRandomBusIdForOperator = (operatorId: string) => {
+    const operatorVehicles = mockVehicles.filter(v => v.operatorId === operatorId);
+    if (operatorVehicles.length === 0) return `BUS-${Math.floor(Math.random() * 410) + 1001}`;
+    return getRandomItem(operatorVehicles).id;
+}
+
+
+// #############################################################
+// # 1. DATOS PARA INTERVENCIONES ACTIVAS (MANTENIMIENTO PREVENTIVO)
+// #############################################################
 
 const activeInterventions: MaintenanceTask[] = [
     // 5 "En Progrés"
-    { id: 'MT-ACT-001', type: 'Preventiu', title: 'Revisió 20.000 km', vehicleId: getRandomBusId(), equipmentType: 'Bornes y Pupitre', frequency: '20.000 km', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Jordi', operatorId: 'op-01', startDate: sub(today, { hours: 2 }), estimatedEndDate: add(today, { hours: 2 }), priority: 'Normal', location: 'Taller 1' },
-    { id: 'MT-ACT-002', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusId(), equipmentType: 'Placa conexiones', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Miquel', operatorId: 'op-02', startDate: sub(today, { hours: 4 }), estimatedEndDate: add(today, { hours: 4 }), priority: 'Normal', location: 'Taller 2' },
-    { id: 'MT-ACT-003', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusId(), equipmentType: 'Limpieza Validadora', frequency: '10.000 km', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Carles', operatorId: 'op-11', startDate: sub(today, { hours: 1 }), estimatedEndDate: add(today, { hours: 1 }), priority: 'Normal', location: 'Taller 1' },
-    { id: 'MT-ACT-004', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusId(), equipmentType: 'Soporte y Barras', frequency: 'Semestral', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David', operatorId: 'op-03', startDate: sub(today, { hours: 3 }), estimatedEndDate: add(today, { hours: 5 }), priority: 'Normal', location: 'Taller 3' },
-    { id: 'MT-ACT-005', type: 'Preventiu', title: 'Revisió 30.000 km', vehicleId: getRandomBusId(), equipmentType: 'Baterías CPU', frequency: '30.000 km', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Bernat', operatorId: 'op-01', startDate: sub(today, { hours: 5 }), estimatedEndDate: add(today, { hours: 3 }), priority: 'Normal', location: 'Taller 2' },
+    { id: 'MT-ACT-001', type: 'Preventiu', title: 'Revisió 20.000 km', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Bornes y Pupitre', frequency: '20.000 km', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Jordi', operatorId: 'op-01', startDate: sub(today, { hours: 2 }), estimatedEndDate: add(today, { hours: 2 }), priority: 'Normal', location: 'Taller 1' },
+    { id: 'MT-ACT-002', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Placa conexiones', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Miquel', operatorId: 'op-02', startDate: sub(today, { hours: 4 }), estimatedEndDate: add(today, { hours: 4 }), priority: 'Normal', location: 'Taller 2' },
+    { id: 'MT-ACT-003', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Limpieza Validadora', frequency: '10.000 km', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Carles', operatorId: 'op-11', startDate: sub(today, { hours: 1 }), estimatedEndDate: add(today, { hours: 1 }), priority: 'Normal', location: 'Taller 1' },
+    { id: 'MT-ACT-004', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Soporte y Barras', frequency: 'Semestral', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David', operatorId: 'op-03', startDate: sub(today, { hours: 3 }), estimatedEndDate: add(today, { hours: 5 }), priority: 'Normal', location: 'Taller 3' },
+    { id: 'MT-ACT-005', type: 'Preventiu', title: 'Revisió 30.000 km', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Baterías CPU', frequency: '30.000 km', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Bernat', operatorId: 'op-01', startDate: sub(today, { hours: 5 }), estimatedEndDate: add(today, { hours: 3 }), priority: 'Normal', location: 'Taller 2' },
+    
     // 4 "Assignat"
-    { id: 'MT-ASG-001', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusId(), equipmentType: 'Antena', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'Assignat', technician: 'Pau', operatorId: 'op-05', startDate: set(today, { hours: 9, minutes: 0, seconds: 0 }), estimatedEndDate: set(today, { hours: 17, minutes: 0, seconds: 0 }), priority: 'Alta', location: 'Taller 1' },
-    { id: 'MT-ASG-002', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusId(), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: add(today, { days: 2 }), status: 'Assignat', technician: 'Toni', operatorId: 'op-02', startDate: add(today, { days: 1 }), estimatedEndDate: add(today, { days: 1, hours: 4 }), priority: 'Normal', location: 'Taller 3' },
-    { id: 'MT-ASG-003', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusId(), equipmentType: 'Todos', frequency: 'Semestral', dueDate: add(today, { days: 3 }), status: 'Assignat', technician: 'Ferran', operatorId: 'op-11', startDate: add(today, { days: 2 }), estimatedEndDate: add(today, { days: 2, hours: 8 }), priority: 'Normal', location: 'Taller 2' },
-    { id: 'MT-ASG-004', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusId(), equipmentType: 'Validadora INDRA', frequency: '10.000 km', dueDate: add(today, { days: 4 }), status: 'Assignat', technician: 'Ramon', operatorId: 'op-01', startDate: add(today, { days: 3 }), estimatedEndDate: add(today, { days: 3, hours: 2 }), priority: 'Baixa', location: 'Taller 1' },
+    { id: 'MT-ASG-001', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Antena', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'Assignat', technician: 'Pau', operatorId: 'op-05', startDate: set(today, { hours: 9, minutes: 0, seconds: 0 }), estimatedEndDate: set(today, { hours: 17, minutes: 0, seconds: 0 }), priority: 'Alta', location: 'Taller 1' },
+    { id: 'MT-ASG-002', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: add(today, { days: 2 }), status: 'Assignat', technician: 'Toni', operatorId: 'op-02', startDate: add(today, { days: 1 }), estimatedEndDate: add(today, { days: 1, hours: 4 }), priority: 'Normal', location: 'Taller 3' },
+    { id: 'MT-ASG-003', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Todos', frequency: 'Semestral', dueDate: add(today, { days: 3 }), status: 'Assignat', technician: 'Ferran', operatorId: 'op-11', startDate: add(today, { days: 2 }), estimatedEndDate: add(today, { days: 2, hours: 8 }), priority: 'Normal', location: 'Taller 2' },
+    { id: 'MT-ASG-004', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Validadora INDRA', frequency: '10.000 km', dueDate: add(today, { days: 4 }), status: 'Assignat', technician: 'Ramon', operatorId: 'op-01', startDate: add(today, { days: 3 }), estimatedEndDate: add(today, { days: 3, hours: 2 }), priority: 'Baixa', location: 'Taller 1' },
+
     // 3 "Pendent" (en flota)
-    { id: 'MT-PND-001', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusId(), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 5 }), status: 'Pendent', technician: undefined, operatorId: 'op-03', priority: 'Normal', location: 'En Ruta' },
-    { id: 'MT-PND-002', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusId(), equipmentType: 'Limpieza Validadora', frequency: 'Mensual', dueDate: add(today, { days: 6 }), status: 'Pendent', technician: undefined, operatorId: 'op-02', priority: 'Normal', location: 'En Ruta' },
-    { id: 'MT-PND-003', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusId(), equipmentType: 'Todos', frequency: 'Anual', dueDate: add(today, { days: 7 }), status: 'Pendent', technician: undefined, operatorId: 'op-11', priority: 'Alta', location: 'En Ruta' },
+    { id: 'MT-PND-001', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 5 }), status: 'Pendent', technician: undefined, operatorId: 'op-03', priority: 'Normal', location: 'En Ruta' },
+    { id: 'MT-PND-002', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Limpieza Validadora', frequency: 'Mensual', dueDate: add(today, { days: 6 }), status: 'Pendent', technician: undefined, operatorId: 'op-02', priority: 'Normal', location: 'En Ruta' },
+    { id: 'MT-PND-003', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Todos', frequency: 'Anual', dueDate: add(today, { days: 7 }), status: 'Pendent', technician: undefined, operatorId: 'op-11', priority: 'Alta', location: 'En Ruta' },
+    
     // 3 "Retardat"
-    { id: 'MT-RTD-001', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusId(), equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { days: 1 }), status: 'Retardat', technician: 'Josep', operatorId: 'op-05', startDate: sub(today, { days: 1, hours: 4 }), estimatedEndDate: sub(today, { days: 1, hours: -4 }), priority: 'Alta', location: 'Taller 2' },
-    { id: 'MT-RTD-002', type: 'Preventiu', title: 'Revisió 20.000 km', vehicleId: getRandomBusId(), equipmentType: 'Baterías CPU', frequency: '20.000 km', dueDate: today, status: 'Retardat', technician: 'Marc', operatorId: 'op-01', startDate: sub(today, { hours: 6 }), estimatedEndDate: sub(today, { hours: 1 }), priority: 'Alta', location: 'Taller 1' },
-    { id: 'MT-RTD-003', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusId(), equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Retardat', technician: 'Oriol', operatorId: 'op-03', startDate: sub(today, { days: 2, hours: 8 }), estimatedEndDate: sub(today, { days: 1 }), priority: 'Alta', location: 'Taller 3' },
+    { id: 'MT-RTD-001', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { days: 1 }), status: 'Retardat', technician: 'Josep', operatorId: 'op-05', startDate: sub(today, { days: 1, hours: 4 }), estimatedEndDate: sub(today, { hours: -4 }), priority: 'Alta', location: 'Taller 2' },
+    { id: 'MT-RTD-002', type: 'Preventiu', title: 'Revisió 20.000 km', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Baterías CPU', frequency: '20.000 km', dueDate: today, status: 'Retardat', technician: 'Marc', operatorId: 'op-01', startDate: sub(today, { hours: 6 }), estimatedEndDate: sub(today, { hours: 1 }), priority: 'Alta', location: 'Taller 1' },
+    { id: 'MT-RTD-003', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Retardat', technician: 'Oriol', operatorId: 'op-03', startDate: sub(today, { days: 2, hours: 8 }), estimatedEndDate: sub(today, { days: 1 }), priority: 'Alta', location: 'Taller 3' },
 ];
+
+
+// #############################################################
+// # 2. DATOS PARA CONTROL DE VENCIMIENTOS
+// #############################################################
 
 const dueTasks: MaintenanceTask[] = [
     // 2 VENCIDOS
-    { id: 'MT-VNC-001', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusId(), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 3 }), status: 'Vençut', operatorId: 'op-01', lastMaintenanceDate: sub(today, { days: 33 }), km: 125000 },
-    { id: 'MT-VNC-002', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusId(), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 8 }), status: 'Vençut', operatorId: 'op-11', lastMaintenanceDate: sub(today, { days: 98 }), km: 85000 },
+    { id: 'MT-VNC-001', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 3 }), status: 'Vençut', operatorId: 'op-01', lastMaintenanceDate: sub(today, { days: 33 }), km: 125000 },
+    { id: 'MT-VNC-002', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 8 }), status: 'Vençut', operatorId: 'op-11', lastMaintenanceDate: sub(today, { days: 98 }), km: 85000 },
+    
     // 8 Mensuales (vencen en 1-15 días)
     ...Array.from({ length: 8 }, (_, i) => ({
-        id: `MT-MNS-${i+1}`, type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusId(), equipmentType: 'Limpieza Validadora' as EquipmentType, frequency: 'Mensual' as const, 
-        dueDate: add(today, { days: i + 2 }), status: 'Urgent' as const, operatorId: getRandomItem(validOperatorIds), lastMaintenanceDate: sub(today, { days: 28 - i }), km: 50000 + i * 1000
+        id: `MT-MNS-${i+1}`, type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator(getRandomItem(validOperatorIds)), equipmentType: 'Limpieza Validadora' as EquipmentType, frequency: 'Mensual' as const, 
+        dueDate: add(today, { days: i + 2 }), status: 'Pendent' as const, operatorId: getRandomItem(validOperatorIds), lastMaintenanceDate: sub(today, { days: 28 - i }), km: 50000 + i * 1000
     })),
+
     // 6 Trimestrales (vencen en 15-30 días)
     ...Array.from({ length: 6 }, (_, i) => ({
-        id: `MT-TRS-${i+1}`, type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusId(), equipmentType: 'Soporte y Barras' as EquipmentType, frequency: 'Trimestral' as const,
+        id: `MT-TRS-${i+1}`, type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusIdForOperator(getRandomItem(validOperatorIds)), equipmentType: 'Soporte y Barras' as EquipmentType, frequency: 'Trimestral' as const,
         dueDate: add(today, { days: 15 + i*2 }), status: 'Pendent' as const, operatorId: getRandomItem(validOperatorIds), lastMaintenanceDate: sub(today, { days: 75 - i*2 }), km: 70000 + i * 2000
     })),
+
     // 4 Semestrales (vencen en 30-60 días)
     ...Array.from({ length: 4 }, (_, i) => ({
-        id: `MT-SMS-${i+1}`, type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusId(), equipmentType: 'Antena' as EquipmentType, frequency: 'Semestral' as const,
+        id: `MT-SMS-${i+1}`, type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator(getRandomItem(validOperatorIds)), equipmentType: 'Antena' as EquipmentType, frequency: 'Semestral' as const,
         dueDate: add(today, { days: 30 + i*5 }), status: 'Pendent' as const, operatorId: getRandomItem(validOperatorIds), lastMaintenanceDate: sub(today, { days: 150 - i*5 }), km: 90000 + i * 5000
     })),
 ];
 
-export const mockTasks: MaintenanceTask[] = [...activeInterventions, ...dueTasks];
+// #############################################################
+// # 3. DATOS PARA HISTORIAL
+// #############################################################
+const completedTasks: MaintenanceTask[] = [
+    { id: 'MT-C01', type: 'Preventiu', title: 'Revisió Mensual', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Pupitre', frequency: 'Mensual', dueDate: sub(today, { days: 32 }), status: 'Completado', technician: 'Jordi' },
+    { id: 'MT-C02', type: 'Preventiu', title: 'Revisió Trimestral', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Limpieza Validadora', frequency: 'Trimestral', dueDate: sub(today, { days: 80 }), status: 'Completado', technician: 'Miquel' },
+    { id: 'MT-C03', type: 'Preventiu', title: 'Revisió Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Todos', frequency: 'Anual', dueDate: sub(today, { months: 11 }), status: 'Completado', technician: 'Pau' },
+    { id: 'MT-C04', type: 'Preventiu', title: 'Revisió Semestral', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Antena', frequency: 'Semestral', dueDate: sub(today, { months: 5 }), status: 'Completado', technician: 'Carles' },
+    { id: 'MT-C05', type: 'Preventiu', title: 'Revisió 10.000 km', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Baterías CPU', frequency: '10.000 km', dueDate: sub(today, { months: 2 }), status: 'Completado', technician: 'Oriol' },
+    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: getRandomBusIdForOperator('op-03'), equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completado', technician: 'David' },
+    { id: 'MT-C07', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: getRandomBusIdForOperator('op-02'), equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completado', technician: 'Bernat' },
+    { id: 'MT-C08', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: getRandomBusIdForOperator('op-01'), equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completado', technician: 'Quim' },
+    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: getRandomBusIdForOperator('op-05'), equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Toni' },
+    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: getRandomBusIdForOperator('op-11'), equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completado', technician: 'Ramon' },
+];
+
+export const mockTasks: MaintenanceTask[] = [...activeInterventions, ...dueTasks, ...completedTasks];
 
 
+// #############################################################
+// # 4. DATOS PARA AVERÍAS (CORRECTIVO)
+// #############################################################
 export const mockIncidents: Incident[] = [
     // 4 Abiertas - ALTA
-    { id: 'AV-001', vehicleId: getRandomBusId(), issue: 'Fallo total del sistema de frenos ABS', priority: 'Alta', status: 'Obert', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { hours: 2 }), estimatedEndDate: add(today, { days: 1 }), location: 'Taller 1' },
-    { id: 'AV-002', vehicleId: getRandomBusId(), issue: 'Avaria greu de motor, fum negre', priority: 'Alta', status: 'Obert', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { hours: 4 }), estimatedEndDate: add(today, { days: 2 }), location: 'Taller 2' },
-    { id: 'AV-003', vehicleId: getRandomBusId(), issue: 'Pèrdua de direcció assistida', priority: 'Alta', status: 'Obert', assignedTo: null, operatorId: 'op-11', reportedAt: sub(today, { hours: 8 }), estimatedEndDate: add(today, { days: 1 }), location: 'Taller 1' },
-    { id: 'AV-004', vehicleId: getRandomBusId(), issue: 'La porta principal no tanca correctament', priority: 'Alta', status: 'Obert', assignedTo: null, operatorId: 'op-03', reportedAt: sub(today, { hours: 10 }), estimatedEndDate: add(today, { days: 1 }), location: 'Taller 3' },
+    { id: 'AV-001', vehicleId: getRandomBusIdForOperator('op-01'), issue: 'Fallada total del sistema de frens ABS', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { hours: 2 }), slaDays: 1, location: 'Taller 1' },
+    { id: 'AV-002', vehicleId: getRandomBusIdForOperator('op-02'), issue: 'Avaria greu de motor, fum negre', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { hours: 4 }), slaDays: 1, location: 'Taller 2' },
+    { id: 'AV-003', vehicleId: getRandomBusIdForOperator('op-11'), issue: 'Pèrdua de direcció assistida', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-11', reportedAt: sub(today, { hours: 8 }), slaDays: 1, location: 'Taller 1' },
+    { id: 'AV-004', vehicleId: getRandomBusIdForOperator('op-03'), issue: 'La porta principal no tanca correctament', priority: 'Alta', status: 'Abierto', assignedTo: null, operatorId: 'op-03', reportedAt: sub(today, { hours: 10 }), slaDays: 2, location: 'Taller 3' },
+    
     // 3 Abiertas - NORMAL
-    { id: 'AV-005', vehicleId: getRandomBusId(), issue: 'Sistema de climatització no funciona', priority: 'Normal', status: 'Obert', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { days: 1 }), estimatedEndDate: add(today, { days: 3 }), location: 'En Ruta' },
-    { id: 'AV-006', vehicleId: getRandomBusId(), issue: 'Fallo en una de les llums de posició', priority: 'Normal', status: 'Obert', assignedTo: null, operatorId: 'op-05', reportedAt: sub(today, { days: 1, hours: 2 }), estimatedEndDate: add(today, { days: 2 }), location: 'En Ruta' },
-    { id: 'AV-007', vehicleId: getRandomBusId(), issue: 'La rampa per a cadires de rodes no es desplega', priority: 'Normal', status: 'Obert', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { days: 1, hours: 5 }), estimatedEndDate: add(today, { days: 3 }), location: 'Taller 2' },
+    { id: 'AV-005', vehicleId: getRandomBusIdForOperator('op-01'), issue: 'El sistema de climatització no funciona', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-01', reportedAt: sub(today, { days: 1 }), slaDays: 3, location: 'En Ruta' },
+    { id: 'AV-006', vehicleId: getRandomBusIdForOperator('op-05'), issue: 'Fallada en una de les llums de posició', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-05', reportedAt: sub(today, { days: 1, hours: 2 }), slaDays: 3, location: 'En Ruta' },
+    { id: 'AV-007', vehicleId: getRandomBusIdForOperator('op-02'), issue: 'La rampa per a cadires de rodes no es desplega', priority: 'Normal', status: 'Abierto', assignedTo: null, operatorId: 'op-02', reportedAt: sub(today, { days: 1, hours: 5 }), slaDays: 2, location: 'Taller 2' },
+    
     // 3 En Reparación
-    { id: 'AV-008', vehicleId: getRandomBusId(), issue: 'Revisió de la caixa de canvis automàtica', priority: 'Normal', status: 'En Reparació', assignedTo: 'Jordi', operatorId: 'op-11', reportedAt: sub(today, { days: 2 }), estimatedEndDate: add(today, { hours: 6 }), location: 'Taller 1' },
-    { id: 'AV-009', vehicleId: getRandomBusId(), issue: 'Canvi de pneumàtics de l\'eix davanter', priority: 'Baixa', status: 'En Reparació', assignedTo: 'Carles', operatorId: 'op-01', reportedAt: sub(today, { days: 2 }), estimatedEndDate: add(today, { hours: 2 }), location: 'Taller 3' },
-    { id: 'AV-010', vehicleId: getRandomBusId(), issue: 'Reparació del sistema de validació de bitllets', priority: 'Alta', status: 'En Reparació', assignedTo: 'Pau', operatorId: 'op-03', reportedAt: sub(today, { days: 1 }), estimatedEndDate: add(today, { days: 1 }), location: 'Taller 2' },
+    { id: 'AV-008', vehicleId: getRandomBusIdForOperator('op-11'), issue: 'Revisió de la caixa de canvis automàtica', priority: 'Normal', status: 'En Progreso', assignedTo: 'Jordi', operatorId: 'op-11', reportedAt: sub(today, { days: 2 }), slaDays: 4, location: 'Taller 1' },
+    { id: 'AV-009', vehicleId: getRandomBusIdForOperator('op-01'), issue: 'Canvi de pneumàtics de l\'eix davanter', priority: 'Baixa', status: 'En Progreso', assignedTo: 'Carles', operatorId: 'op-01', reportedAt: sub(today, { days: 2 }), slaDays: 5, location: 'Taller 3' },
+    { id: 'AV-010', vehicleId: getRandomBusIdForOperator('op-03'), issue: 'Reparació del sistema de validació de bitllets', priority: 'Alta', status: 'En Progreso', assignedTo: 'Pau', operatorId: 'op-03', reportedAt: sub(today, { days: 1 }), slaDays: 2, location: 'Taller 2' },
+    
     // 2 Resueltos
-    { id: 'AV-011', vehicleId: getRandomBusId(), issue: 'Substitució de vidre lateral trencat', priority: 'Alta', status: 'Resolt', assignedTo: 'Miquel', operatorId: 'op-02', reportedAt: sub(today, { days: 3 }), estimatedEndDate: sub(today, { hours: 2 }), location: 'Taller 2' },
-    { id: 'AV-012', vehicleId: getRandomBusId(), issue: 'Neteja i desinfecció interior completa', priority: 'Baixa', status: 'Resolt', assignedTo: 'David', operatorId: 'op-05', reportedAt: sub(today, { days: 4 }), estimatedEndDate: sub(today, { days: 1 }), location: 'Cotxera' },
+    { id: 'AV-011', vehicleId: getRandomBusIdForOperator('op-02'), issue: 'Substitució de vidre lateral trencat', priority: 'Alta', status: 'Resuelto', assignedTo: 'Miquel', operatorId: 'op-02', reportedAt: sub(today, { days: 3 }), slaDays: 2, location: 'Taller 2' },
+    { id: 'AV-012', vehicleId: getRandomBusIdForOperator('op-05'), issue: 'Neteja i desinfecció interior completa', priority: 'Baixa', status: 'Resuelto', assignedTo: 'David', operatorId: 'op-05', reportedAt: sub(today, { days: 4 }), slaDays: 5, location: 'Cotxera' },
 ];
 
 
@@ -429,5 +470,3 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
         stockCritico: false,
     }
 ];
-
-    

@@ -31,6 +31,7 @@ import { useAuth } from '@/hooks/use-auth';
 import type { MaintenanceTask, Operator } from '@/lib/types';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
+import { DateRange } from 'react-day-picker';
 
 const FilterControls = ({
   filters,
@@ -42,7 +43,7 @@ const FilterControls = ({
     query: string;
     operator: string;
     technician: string;
-    dateRange: { from?: Date, to?: Date };
+    dateRange?: DateRange;
   };
   onFilterChange: (newFilters: Partial<typeof filters>) => void;
   operators: Operator[];
@@ -50,11 +51,11 @@ const FilterControls = ({
 }) => {
 
   const handleFilterChange = <K extends keyof typeof filters>(key: K, value: (typeof filters)[K]) => {
-    onFilterChange({ ...filters, [key]: value });
+    onFilterChange({ [key]: value });
   };
   
   const clearFilters = () => {
-    onFilterChange({ query: '', operator: 'all', technician: 'all', dateRange: {} });
+    onFilterChange({ query: '', operator: 'all', technician: 'all', dateRange: undefined });
   }
 
   return (
@@ -134,7 +135,7 @@ const FilterControls = ({
                             mode="range"
                             defaultMonth={filters.dateRange?.from}
                             selected={filters.dateRange}
-                            onSelect={(range) => handleFilterChange('dateRange', range || {})}
+                            onSelect={(range) => handleFilterChange('dateRange', range)}
                             numberOfMonths={2}
                         />
                         </PopoverContent>
@@ -149,11 +150,15 @@ const FilterControls = ({
 
 export default function HistoryPage() {
     const { user } = useAuth();
-    const [filters, setFilters] = React.useState({
+    const [filters, setFilters] = React.useState<{
+        query: string;
+        operator: string;
+        technician: string;
+        dateRange?: DateRange;
+    }>({
         query: '',
         operator: 'all',
         technician: 'all',
-        dateRange: {},
     });
 
     const completedTasks: MaintenanceTask[] = React.useMemo(() => {
@@ -172,7 +177,7 @@ export default function HistoryPage() {
         const operatorIds = new Set(completedTasks.map(t => {
             return mockVehicles.find(v => v.id === t.vehicleId)?.operatorId
         }));
-        return mockOperators.filter(op => operatorIds.has(op.id));
+        return mockOperators.filter(op => op && operatorIds.has(op.id));
     }, [user, completedTasks]);
     
     const availableTechnicians = React.useMemo(() => {
@@ -192,7 +197,7 @@ export default function HistoryPage() {
             
             const technicianMatch = filters.technician === 'all' || task.technician === filters.technician;
             
-            const dateMatch = !filters.dateRange.from || (
+            const dateMatch = !filters.dateRange?.from || (
                 task.dueDate >= filters.dateRange.from &&
                 (!filters.dateRange.to || task.dueDate <= filters.dateRange.to)
             );
@@ -258,6 +263,11 @@ export default function HistoryPage() {
                         })}
                     </TableBody>
                 </Table>
+                 {filteredTasks.length === 0 && (
+                    <div className="text-center text-muted-foreground py-12">
+                        <p className="font-semibold">No s'han trobat intervencions que coincideixin amb els filtres.</p>
+                    </div>
+                )}
             </CardContent>
         </Card>
     </main>

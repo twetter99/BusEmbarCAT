@@ -27,6 +27,7 @@ type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
 
 const getUrgency = (incident: Incident): UrgencyStatus => {
     if (incident.status !== 'Abierto') return 'Normal';
+    if (!incident.slaDays) return 'Normal';
     
     const dueDate = add(incident.reportedAt, { days: incident.slaDays });
     const today = new Date();
@@ -51,8 +52,8 @@ const statusVariant: { [key in Incident['status']]: 'destructive' | 'secondary' 
 const priorityVariant: { [key in Incident['priority']]: 'destructive' | 'secondary' | 'default' | 'outline' } = {
     'Crítica': 'destructive',
     'Alta': 'secondary',
-    'Media': 'default',
-    'Baja': 'outline',
+    'Normal': 'default',
+    'Baixa': 'outline',
 };
 
 const urgencyBadgeVariant: { [key in UrgencyStatus]: 'destructive' | 'warning' | 'attention' | 'default' } = {
@@ -100,7 +101,7 @@ const IncidentCard = ({ incident }: { incident: Incident }) => {
     const vehicle = mockVehicles.find(v => v.id === incident.vehicleId);
     const urgency = getUrgency(incident);
     const UrgencyIcon = urgencyIcons[urgency];
-    const dueDate = add(incident.reportedAt, { days: incident.slaDays });
+    const dueDate = incident.slaDays ? add(incident.reportedAt, { days: incident.slaDays }) : null;
 
     return (
         <Card className={cn("flex flex-col", incident.status === 'Abierto' ? urgencyCardClass[urgency] : '')}>
@@ -133,25 +134,27 @@ const IncidentCard = ({ incident }: { incident: Incident }) => {
                         </div>
                     </>
                 )}
-                <div className="flex items-start gap-2">
-                    <UrgencyIcon className={cn("h-4 w-4 mt-0.5", {
-                        'text-destructive': urgency === 'Vencido',
-                        'text-warning': urgency === 'Urgente',
-                        'text-attention': urgency === 'Próximo',
-                        'text-muted-foreground': urgency === 'Normal',
-                    })} />
-                    <div className={cn("text-sm", incident.status === 'Abierto' && urgencyDateClass[urgency], 'p-1 rounded-md')}>
-                       <span>
-                         {urgency === 'Vencido' ? 'Vençut ' : 'Venç '}
-                         {formatDistanceToNow(dueDate, { addSuffix: true, locale: ca })}
-                       </span>
-                        <br />
-                       <span className="text-xs">({format(dueDate, 'd MMM, yyyy', { locale: ca })})</span>
+                {dueDate && (
+                    <div className="flex items-start gap-2">
+                        <UrgencyIcon className={cn("h-4 w-4 mt-0.5", {
+                            'text-destructive': urgency === 'Vencido',
+                            'text-warning': urgency === 'Urgente',
+                            'text-attention': urgency === 'Próximo',
+                            'text-muted-foreground': urgency === 'Normal',
+                        })} />
+                        <div className={cn("text-sm", incident.status === 'Abierto' && urgencyDateClass[urgency], 'p-1 rounded-md')}>
+                        <span>
+                            {urgency === 'Vencido' ? 'Vençut ' : 'Venç '}
+                            {formatDistanceToNow(dueDate, { addSuffix: true, locale: ca })}
+                        </span>
+                            <br />
+                        <span className="text-xs">({format(dueDate, 'd MMM, yyyy', { locale: ca })})</span>
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="flex items-center gap-2">
                     <Wrench className="h-4 w-4" />
-                    <span>Revisió de: {incident.equipmentType}</span>
+                    <span>Revisió de: {incident.equipmentType || 'General'}</span>
                 </div>
                 {incident.assignedTo ? <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
@@ -246,8 +249,8 @@ export default function CorrectivePage() {
                 if (urgencyOrder[urgencyA] !== urgencyOrder[urgencyB]) {
                     return urgencyOrder[urgencyA] - urgencyOrder[urgencyB];
                 }
-                const dueDateA = add(a.reportedAt, { days: a.slaDays });
-                const dueDateB = add(b.reportedAt, { days: b.slaDays });
+                const dueDateA = a.slaDays ? add(a.reportedAt, {days: a.slaDays}) : new Date();
+                const dueDateB = b.slaDays ? add(b.reportedAt, {days: b.slaDays}) : new Date();
                 return dueDateA.getTime() - dueDateB.getTime();
             });
         }
@@ -289,5 +292,3 @@ export default function CorrectivePage() {
     </main>
   );
 }
-
-    

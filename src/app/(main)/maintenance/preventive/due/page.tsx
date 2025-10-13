@@ -22,56 +22,56 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { FilterControls } from '@/components/layout/filter-controls';
 
-type UrgencyStatus = 'Vencido' | 'Urgente' | 'Próximo' | 'Normal';
+type UrgencyStatus = 'Vençut' | 'Urgent' | 'Proper' | 'Normal';
 
 const getUrgency = (task: MaintenanceTask): UrgencyStatus => {
-    if (task.status !== 'Pendiente') return 'Normal';
+    if (task.status !== 'Pendent' && task.status !== 'Vençut') return 'Normal';
     
-    const today = new Date();
+    const today = new Date('2026-01-15T15:00:00');
     today.setHours(0, 0, 0, 0);
     const taskDate = new Date(task.dueDate);
     taskDate.setHours(0, 0, 0, 0);
 
     const daysDiff = differenceInDays(taskDate, today);
 
-    if (daysDiff < 0) return 'Vencido';
-    if (daysDiff <= 3) return 'Urgente';
-    if (daysDiff <= 15) return 'Próximo';
+    if (daysDiff < 0) return 'Vençut';
+    if (daysDiff <= 7) return 'Urgent';
+    if (daysDiff <= 30) return 'Proper';
     return 'Normal';
 };
 
 const urgencyBadgeVariant: { [key in UrgencyStatus]: 'destructive' | 'warning' | 'attention' | 'default' } = {
-    'Vencido': 'destructive',
-    'Urgente': 'warning',
-    'Próximo': 'attention',
+    'Vençut': 'destructive',
+    'Urgent': 'warning',
+    'Proper': 'attention',
     'Normal': 'default',
 };
 
 const urgencyText: { [key in UrgencyStatus]: string } = {
-    'Vencido': 'Vençut',
-    'Urgente': 'Urgent',
-    'Próximo': 'Proper',
+    'Vençut': 'Vençut',
+    'Urgent': 'Urgent',
+    'Proper': 'Proper',
     'Normal': 'Pendent',
 };
 
 const urgencyCardClass: { [key in UrgencyStatus]: string } = {
-  'Vencido': 'border-l-4 border-l-destructive',
-  'Urgente': 'border-l-4 border-l-warning',
-  'Próximo': 'border-l-4 border-l-attention',
+  'Vençut': 'border-l-4 border-l-destructive',
+  'Urgent': 'border-l-4 border-l-warning',
+  'Proper': 'border-l-4 border-l-attention',
   'Normal': '',
 };
 
 const urgencyDateClass: { [key in UrgencyStatus]: string } = {
-  'Vencido': 'bg-destructive/10 text-destructive',
-  'Urgente': 'bg-warning/10 text-warning-foreground',
-  'Próximo': 'bg-attention/10 text-attention-foreground',
+  'Vençut': 'bg-destructive/10 text-destructive',
+  'Urgent': 'bg-warning/10 text-warning-foreground',
+  'Proper': 'bg-attention/10 text-attention-foreground',
   'Normal': '',
 };
 
 const urgencyIcons: { [key in UrgencyStatus]: React.ElementType } = {
-  'Vencido': AlertTriangle,
-  'Urgente': Zap,
-  'Próximo': Calendar,
+  'Vençut': AlertTriangle,
+  'Urgent': Zap,
+  'Proper': Calendar,
   'Normal': Clock,
 };
 
@@ -109,13 +109,13 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                 )}
                 <div className="flex items-start gap-2">
                     <UrgencyIcon className={cn("h-4 w-4 mt-0.5", {
-                        'text-destructive': urgency === 'Vencido',
-                        'text-warning': urgency === 'Urgente',
-                        'text-attention': urgency === 'Próximo',
+                        'text-destructive': urgency === 'Vençut',
+                        'text-warning': urgency === 'Urgent',
+                        'text-attention': urgency === 'Proper',
                     })} />
                     <div className={cn("text-sm p-1 rounded-md", urgencyDateClass[urgency])}>
                        <span>
-                         {urgency === 'Vencido' ? 'Vençut ' : 'Venç '}
+                         {urgency === 'Vençut' ? 'Vençut ' : 'Venç '}
                          {formatDistanceToNow(task.dueDate, { addSuffix: true, locale: ca })}
                        </span>
                         <br />
@@ -153,7 +153,7 @@ export default function DuePage() {
   });
 
   const allPendingTasks = React.useMemo(() => {
-    let tasks = mockTasks.filter(t => t.status === 'Pendiente');
+    let tasks = mockTasks.filter(t => t.status === 'Pendent' || t.status === 'Vençut');
      if (user?.role === 'Operador') {
         const operatorVehicles = mockVehicles.filter(v => v.operatorId === user.operatorId).map(v => v.id);
         tasks = tasks.filter(t => operatorVehicles.includes(t.vehicleId));
@@ -172,7 +172,7 @@ export default function DuePage() {
           return mockOperators.filter(op => op.id === user.operatorId);
       }
       const operatorIds = new Set(allPendingTasks.map(t => mockVehicles.find(v => v.id === t.vehicleId)?.operatorId));
-      return mockOperators.filter(op => operatorIds.has(op.id));
+      return mockOperators.filter(op => op && operatorIds.has(op.id));
   }, [user, allPendingTasks]);
 
   const filteredTasks = React.useMemo(() => {
@@ -186,9 +186,9 @@ export default function DuePage() {
   
   const tasksByUrgency = React.useMemo(() => {
     const grouped: Record<UrgencyStatus, MaintenanceTask[]> = {
-      'Vencido': [],
-      'Urgente': [],
-      'Próximo': [],
+      'Vençut': [],
+      'Urgent': [],
+      'Proper': [],
       'Normal': []
     };
     filteredTasks.forEach(task => {
