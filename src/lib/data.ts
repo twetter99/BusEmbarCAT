@@ -155,6 +155,10 @@ const findVehicleByOperatorAndIndex = (operatorId: string, index: number): Vehic
     }
     // Fallback if no vehicle for operator is found
     const fallbackVehicle = mockVehicles[index % mockVehicles.length];
+    if (!fallbackVehicle) {
+      // This should not happen if mockVehicles is not empty
+      throw new Error("mockVehicles is empty, cannot find a fallback vehicle.");
+    }
     return fallbackVehicle;
 };
 
