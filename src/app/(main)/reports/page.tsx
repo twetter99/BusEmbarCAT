@@ -61,12 +61,12 @@ export default function ReportsPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {/* Documento de Actividad Mensual */}
-        <Card className="flex flex-col">
+        <Card className="flex flex-col lg:col-span-2">
           <CardHeader>
              <div className="flex items-start justify-between">
                  <div>
                     <CardTitle>Documento de Actividad Mensual</CardTitle>
-                    <CardDescription>Reporte automático requerido por el pliego de SERMETRA.</CardDescription>
+                    <CardDescription>Reporte automático requerido por el pliego de SERMETRA. Genera con un solo clic el informe completo con traspassos, instalaciones, desinstalaciones, albaranes, material y estado de la bolsa de estoc.</CardDescription>
                  </div>
                  <FileText className="h-8 w-8 text-primary" />
              </div>
@@ -78,7 +78,7 @@ export default function ReportsPage() {
             </div>
              <div>
                 <p className="text-sm text-muted-foreground">Estado actual:</p>
-                <p className="font-semibold text-green-600">Generado automáticamente</p>
+                <p className="font-semibold text-green-600">Generado automáticamente y listo para descargar.</p>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-end gap-2 border-t pt-6 flex-wrap">
@@ -86,7 +86,7 @@ export default function ReportsPage() {
             <Button variant="outline"><Eye className="mr-2 h-4 w-4" /> Preview</Button>
             <Button variant="outline"><Sliders className="mr-2 h-4 w-4" /> Personalizar</Button>
             <Button variant="outline"><Settings className="mr-2 h-4 w-4" /> Programar</Button>
-            <Button><Download className="mr-2 h-4 w-4" /> Generar</Button>
+            <Button><Download className="mr-2 h-4 w-4" /> Generar Informe Actual</Button>
           </CardFooter>
         </Card>
 
