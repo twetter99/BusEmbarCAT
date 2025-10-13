@@ -122,26 +122,26 @@ const generateEquipment = (): Equipment[] => {
   createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operatiu', 'IND-003');
 
   // Create unassigned equipment
-  createEquipment('Pupitre', undefined, null, 'En Estoc', 'PUP-100', 'Magatzem Principal');
+  createEquipment('Pupitre', undefined, null, 'En Stock', 'PUP-100', 'Magatzem Principal');
   createEquipment('Validadora INDRA', undefined, null, 'Requereix Reparació', 'IND-100', 'Taller Reparacions');
-  createEquipment('Validadora Inetum', undefined, null, 'En Estoc', 'INE-100', 'Magatzem Operador 2');
-  createEquipment('Terminal de consulta INDRA', undefined, null, 'En Estoc', 'CON-100', 'Magatzem Principal');
+  createEquipment('Validadora Inetum', undefined, null, 'En Stock', 'INE-100', 'Magatzem Operador 2');
+  createEquipment('Terminal de consulta INDRA', undefined, null, 'En Stock', 'CON-100', 'Magatzem Principal');
   
   // Create all subtypes of Material auxiliar
   createEquipment('Material auxiliar', 'MMC', mockVehicles[4], 'Operatiu', 'MMC-002');
-  createEquipment('Material auxiliar', 'Placa de conexión', null, 'En Estoc', 'PLC-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Placa de conexión', null, 'En Stock', 'PLC-101', 'Magatzem Principal');
   createEquipment('Material auxiliar', 'Soporte', mockVehicles[5], 'Requereix Reparació', 'SOP-001');
-  createEquipment('Material auxiliar', 'Antena', null, 'En Estoc', 'ANT-101', 'Magatzem Operador 1');
+  createEquipment('Material auxiliar', 'Antena', null, 'En Stock', 'ANT-101', 'Magatzem Operador 1');
   createEquipment('Material auxiliar', 'Cambio de IP', mockVehicles[6], 'Operatiu', 'CIP-001');
-  createEquipment('Material auxiliar', 'Kit de conexión HARTING', null, 'En Estoc', 'HAR-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Kit de conexión HARTING', null, 'En Stock', 'HAR-101', 'Magatzem Principal');
   createEquipment('Material auxiliar', 'Cable de conexión', mockVehicles[7], 'Operatiu', 'CAB-001');
   createEquipment('Material auxiliar', 'Conector', null, 'Requereix Reparació', 'CON-102', 'Taller Reparacions');
   createEquipment('Material auxiliar', 'Fusible', mockVehicles[8], 'Operatiu', 'FUS-001');
-  createEquipment('Material auxiliar', 'Perno', null, 'En Estoc', 'PER-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Perno', null, 'En Stock', 'PER-101', 'Magatzem Principal');
   createEquipment('Material auxiliar', 'Tanque', mockVehicles[9], 'Operatiu', 'TAN-001');
-  createEquipment('Material auxiliar', 'Brida', null, 'En Estoc', 'BRI-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Brida', null, 'En Stock', 'BRI-101', 'Magatzem Principal');
   createEquipment('Material auxiliar', 'Travesaño', mockVehicles[10], 'Operatiu', 'TRA-001');
-  createEquipment('Material auxiliar', 'Barra', null, 'En Estoc', 'BAR-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Barra', null, 'En Stock', 'BAR-101', 'Magatzem Principal');
 
   return equipmentList;
 };
@@ -166,49 +166,45 @@ const technicians = ['Jordi', 'Pau', 'Marc', 'Oriol', 'Xavier', 'Miquel', 'Josep
 const today = new Date('2026-01-15T15:00:00');
 
 export const mockTasks: MaintenanceTask[] = [
-    // === PENDENT (10) ===
-    // 4 Vençuts (vermells)
-    { id: 'MT-P01', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-03T15:00:00'), status: 'Pendent' },
-    { id: 'MT-P02', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: new Date('2026-01-07T15:00:00'), status: 'Pendent' },
-    { id: 'MT-P03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: new Date('2026-01-12T15:00:00'), status: 'Pendent' },
-    { id: 'MT-P04', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2025-12-20T15:00:00'), status: 'Pendent' },
+    // === PENDENT ===
+    // 4 Vençuts (per a Control de Venciments)
+    { id: 'MT-P01', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 12 }), status: 'Pendent', technician: 'Jordi' },
+    { id: 'MT-P02', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 8 }), status: 'Pendent' },
+    { id: 'MT-P03', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { days: 3 }), status: 'Pendent', technician: 'Pau' },
+    { id: 'MT-P04', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 25 }), status: 'Pendent' },
     
-    // 2 Urgents (taronges)
-    { id: 'MT-P05', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-01-16T15:00:00'), status: 'Pendent' },
-    { id: 'MT-P06', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-18T15:00:00'), status: 'Pendent' },
+    // 2 Urgents (vencen en <= 3 dies)
+    { id: 'MT-P05', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'Pendent', technician: 'Marc' },
+    { id: 'MT-P06', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 3 }), status: 'Pendent' },
 
-    // 3 Propers (grocs)
-    { id: 'MT-P07', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: new Date('2026-01-23T15:00:00'), status: 'Pendent' },
-    { id: 'MT-P08', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: new Date('2026-01-30T15:00:00'), status: 'Pendent' },
+    // 2 Pròxims (vencen en <= 15 dies)
+    { id: 'MT-P07', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 8 }), status: 'Pendent', technician: 'Oriol' },
+    { id: 'MT-P08', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: add(today, { days: 15 }), status: 'Pendent' },
     
-    // 1 Normal (default)
-    { id: 'MT-P09', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-06', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-02-05T15:00:00'), status: 'Pendent' },
-    { id: 'MT-P10', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-03-15T15:00:00'), status: 'Pendent' },
+    // 2 Normals (vencen en > 15 dies)
+    { id: 'MT-P09', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-06', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 21 }), status: 'Pendent', technician: 'Xavier' },
+    { id: 'MT-P10', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 60 }), status: 'Pendent' },
 
+    // === EN PROGRÉS (4 per a Intervencions Actives) ===
+    { id: 'MT-IP01', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Pau' },
+    { id: 'MT-IP02', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Xavier' },
+    { id: 'MT-IP03', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-08', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Miquel' },
+    { id: 'MT-IP04', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-04', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Josep' },
+    // Dades addicionals per si es necessiten més
+    { id: 'MT-IP05', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: today, status: 'En Progrés', technician: 'Carles' },
+    { id: 'MT-IP06', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David' },
 
-    // === EN PROGRÉS (10) ===
-    { id: 'MT-IP01', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Pau' },
-    { id: 'MT-IP02', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Xavier' },
-    { id: 'MT-IP03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Miquel' },
-    { id: 'MT-IP04', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Josep' },
-    { id: 'MT-IP05', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: today, status: 'En Progrés', technician: 'Carles' },
-    { id: 'MT-IP06', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David' },
-    { id: 'MT-IP07', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 3).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: add(today, { weeks: 1 }), status: 'En Progrés', technician: 'Bernat' },
-    { id: 'MT-IP08', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 3).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Quim' },
-    { id: 'MT-IP09', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Toni' },
-    { id: 'MT-IP10', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Ramon' },
-
-    // === COMPLETAT (10) ===
-    { id: 'MT-C01', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 4).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Completat', technician: 'Pau' },
-    { id: 'MT-C02', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Xavier' },
-    { id: 'MT-C03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 2).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { weeks: 3 }), status: 'Completat', technician: 'Miquel' },
-    { id: 'MT-C04', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 2).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(today, { days: 5 }), status: 'Completat', technician: 'Josep' },
-    { id: 'MT-C05', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { months: 1 }), status: 'Completat', technician: 'Carles' },
-    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completat', technician: 'David' },
-    { id: 'MT-C07', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 5).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completat', technician: 'Bernat' },
-    { id: 'MT-C08', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 5).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completat', technician: 'Quim' },
-    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Toni' },
-    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 2).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completat', technician: 'Ramon' },
+    // === COMPLETAT (per a Historial) ===
+    { id: 'MT-C01', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-01', 4).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Completado', technician: 'Pau' },
+    { id: 'MT-C02', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Xavier' },
+    { id: 'MT-C03', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-08', 2).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { weeks: 3 }), status: 'Completado', technician: 'Miquel' },
+    { id: 'MT-C04', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-04', 2).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(today, { days: 5 }), status: 'Completado', technician: 'Josep' },
+    { id: 'MT-C05', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-11', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { months: 1 }), status: 'Completado', technician: 'Carles' },
+    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completado', technician: 'David' },
+    { id: 'MT-C07', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-02', 5).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completado', technician: 'Bernat' },
+    { id: 'MT-C08', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-01', 5).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completado', technician: 'Quim' },
+    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-06', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Toni' },
+    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-09', 2).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completado', technician: 'Ramon' },
 ];
 
 export const mockIncidents: Incident[] = [
