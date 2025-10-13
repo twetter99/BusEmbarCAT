@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { mockInstallations, mockDecommissionings, mockTransfers, mockOperators } from '@/lib/data';
 import type { Installation, Decommissioning, Transfer } from '@/lib/types';
-import { Package, PackageCheck, PackageOpen, ArrowRight, Truck, Building, Calendar, User, PlusCircle } from 'lucide-react';
+import { PackageCheck, PackageOpen, ArrowRight, Truck, Building, Calendar, User, PlusCircle, Target, Clock, CheckCircle, DollarSign } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { NewInstallationForm, NewDecommissioningForm, NewTransferForm } from './forms';
 import { useAuth } from '@/hooks/use-auth';
-
+import { Progress } from '@/components/ui/progress';
 
 const statusVariant: { [key: string]: 'default' | 'secondary' | 'destructive' | 'outline' | 'warning' } = {
   'Programada': 'secondary',
@@ -112,7 +112,9 @@ const DecommissioningCard = ({ item }: { item: Decommissioning }) => {
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span>Programada: {item.scheduledDate}</span>
                 </div>
+
                 <Separator />
+
                 <div className="space-y-1">
                     <h4 className="font-semibold">Material a recuperar:</h4>
                     <ul className="list-disc list-inside text-muted-foreground">
@@ -177,6 +179,21 @@ const TransferCard = ({ item }: { item: Transfer }) => {
     );
 };
 
+const KPICard = ({ title, value, subtext, icon: Icon, progress, progressColor }: { title: string, value: string, subtext: string, icon: React.ElementType, progress?: number, progressColor?: string }) => (
+    <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{title}</CardTitle>
+            <Icon className="h-5 w-5 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+            <div className="text-2xl font-bold">{value}</div>
+            <p className="text-xs text-muted-foreground">{subtext}</p>
+            {progress !== undefined && (
+                 <Progress value={progress} className="mt-2 h-2" style={{ backgroundColor: progressColor ? `${progressColor}20` : undefined, accentColor: progressColor }} />
+            )}
+        </CardContent>
+    </Card>
+);
 
 export default function InstallationsPage() {
     const { user } = useAuth();
@@ -205,6 +222,10 @@ export default function InstallationsPage() {
         return mockTransfers;
     }, [user]);
     
+  // Mock data for KPIs
+  const budgetTotal = 66600;
+  const budgetSpent = 21600; 
+  const budgetProgress = (budgetSpent / budgetTotal) * 100;
 
   const newInstallationsCount = userInstallations.length;
   const decommissioningsCount = userDecommissionings.length;
@@ -213,8 +234,9 @@ export default function InstallationsPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex items-center justify-between">
-            <div className="flex-1">
-                {/* El título se gestiona desde el layout */}
+            <div>
+              <h1 className="text-2xl font-bold">Operaciones Lote 2</h1>
+              <p className="text-muted-foreground">Instalaciones, Desinstalaciones y Traspasos</p>
             </div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -239,29 +261,23 @@ export default function InstallationsPage() {
             </DropdownMenu>
         </div>
 
-
        <Card>
         <CardHeader>
-            <CardTitle>Resumen Operativo</CardTitle>
-            <CardDescription>Estado actual de las operaciones de instalación y traspaso.</CardDescription>
+            <CardTitle>KPIs de Rendimiento (Lote 2)</CardTitle>
+            <CardDescription>Métricas clave para la auditoría de servicio de SERMETRA.</CardDescription>
         </CardHeader>
         <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <div className="p-4 border rounded-lg">
-                    <Package className="mx-auto h-8 w-8 text-primary mb-2"/>
-                    <p className="text-2xl font-bold">{newInstallationsCount}</p>
-                    <p className="text-sm text-muted-foreground">Nuevas Instalaciones</p>
-                </div>
-                 <div className="p-4 border rounded-lg">
-                    <PackageOpen className="mx-auto h-8 w-8 text-destructive mb-2"/>
-                    <p className="text-2xl font-bold">{decommissioningsCount}</p>
-                    <p className="text-sm text-muted-foreground">Desinstalaciones</p>
-                </div>
-                 <div className="p-4 border rounded-lg">
-                    <ArrowRight className="mx-auto h-8 w-8 text-attention-foreground mb-2"/>
-                    <p className="text-2xl font-bold">{transfersCount}</p>
-                    <p className="text-sm text-muted-foreground">Traspasos</p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+               <KPICard title="Cumplimiento SLA Instalación" value="95%" subtext="Operaciones en ≤ 2 días laborables" icon={Target} />
+               <KPICard title="Tiempo Medio de Ciclo" value="1.8 días" subtext="Promedio desde OT a cierre" icon={Clock} />
+               <KPICard title="Tasa de Éxito (FTR)" value="98%" subtext="Instalaciones sin incidencias en 15 días" icon={CheckCircle} />
+               <KPICard 
+                    title="Consumo Bolsa de Material" 
+                    value={new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(budgetTotal - budgetSpent)} 
+                    subtext={`de ${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(budgetTotal)}`} 
+                    icon={DollarSign}
+                    progress={budgetProgress}
+                />
             </div>
         </CardContent>
        </Card>
