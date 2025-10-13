@@ -86,14 +86,14 @@ export default function VehicleDetailPage() {
       <div className="flex items-center justify-center p-8">
         <Card className="w-full max-w-lg text-center">
           <CardHeader>
-            <CardTitle>Vehículo no encontrado</CardTitle>
+            <CardTitle>Vehicle no trobat</CardTitle>
             <CardDescription>
-              El vehículo que buscas no existe o ha sido movido.
+              El vehicle que cerqueu no existeix o ha estat mogut.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => router.push('/vehicles')}>
-              Volver al listado
+              Tornar al llistat
             </Button>
           </CardContent>
         </Card>
@@ -106,10 +106,10 @@ export default function VehicleDetailPage() {
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4" />
-          <span className="sr-only">Volver</span>
+          <span className="sr-only">Tornar</span>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Ficha del Vehículo</h1>
+          <h1 className="text-2xl font-bold">Fitxa del Vehicle</h1>
           <p className="text-muted-foreground">{vehicle.uniqueId}</p>
         </div>
       </div>
@@ -119,9 +119,9 @@ export default function VehicleDetailPage() {
             <CardHeader className="flex flex-row items-center gap-4">
               <Info className="h-6 w-6 text-primary" />
               <div>
-                <CardTitle>Información Básica</CardTitle>
+                <CardTitle>Informació Bàsica</CardTitle>
                 <CardDescription>
-                  Datos identificativos y técnicos del vehículo.
+                  Dades identificatives i tècniques del vehicle.
                 </CardDescription>
               </div>
             </CardHeader>
@@ -129,7 +129,7 @@ export default function VehicleDetailPage() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8 text-sm">
                 <div>
                   <p className="font-semibold text-muted-foreground">
-                    ID Único
+                    ID Únic
                   </p>
                   <p>{vehicle.uniqueId}</p>
                 </div>
@@ -147,23 +147,23 @@ export default function VehicleDetailPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-muted-foreground">
-                    Número de Chasis
+                    Número de Xassís
                   </p>
                   <p>{vehicle.vin}</p>
                 </div>
                 <div>
-                  <p className="font-semibold text-muted-foreground">Modelo</p>
+                  <p className="font-semibold text-muted-foreground">Model</p>
                   <p>{vehicle.model}</p>
                 </div>
                 <div>
                   <p className="font-semibold text-muted-foreground">
-                    Carrocería
+                    Carrosseria
                   </p>
                   <p>{vehicle.bodywork}</p>
                 </div>
                 <div>
                   <p className="font-semibold text-muted-foreground">
-                    Fecha Instalación
+                    Data Instal·lació
                   </p>
                   <p>{vehicle.preInstallationDate || 'N/A'}</p>
                 </div>
@@ -176,10 +176,10 @@ export default function VehicleDetailPage() {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <HardDrive className="h-6 w-6 text-primary" />
-                    Equipamiento Instalado
+                    Equipament Instal·lat
                 </div>
                 <span className="text-sm font-medium text-muted-foreground">
-                    Total: {installedEquipment.length}/{totalEquipmentLimit} equipos
+                    Total: {installedEquipment.length}/{totalEquipmentLimit} equips
                 </span>
               </CardTitle>
             </CardHeader>
@@ -188,9 +188,9 @@ export default function VehicleDetailPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Tipo de Equipo</TableHead>
-                      <TableHead>Número de Serie</TableHead>
-                      <TableHead>Estado</TableHead>
+                      <TableHead>Tipus d'Equip</TableHead>
+                      <TableHead>Número de Sèrie</TableHead>
+                      <TableHead>Estat</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -217,7 +217,7 @@ export default function VehicleDetailPage() {
                 </Table>
               ) : (
                 <div className="text-center text-muted-foreground py-8">
-                  <p>Este vehículo no tiene equipamiento asignado actualmente.</p>
+                  <p>Aquest vehicle no té equipament assignat actualment.</p>
                 </div>
               )}
             </CardContent>
@@ -228,16 +228,16 @@ export default function VehicleDetailPage() {
           <Card>
             <CardHeader className="flex flex-row items-center gap-4">
               <Wrench className="h-6 w-6 text-primary" />
-              <CardTitle>Estado y Operador</CardTitle>
+              <CardTitle>Estat i Operador</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
               <div>
                 <p className="font-semibold text-muted-foreground">Operador</p>
-                <p>{operator?.name || 'No asignado'}</p>
+                <p>{operator?.name || 'No assignat'}</p>
               </div>
               <div>
                 <p className="font-semibold text-muted-foreground">
-                  Estado del Vehículo
+                  Estat del Vehicle
                 </p>
                 <div>
                   <Badge variant={statusVariant[vehicle.status]}>
@@ -249,21 +249,21 @@ export default function VehicleDetailPage() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Estadísticas</CardTitle>
+              <CardTitle>Estadístiques</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center text-sm">
-                <p className="font-medium">Total de Equipos Instalados</p>
+                <p className="font-medium">Total d'Equips Instal·lats</p>
                 <p className="font-bold text-lg">{installedEquipment.length}</p>
               </div>
               <Separator />
               <div className="text-sm text-muted-foreground">
                 <p>
-                  <span className="font-semibold">Última Revisión:</span>{' '}
+                  <span className="font-semibold">Última Revisió:</span>{' '}
                   10/01/2026
                 </p>
                 <p>
-                  <span className="font-semibold">Próximo Mantenimiento:</span>{' '}
+                  <span className="font-semibold">Pròxim Manteniment:</span>{' '}
                   10/04/2026
                 </p>
               </div>

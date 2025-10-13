@@ -46,41 +46,41 @@ export type NavConfig = {
 export const navItems: NavConfig = {
     main: [
       { id: 'dashboard', href: '/', label: 'Dashboard Principal', icon: AreaChart },
-      { id: 'operators', href: '/operators', label: 'Operadores', icon: Group },
+      { id: 'operators', href: '/operators', label: 'Operadors', icon: Group },
       { id: 'fleet', href: '/vehicles', label: 'Control de Flota', icon: Truck },
-      { id: 'equipment', href: '/equipment', label: 'Equipamiento', icon: HardDrive },
-      { id: 'installations', href: '/installations', label: 'Instalaciones y Traspasos', icon: Replace },
+      { id: 'equipment', href: '/equipment', label: 'Equipament', icon: HardDrive },
+      { id: 'installations', href: '/installations', label: 'Instal·lacions i Traspassos', icon: Replace },
       { 
         id: 'maintenance', 
         href: '#', 
-        label: 'Mantenimiento', 
+        label: 'Manteniment', 
         icon: Wrench,
         subItems: [
-            { id: 'preventive-dashboard', href: '/maintenance/preventive', label: 'Dashboard Preventivo', icon: LayoutDashboard },
-            { id: 'planning', href: '/maintenance/preventive/planning', label: 'Planificación', icon: CalendarIcon },
-            { id: 'active', href: '/maintenance/preventive/active', label: 'Intervenciones Activas', icon: PlayCircle },
-            { id: 'history', href: '/maintenance/preventive/history', label: 'Historial y Trazabilidad', icon: History },
-            { id: 'due', href: '/maintenance/preventive/due', label: 'Control de Vencimientos', icon: ShieldAlert },
-            { id: 'analysis', href: '/maintenance/preventive/analysis', label: 'Análisis e Informes', icon: BarChart3 },
-            { id: 'plan-config', href: '/maintenance/preventive/config', label: 'Configuración del Plan', icon: Settings },
-            { id: 'corrective', href: '/maintenance/corrective', label: 'Correctivo (Averías)', icon: Siren },
+            { id: 'preventive-dashboard', href: '/maintenance/preventive', label: 'Dashboard Preventiu', icon: LayoutDashboard },
+            { id: 'planning', href: '/maintenance/preventive/planning', label: 'Planificació', icon: CalendarIcon },
+            { id: 'active', href: '/maintenance/preventive/active', label: 'Intervencions Actives', icon: PlayCircle },
+            { id: 'history', href: '/maintenance/preventive/history', label: 'Historial i Traçabilitat', icon: History },
+            { id: 'due', href: '/maintenance/preventive/due', label: 'Control de Venciments', icon: ShieldAlert },
+            { id: 'analysis', href: '/maintenance/preventive/analysis', label: 'Anàlisi i Informes', icon: BarChart3 },
+            { id: 'plan-config', href: '/maintenance/preventive/config', label: 'Configuració del Pla', icon: Settings },
+            { id: 'corrective', href: '/maintenance/corrective', label: 'Correctiu (Avaries)', icon: Siren },
         ]
       },
-      { id: 'inventory', href: '/inventory', label: 'Inventario y Stock', icon: Boxes },
-      { id: 'reports', href: '/reports', label: 'Reportes y Analítica', icon: FileText },
+      { id: 'inventory', href: '/inventory', label: 'Inventari i Estoc', icon: Boxes },
+      { id: 'reports', href: '/reports', label: 'Informes i Analítica', icon: FileText },
     ],
     config: [
-        { id: 'users', href: '/users', label: 'Usuarios y Roles', icon: Users },
+        { id: 'users', href: '/users', label: 'Usuaris i Rols', icon: Users },
         { 
             id: 'system-config', 
             href: '/config', 
-            label: 'Configuración', 
+            label: 'Configuració', 
             icon: Settings,
             subItems: [
-                 { id: 'parameters', href: '/parameters', label: 'Parámetros Generales', icon: SlidersHorizontal },
+                 { id: 'parameters', href: '/parameters', label: 'Paràmetres Generals', icon: SlidersHorizontal },
             ]
         },
-        { id: 'access', href: '/access', label: 'Mi Acceso', icon: KeyRound },
+        { id: 'access', href: '/access', label: 'El Meu Accés', icon: KeyRound },
     ]
 }
 

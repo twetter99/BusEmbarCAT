@@ -21,40 +21,40 @@ import { Button } from '@/components/ui/button';
 
 const complianceData = [
   { month: 'Ago', compliance: 92 },
-  { month: 'Sep', compliance: 95 },
+  { month: 'Set', compliance: 95 },
   { month: 'Oct', compliance: 91 },
   { month: 'Nov', compliance: 98 },
-  { month: 'Dic', compliance: 96 },
-  { month: 'Ene', compliance: 89 },
+  { month: 'Des', compliance: 96 },
+  { month: 'Gen', compliance: 89 },
 ];
 
 const complianceChartConfig = {
   compliance: {
-    label: '% Cumplimiento',
+    label: '% Compliment',
     color: 'hsl(var(--primary))',
   },
 } satisfies ChartConfig;
 
 const breakdownByCategoryData = [
-    { name: 'Eléctrico', value: 45, color: 'hsl(var(--chart-1))' },
-    { name: 'Mecánico', value: 25, color: 'hsl(var(--chart-2))' },
+    { name: 'Elèctric', value: 45, color: 'hsl(var(--chart-1))' },
+    { name: 'Mecànic', value: 25, color: 'hsl(var(--chart-2))' },
     { name: 'Software', value: 15, color: 'hsl(var(--chart-3))' },
     { name: 'Hardware', value: 10, color: 'hsl(var(--chart-4))' },
-    { name: 'Otro', value: 5, color: 'hsl(var(--chart-5))' },
+    { name: 'Altres', value: 5, color: 'hsl(var(--chart-5))' },
 ];
 
 const correctiveVsPreventiveData = [
-  { month: 'Ago', preventivo: 180, correctivo: 40 },
-  { month: 'Sep', preventivo: 190, correctivo: 35 },
-  { month: 'Oct', preventivo: 230, correctivo: 30 },
-  { month: 'Nov', preventivo: 240, correctivo: 25 },
-  { month: 'Dic', preventivo: 280, correctivo: 20 },
-  { month: 'Ene', preventivo: 90, correctivo: 50 },
+  { month: 'Ago', preventiu: 180, correctiu: 40 },
+  { month: 'Set', preventiu: 190, correctiu: 35 },
+  { month: 'Oct', preventiu: 230, correctiu: 30 },
+  { month: 'Nov', preventiu: 240, correctiu: 25 },
+  { month: 'Des', preventiu: 280, correctiu: 20 },
+  { month: 'Gen', preventiu: 90, correctiu: 50 },
 ];
 
 const correctiveVsPreventiveConfig = {
-  preventivo: { label: 'Preventivo', color: 'hsl(var(--primary))' },
-  correctivo: { label: 'Correctivo', color: 'hsl(var(--destructive))' },
+  preventiu: { label: 'Preventiu', color: 'hsl(var(--primary))' },
+  correctiu: { label: 'Correctiu', color: 'hsl(var(--destructive))' },
 } satisfies ChartConfig;
 
 export default function AnalysisPage() {
@@ -63,8 +63,8 @@ export default function AnalysisPage() {
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card className="lg:col-span-2">
             <CardHeader>
-                <CardTitle>Cumplimiento del Plan Preventivo (Últimos 6 Meses)</CardTitle>
-                <CardDescription>Evolución del porcentaje de tareas de mantenimiento preventivo completadas en plazo.</CardDescription>
+                <CardTitle>Compliment del Pla Preventiu (Últims 6 Mesos)</CardTitle>
+                <CardDescription>Evolució del percentatge de tasques de manteniment preventiu completades en termini.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={complianceChartConfig} className="h-[250px] w-full">
@@ -82,8 +82,8 @@ export default function AnalysisPage() {
         
         <Card>
             <CardHeader>
-                <CardTitle>Averías por Tipología</CardTitle>
-                <CardDescription>Distribución de los mantenimientos correctivos por tipo de problema detectado.</CardDescription>
+                <CardTitle>Avaries per Tipologia</CardTitle>
+                <CardDescription>Distribució dels manteniments correctius per tipus de problema detectat.</CardDescription>
             </CardHeader>
             <CardContent className='flex justify-center'>
                  <ChartContainer config={{}} className="h-[250px] w-full max-w-xs">
@@ -102,8 +102,8 @@ export default function AnalysisPage() {
         
         <Card className="lg:col-span-3">
             <CardHeader>
-                <CardTitle>Análisis Preventivo vs. Correctivo</CardTitle>
-                <CardDescription>Comparativa del número de intervenciones. Un buen plan preventivo reduce las correctivas.</CardDescription>
+                <CardTitle>Anàlisi Preventiu vs. Correctiu</CardTitle>
+                <CardDescription>Comparativa del nombre d'intervencions. Un bon pla preventiu redueix les correctives.</CardDescription>
             </CardHeader>
             <CardContent>
                  <ChartContainer config={correctiveVsPreventiveConfig} className="h-[300px] w-full">
@@ -121,8 +121,8 @@ export default function AnalysisPage() {
                         content={<ChartTooltipContent indicator="dot" />}
                         />
                         <Legend />
-                        <Bar dataKey="preventivo" fill="var(--color-preventivo)" radius={4} />
-                        <Bar dataKey="correctivo" fill="var(--color-correctivo)" radius={4} />
+                        <Bar dataKey="preventiu" fill="var(--color-preventiu)" radius={4} />
+                        <Bar dataKey="correctiu" fill="var(--color-correctiu)" radius={4} />
                     </BarChart>
                     </ChartContainer>
             </CardContent>
@@ -130,22 +130,22 @@ export default function AnalysisPage() {
 
         <Card>
             <CardHeader>
-                <CardTitle>Generador de Informes</CardTitle>
-                <CardDescription>Crea reportes detallados en PDF o Excel para análisis offline o auditorías.</CardDescription>
+                <CardTitle>Generador d'Informes</CardTitle>
+                <CardDescription>Creeu reportatges detallats en PDF o Excel per a anàlisis offline o auditories.</CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
-                <Button className='w-full'><FileText className='mr-2' />Generar Informe de Cumplimiento</Button>
-                 <Button className='w-full' variant='secondary'><FileText className='mr-2' />Exportar Historial de Vehículo</Button>
+                <Button className='w-full'><FileText className='mr-2' />Generar Informe de Compliment</Button>
+                 <Button className='w-full' variant='secondary'><FileText className='mr-2' />Exportar Historial de Vehicle</Button>
             </CardContent>
         </Card>
         
         <Card>
             <CardHeader>
-                <CardTitle>Análisis Predictivo IA</CardTitle>
-                <CardDescription>Utiliza IA para encontrar patrones y predecir futuras necesidades de mantenimiento.</CardDescription>
+                <CardTitle>Anàlisi Predictiva IA</CardTitle>
+                <CardDescription>Utilitzeu IA per trobar patrons i predir futures necessitats de manteniment.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Button className='w-full'><BrainCircuit className='mr-2' />Analizar Patrones de Fallo</Button>
+                <Button className='w-full'><BrainCircuit className='mr-2' />Analitzar Patrons d'Avaria</Button>
             </CardContent>
         </Card>
 

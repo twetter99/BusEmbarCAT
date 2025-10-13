@@ -1,6 +1,4 @@
 
-
-
 export type Role = 'Administrador' | 'Operador' | 'Sermetra';
 
 export type User = {
@@ -14,7 +12,7 @@ export type User = {
 export type Operator = {
   id: string;
   name: string;
-  status: 'Activo' | 'Inactivo';
+  status: 'Actiu' | 'Inactiu';
 }
 
 export type Vehicle = {
@@ -27,7 +25,7 @@ export type Vehicle = {
   preInstallationDate: string;
   operatorId: string;
   operatorName: string; // Duplicado para facilitar el acceso
-  status: 'Activo' | 'En Mantenimiento' | 'Fuera de Servicio';
+  status: 'Actiu' | 'En Manteniment' | 'Fora de Servei';
 };
 
 export type EquipmentType = 
@@ -75,7 +73,7 @@ export const equipmentSubTypes = {
     ]
 } as const;
 
-export type EquipmentStatus = 'Operativo' | 'Requiere Reparación' | 'En Stock';
+export type EquipmentStatus = 'Operatiu' | 'Requereix Reparació' | 'En Estoc';
 
 export type Equipment = {
   id: string;
@@ -90,13 +88,13 @@ export type Equipment = {
 
 export type MaintenanceTask = {
   id: string;
-  type: 'Preventivo' | 'Correctivo';
+  type: 'Preventiu' | 'Correctiu';
   title: string;
   vehicleId: string;
   equipmentType: EquipmentType;
   frequency: 'Trimestral' | 'Anual' | 'Bianual';
   dueDate: Date;
-  status: 'Pendiente' | 'En Progreso' | 'Completado';
+  status: 'Pendent' | 'En Progrés' | 'Completat';
   technician?: string;
 };
 
@@ -106,14 +104,14 @@ export type Incident = {
   issue: string;
   reportedBy: string;
   assignedTo: string;
-  status: 'Abierto' | 'En Progreso' | 'Resuelto';
+  status: 'Obert' | 'En Progrés' | 'Resolt';
   reportedAt: Date;
   slaDays: number;
-  priority: 'Crítica' | 'Alta' | 'Media' | 'Baja';
+  priority: 'Crítica' | 'Alta' | 'Mitjana' | 'Baixa';
   equipmentType: EquipmentType;
 };
 
-export type InventoryCategory = 'Material genérico' | 'Material de adquisición libre' | 'Material específico SERMETRA';
+export type InventoryCategory = 'Material genèric' | 'Material de adquisició lliure' | 'Material específic SERMETRA';
 
 export type InventoryItem = {
   id: string;
@@ -141,7 +139,7 @@ export type Checklist = {
   items: ChecklistItem[];
 };
 
-export type InstallationStatus = 'Programada' | 'En Progreso' | 'Completada';
+export type InstallationStatus = 'Programada' | 'En Progrés' | 'Completada';
 
 export type Installation = {
   id: string;
@@ -154,7 +152,7 @@ export type Installation = {
   materials: string[];
 };
 
-export type DecommissioningStatus = 'Programada' | 'En Progreso' | 'Completada';
+export type DecommissioningStatus = 'Programada' | 'En Progrés' | 'Completada';
 
 export type Decommissioning = {
     id: string;
@@ -167,7 +165,7 @@ export type Decommissioning = {
     materials: string[];
 };
 
-export type TransferStatus = 'Programada' | 'Fase 1 OK' | 'En Progreso' | 'Completada';
+export type TransferStatus = 'Programada' | 'Fase 1 OK' | 'En Progrés' | 'Completada';
 
 export type Transfer = {
     id: string;
@@ -177,9 +175,9 @@ export type Transfer = {
     destinationVehicleModel: string;
     operatorId: string;
     status: TransferStatus;
-    phase1_status: 'Pendiente' | 'Completada';
+    phase1_status: 'Pendent' | 'Completada';
     phase1_date: string;
-    phase2_status: 'Pendiente' | 'Completada';
+    phase2_status: 'Pendent' | 'Completada';
     phase2_date: string;
 };
 
@@ -204,7 +202,7 @@ export type DashboardData = {
 export interface OperatorMetrics {
   nombre: string;
   id: string;
-  estado: 'Activo' | 'Inactivo' | 'Suspendido';
+  estado: 'Actiu' | 'Inactiu' | 'Suspès';
   ubicacionPrincipal: string;
   
   vehiculosOperativos: number;

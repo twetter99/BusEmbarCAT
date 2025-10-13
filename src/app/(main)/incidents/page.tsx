@@ -32,7 +32,7 @@ const statusVariant: { [key in Incident['status']]: 'destructive' | 'secondary' 
 
 const SlaCell = ({ incident }: { incident: Incident }) => {
     if (incident.status === 'Resuelto') {
-        return <TableCell><Badge variant="outline">Resuelto</Badge></TableCell>
+        return <TableCell><Badge variant="outline">Resolt</Badge></TableCell>
     }
 
     const dueDate = add(incident.reportedAt, { days: incident.slaDays });
@@ -43,17 +43,17 @@ const SlaCell = ({ incident }: { incident: Incident }) => {
 
     if (daysRemaining < 0) {
         variant = 'destructive';
-        text = 'Vencido';
+        text = 'Vençut';
     } else if (daysRemaining < 1) {
         variant = 'warning';
-        text = 'Urgente';
+        text = 'Urgent';
     } else {
        variant = 'default';
-       text = `${daysRemaining} día${daysRemaining !== 1 ? 's' : ''} restante${daysRemaining !== 1 ? 's' : ''}`;
+       text = `${daysRemaining} dia${daysRemaining !== 1 ? 's' : ''} restant${daysRemaining !== 1 ? 's' : ''}`;
     }
 
     if (incident.status === 'En Progreso') {
-        return <TableCell><Badge variant="secondary">En Progreso</Badge></TableCell>
+        return <TableCell><Badge variant="secondary">En Progrés</Badge></TableCell>
     }
 
     return (
@@ -81,25 +81,25 @@ export default function IncidentsPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Gestión de Incidencias</CardTitle>
+            <CardTitle>Gestió d'Incidències</CardTitle>
             <CardDescription>
-              Registre y gestione incidencias no planificadas y solicitudes de servicio.
+              Registreu i gestioneu incidències no planificades i sol·licituds de servei.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Reportar Incidencia
+            Reportar Incidència
           </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID de Ticket</TableHead>
-                <TableHead>Vehículo</TableHead>
+                <TableHead>ID de Tiquet</TableHead>
+                <TableHead>Vehicle</TableHead>
                 <TableHead>Problema</TableHead>
-                <TableHead>Asignado a</TableHead>
-                <TableHead>Estado</TableHead>
+                <TableHead>Assignat a</TableHead>
+                <TableHead>Estat</TableHead>
                 <TableHead>SLA</TableHead>
               </TableRow>
             </TableHeader>

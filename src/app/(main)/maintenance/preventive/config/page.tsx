@@ -27,17 +27,17 @@ const MaintenancePlanCard = ({ title, interval, tasks }: { title: string, interv
     <Card>
         <CardHeader>
             <CardTitle className='text-lg'>{title}</CardTitle>
-            <CardDescription>Se ejecuta cada {interval} meses.</CardDescription>
+            <CardDescription>S'executa cada {interval} mesos.</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="space-y-4">
                  <div>
-                    <Label htmlFor={`interval-${title}`}>Intervalo (meses)</Label>
+                    <Label htmlFor={`interval-${title}`}>Interval (mesos)</Label>
                     <Input id={`interval-${title}`} type="number" defaultValue={interval} />
                 </div>
                  <div>
-                    <Label>Tareas asociadas</Label>
-                    <p className="text-sm text-muted-foreground">{tasks} tareas definidas en el checklist.</p>
+                    <Label>Tasques associades</Label>
+                    <p className="text-sm text-muted-foreground">{tasks} tasques definides al checklist.</p>
                     <Button variant='link' className='p-0 h-auto'>Editar Checklist</Button>
                 </div>
             </div>
@@ -45,7 +45,7 @@ const MaintenancePlanCard = ({ title, interval, tasks }: { title: string, interv
         <CardFooter className='flex justify-between'>
             <Button variant='ghost' className='text-destructive hover:text-destructive'>
                 <Trash2 className='mr-2' />
-                Eliminar Plan
+                Eliminar Pla
             </Button>
             <Button>Guardar</Button>
         </CardFooter>
@@ -59,55 +59,55 @@ export default function ConfigPage() {
             <div className='space-y-6'>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Planes de Mantenimiento</CardTitle>
-                        <CardDescription>Define las periodicidades de los mantenimientos preventivos y las tareas asociadas a cada uno.</CardDescription>
+                        <CardTitle>Plans de Manteniment</CardTitle>
+                        <CardDescription>Definiu les periodicitats dels manteniments preventius i les tasques associades a cadascun.</CardDescription>
                     </CardHeader>
                     <CardContent className='space-y-4'>
-                        <MaintenancePlanCard title="Mantenimiento Trimestral" interval={3} tasks={8} />
-                        <MaintenancePlanCard title="Mantenimiento Anual" interval={12} tasks={16} />
-                        <MaintenancePlanCard title="Mantenimiento Bianual" interval={24} tasks={23} />
+                        <MaintenancePlanCard title="Manteniment Trimestral" interval={3} tasks={8} />
+                        <MaintenancePlanCard title="Manteniment Anual" interval={12} tasks={16} />
+                        <MaintenancePlanCard title="Manteniment Bianual" interval={24} tasks={23} />
                     </CardContent>
                     <CardFooter>
-                        <Button variant='outline' className='w-full'>Añadir Nuevo Plan de Mantenimiento</Button>
+                        <Button variant='outline' className='w-full'>Afegir Nou Pla de Manteniment</Button>
                     </CardFooter>
                 </Card>
             </div>
             <div className='space-y-6'>
                  <Card>
                     <CardHeader>
-                        <CardTitle>Configuración de Alertas</CardTitle>
-                        <CardDescription>Ajusta cuándo y cómo se envían las notificaciones de vencimiento.</CardDescription>
+                        <CardTitle>Configuració d'Alertes</CardTitle>
+                        <CardDescription>Ajusteu quan i com s'envien les notificacions de venciment.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="flex items-center justify-between rounded-lg border p-4">
                             <div className='space-y-0.5'>
-                                <Label htmlFor="notifications-enabled">Activar notificaciones</Label>
+                                <Label htmlFor="notifications-enabled">Activar notificacions</Label>
                                 <p className='text-sm text-muted-foreground'>
-                                    Envía alertas por email cuando los mantenimientos están próximos a vencer o vencidos.
+                                    Envia alertes per email quan els manteniments estan a punt de vèncer o vençuts.
                                 </p>
                             </div>
                             <Switch id="notifications-enabled" defaultChecked />
                         </div>
 
                         <div className='space-y-2'>
-                            <Label htmlFor='alert-urgent'>Umbral "Urgente" (días antes)</Label>
+                            <Label htmlFor='alert-urgent'>Límit "Urgent" (dies abans)</Label>
                             <Input id='alert-urgent' type='number' defaultValue={3} />
                         </div>
 
                          <div className='space-y-2'>
-                            <Label htmlFor='alert-upcoming'>Umbral "Próximo" (días antes)</Label>
+                            <Label htmlFor='alert-upcoming'>Límit "Proper" (dies abans)</Label>
                             <Input id='alert-upcoming' type='number' defaultValue={15} />
                         </div>
                         
                          <div className='space-y-2'>
-                            <Label>Destinatarios de Alertas</Label>
-                             <Input placeholder="ej: supervisor@operador.com, jefe.taller@operador.com" />
-                             <p className='text-xs text-muted-foreground'>Añade múltiples emails separados por comas.</p>
+                            <Label>Destinataris d'Alertes</Label>
+                             <Input placeholder="ex: supervisor@operador.com, cap.taller@operador.com" />
+                             <p className='text-xs text-muted-foreground'>Afegiu múltiples emails separats per comes.</p>
                         </div>
 
                     </CardContent>
                     <CardFooter>
-                        <Button className="ml-auto">Guardar Configuración</Button>
+                        <Button className="ml-auto">Guardar Configuració</Button>
                     </CardFooter>
                 </Card>
             </div>

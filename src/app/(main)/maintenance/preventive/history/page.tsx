@@ -24,7 +24,7 @@ import { Calendar as CalendarIcon, FileText, Search, SlidersHorizontal } from 'l
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ca } from 'date-fns/locale';
 import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
@@ -62,20 +62,20 @@ const FilterControls = ({
         <CardHeader>
             <div className='flex items-center gap-2'>
                 <SlidersHorizontal className='h-5 w-5 text-primary' />
-                <CardTitle className='text-lg'>Filtros de Búsqueda</CardTitle>
+                <CardTitle className='text-lg'>Filtres de Cerca</CardTitle>
             </div>
             <CardDescription>
-                Filtra el historial de intervenciones por vehículo, operador, técnico o rango de fechas.
+                Filtreu l'historial d'intervencions per vehicle, operador, tècnic o rang de dates.
             </CardDescription>
         </CardHeader>
         <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                 <div className="relative">
-                     <Label htmlFor="search">Búsqueda Rápida</Label>
+                     <Label htmlFor="search">Cerca Ràpida</Label>
                      <Search className="absolute left-3 bottom-3 h-4 w-4 text-muted-foreground" />
                      <Input 
                         id="search"
-                        placeholder="Buscar por ID vehículo, tarea..."
+                        placeholder="Cercar per ID vehicle, tasca..."
                         value={filters.query}
                         onChange={(e) => handleFilterChange('query', e.target.value)}
                         className="pl-10"
@@ -86,23 +86,23 @@ const FilterControls = ({
                      <Select value={filters.operator} onValueChange={(value) => handleFilterChange('operator', value)}>
                         <SelectTrigger id="operator"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos los operadores</SelectItem>
+                            <SelectItem value="all">Tots els operadors</SelectItem>
                             {operators.map(op => <SelectItem key={op.id} value={op.id}>{op.name}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
                  <div>
-                     <Label htmlFor="technician">Técnico</Label>
+                     <Label htmlFor="technician">Tècnic</Label>
                      <Select value={filters.technician} onValueChange={(value) => handleFilterChange('technician', value)}>
                         <SelectTrigger id="technician"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos los técnicos</SelectItem>
+                            <SelectItem value="all">Tots els tècnics</SelectItem>
                              {technicians.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
                 <div>
-                    <Label>Rango de Fechas</Label>
+                    <Label>Rang de Dates</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                         <Button
@@ -124,7 +124,7 @@ const FilterControls = ({
                                 format(filters.dateRange.from, "LLL dd, y")
                             )
                             ) : (
-                            <span>Seleccionar rango</span>
+                            <span>Seleccionar rang</span>
                             )}
                         </Button>
                         </PopoverTrigger>
@@ -140,7 +140,7 @@ const FilterControls = ({
                         </PopoverContent>
                     </Popover>
                 </div>
-                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto">Limpiar Filtros</Button>
+                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto">Netejar Filtres</Button>
             </div>
         </CardContent>
     </Card>
@@ -205,9 +205,9 @@ export default function HistoryPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex items-center justify-between">
             <div>
-                <h1 className="text-2xl font-bold">Historial y Trazabilidad</h1>
+                <h1 className="text-2xl font-bold">Historial i Traçabilitat</h1>
                 <p className="text-muted-foreground">
-                    {filteredTasks.length} de {completedTasks.length} intervenciones completadas mostradas.
+                    {filteredTasks.length} de {completedTasks.length} intervencions completades mostrades.
                 </p>
             </div>
         </div>
@@ -224,13 +224,13 @@ export default function HistoryPage() {
                 <Table>
                     <TableHeader>
                     <TableRow>
-                        <TableHead>ID Intervención</TableHead>
-                        <TableHead>Vehículo</TableHead>
-                        <TableHead>Tipo Mant.</TableHead>
+                        <TableHead>ID Intervenció</TableHead>
+                        <TableHead>Vehicle</TableHead>
+                        <TableHead>Tipus Mant.</TableHead>
                         <TableHead>Operador</TableHead>
-                        <TableHead>Fecha Fin</TableHead>
-                        <TableHead>Técnico</TableHead>
-                        <TableHead>Acciones</TableHead>
+                        <TableHead>Data Fi</TableHead>
+                        <TableHead>Tècnic</TableHead>
+                        <TableHead>Accions</TableHead>
                     </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -249,7 +249,7 @@ export default function HistoryPage() {
                                         <Button asChild variant="outline" size="sm">
                                             <Link href={`/maintenance/preventive/${task.id}`}>
                                                 <FileText className="h-4 w-4 mr-2" />
-                                                Ver Ficha
+                                                Veure Fitxa
                                             </Link>
                                         </Button>
                                     </TableCell>

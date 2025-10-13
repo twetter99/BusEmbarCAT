@@ -4,17 +4,17 @@ import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
-    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', status: 'Activo' },
-    { id: 'op-02', name: 'AUTOCARES JULIA, SL', status: 'Activo' },
-    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA', status: 'Activo' },
-    { id: 'op-04', name: 'AUTOCARS PRAT, SA', status: 'Activo' },
-    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU', status: 'Inactivo' },
-    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL', status: 'Activo' },
-    { id: 'op-07', name: 'AUTOCORB, SA', status: 'Activo' },
-    { id: 'op-08', name: 'HISPANO LLACUNENSE, SL', status: 'Activo' },
-    { id: 'op-09', name: 'MONTFERRI HERMANOS, SL', status: 'Activo' },
-    { id: 'op-10', name: 'TRANSPORTES MIR', status: 'Inactivo' },
-    { id: 'op-11', name: 'TUS, SCCL', status: 'Activo' }
+    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', status: 'Actiu' },
+    { id: 'op-02', name: 'AUTOCARES JULIA, SL', status: 'Actiu' },
+    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA', status: 'Actiu' },
+    { id: 'op-04', name: 'AUTOCARS PRAT, SA', status: 'Actiu' },
+    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU', status: 'Inactiu' },
+    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL', status: 'Actiu' },
+    { id: 'op-07', name: 'AUTOCORB, SA', status: 'Actiu' },
+    { id: 'op-08', name: 'HISPANO LLACUNENSE, SL', status: 'Actiu' },
+    { id: 'op-09', name: 'MONTFERRI HERMANOS, SL', status: 'Actiu' },
+    { id: 'op-10', name: 'TRANSPORTES MIR', status: 'Inactiu' },
+    { id: 'op-11', name: 'TUS, SCCL', status: 'Actiu' }
 ];
 
 export const mockUsers: User[] = [
@@ -32,48 +32,48 @@ const generateUniqueId = (codBus: string, operatorName: string): string => {
 }
 
 const rawVehicles: Omit<Vehicle, 'uniqueId' | 'operatorId' | 'operatorName'> & { operator: string }[] = [
-    { codBus: '300', id: '6916-HCR', vin: 'WEB62809013122121', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-    { codBus: '301', id: '6917-HCR', vin: 'WEB62809013122122', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-    { codBus: '302', id: '7001-HCR', vin: 'WEB62808313122109', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-    { codBus: '303', id: '7002-HCR', vin: 'WEB62808313122110', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-    { codBus: '326', id: '4602-JKD', vin: 'WEB62852313704925', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'En Mantenimiento' },
-    { codBus: '338', id: '4192-KFL', vin: 'NLRTMLA20HA006121', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
-    { codBus: '342', id: '5400-LFN', vin: 'WEB62805610612016', model: 'MERCEDES', bodywork: 'CITARO Hybrid', preInstallationDate: '16/01/26', operator: "AUTOCARS R. FONT, SAU", status: 'Activo' },
-    { codBus: '344', id: '5993-LMS', vin: 'SUU241163MB023120', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fuera de Servicio' },
-    { codBus: '349', id: '3806-MBW', vin: 'SUU241163NB025635', model: 'EVOBUS-SOLARIS', bodywork: 'Solaris Urbino 12 Hybrid', preInstallationDate: '01/02/26', operator: "AUTOCORB, SA", status: 'Activo' },
-    { codBus: '350', id: '3235-MCR', vin: 'WEB62805610616792', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/26', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
-    { codBus: '351', id: '3236-MCR', vin: 'WEB62805610616793', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/26', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
-    { codBus: '354', id: '1399-MCY', vin: 'WEB62852510616914', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
-    { codBus: '358', id: '7907-MNZ', vin: 'WEB2805611L619111', model: 'DAIMLER BUSES', bodywork: 'CITARO HYBRID (Clas 1) - 3 ptas', preInstallationDate: '12/03/26', operator: "TRANSPORTES MIR", status: 'Activo' },
-    { codBus: '368', id: '0816-NDV', vin: 'WEB2852511L621420', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/26', operator: "TUS, SCCL", status: 'Activo' },
-    { codBus: '287', id: '1111-KFL', vin: 'NLRTMLA20HA001111', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
-    { codBus: '203', id: '2222-JKD', vin: 'WEB62852313704222', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Activo' },
-    { codBus: '159', id: '3333-HCR', vin: 'WEB62808313122333', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-    { codBus: '445', id: '4444-HCR', vin: 'WEB62809013122444', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-    { codBus: '412', id: '5555-LMS', vin: 'SUU241163MB023555', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fuera de Servicio' },
-    { codBus: '334', id: '6666-MCY', vin: 'WEB62852510616666', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
-    { codBus: '304', id: '8889-HCR', vin: 'WEB62808313122889', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-    { codBus: '352', id: '9990-MCR', vin: 'WEB62805610616990', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/26', operator: "HISPANO LLACUNENSE, SL", status: 'Activo' },
-    { codBus: '288', id: '1112-KFL', vin: 'NLRTMLA20HA001112', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
-    { codBus: '369', id: '0817-NDV', vin: 'WEB2852511L621421', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/26', operator: "TUS, SCCL", status: 'Activo' },
-    { codBus: '204', id: '2223-JKD', vin: 'WEB62852313704223', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Activo' },
-    { codBus: '160', id: '3334-HCR', vin: 'WEB62808313122334', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-    { codBus: '446', id: '4445-HCR', vin: 'WEB62809013122445', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-    { codBus: '413', id: '5556-LMS', vin: 'SUU241163MB023556', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fuera de Servicio' },
-    { codBus: '335', id: '6667-MCY', vin: 'WEB62852510616667', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
-    { codBus: '289', id: '1113-KFL', vin: 'NLRTMLA20HA001113', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Activo' },
-    { codBus: '370', id: '0818-NDV', vin: 'WEB2852511L621422', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/26', operator: "TUS, SCCL", status: 'Activo' },
-    { codBus: '205', id: '2224-JKD', vin: 'WEB62852313704224', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 puertas', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Activo' },
-    { codBus: '161', id: '3335-HCR', vin: 'WEB62808313122335', model: 'MERCEDES', bodywork: 'CITARO 2 puertas', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Activo' },
-    { codBus: '447', id: '4446-HCR', vin: 'WEB62809013122446', model: 'MERCEDES', bodywork: 'CITARO 3 puertas', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Activo' },
-    { codBus: '414', id: '5557-LMS', vin: 'SUU241163MB023557', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fuera de Servicio' },
-    { codBus: '336', id: '6668-MCY', vin: 'WEB62852510616668', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Activo' },
+    { codBus: '300', id: '6916-HCR', vin: 'WEB62809013122121', model: 'MERCEDES', bodywork: 'CITARO 3 portes', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Actiu' },
+    { codBus: '301', id: '6917-HCR', vin: 'WEB62809013122122', model: 'MERCEDES', bodywork: 'CITARO 3 portes', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Actiu' },
+    { codBus: '302', id: '7001-HCR', vin: 'WEB62808313122109', model: 'MERCEDES', bodywork: 'CITARO 2 portes', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Actiu' },
+    { codBus: '303', id: '7002-HCR', vin: 'WEB62808313122110', model: 'MERCEDES', bodywork: 'CITARO 2 portes', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Actiu' },
+    { codBus: '326', id: '4602-JKD', vin: 'WEB62852313704925', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 portes', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'En Manteniment' },
+    { codBus: '338', id: '4192-KFL', vin: 'NLRTMLA20HA006121', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Actiu' },
+    { codBus: '342', id: '5400-LFN', vin: 'WEB62805610612016', model: 'MERCEDES', bodywork: 'CITARO Hybrid', preInstallationDate: '16/01/26', operator: "AUTOCARS R. FONT, SAU", status: 'Actiu' },
+    { codBus: '344', id: '5993-LMS', vin: 'SUU241163MB023120', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fora de Servei' },
+    { codBus: '349', id: '3806-MBW', vin: 'SUU241163NB025635', model: 'EVOBUS-SOLARIS', bodywork: 'Solaris Urbino 12 Hybrid', preInstallationDate: '01/02/26', operator: "AUTOCORB, SA", status: 'Actiu' },
+    { codBus: '350', id: '3235-MCR', vin: 'WEB62805610616792', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/26', operator: "HISPANO LLACUNENSE, SL", status: 'Actiu' },
+    { codBus: '351', id: '3236-MCR', vin: 'WEB62805610616793', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/26', operator: "HISPANO LLACUNENSE, SL", status: 'Actiu' },
+    { codBus: '354', id: '1399-MCY', vin: 'WEB62852510616914', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Actiu' },
+    { codBus: '358', id: '7907-MNZ', vin: 'WEB2805611L619111', model: 'DAIMLER BUSES', bodywork: 'CITARO HYBRID (Clas 1) - 3 ptas', preInstallationDate: '12/03/26', operator: "TRANSPORTES MIR", status: 'Actiu' },
+    { codBus: '368', id: '0816-NDV', vin: 'WEB2852511L621420', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/26', operator: "TUS, SCCL", status: 'Actiu' },
+    { codBus: '287', id: '1111-KFL', vin: 'NLRTMLA20HA001111', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Actiu' },
+    { codBus: '203', id: '2222-JKD', vin: 'WEB62852313704222', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 portes', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Actiu' },
+    { codBus: '159', id: '3333-HCR', vin: 'WEB62808313122333', model: 'MERCEDES', bodywork: 'CITARO 2 portes', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Actiu' },
+    { codBus: '445', id: '4444-HCR', vin: 'WEB62809013122444', model: 'MERCEDES', bodywork: 'CITARO 3 portes', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Actiu' },
+    { codBus: '412', id: '5555-LMS', vin: 'SUU241163MB023555', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fora de Servei' },
+    { codBus: '334', id: '6666-MCY', vin: 'WEB62852510616666', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Actiu' },
+    { codBus: '304', id: '8889-HCR', vin: 'WEB62808313122889', model: 'MERCEDES', bodywork: 'CITARO 2 portes', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Actiu' },
+    { codBus: '352', id: '9990-MCR', vin: 'WEB62805610616990', model: 'MERCEDES', bodywork: 'Citaro Hybrid', preInstallationDate: '02/02/26', operator: "HISPANO LLACUNENSE, SL", status: 'Actiu' },
+    { codBus: '288', id: '1112-KFL', vin: 'NLRTMLA20HA001112', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Actiu' },
+    { codBus: '369', id: '0817-NDV', vin: 'WEB2852511L621421', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/26', operator: "TUS, SCCL", status: 'Actiu' },
+    { codBus: '204', id: '2223-JKD', vin: 'WEB62852313704223', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 portes', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Actiu' },
+    { codBus: '160', id: '3334-HCR', vin: 'WEB62808313122334', model: 'MERCEDES', bodywork: 'CITARO 2 portes', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Actiu' },
+    { codBus: '446', id: '4445-HCR', vin: 'WEB62809013122445', model: 'MERCEDES', bodywork: 'CITARO 3 portes', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Actiu' },
+    { codBus: '413', id: '5556-LMS', vin: 'SUU241163MB023556', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fora de Servei' },
+    { codBus: '335', id: '6667-MCY', vin: 'WEB62852510616667', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Actiu' },
+    { codBus: '289', id: '1113-KFL', vin: 'NLRTMLA20HA001113', model: 'OTOKAR', bodywork: 'VECTIO LE', preInstallationDate: '15/01/26', operator: "AUTOCARS PRAT, SA", status: 'Actiu' },
+    { codBus: '370', id: '0818-NDV', vin: 'WEB2852511L621422', model: 'DAIMLER BUSES', bodywork: 'Citaro LE MÜ Hybrid 2p', preInstallationDate: '13/03/26', operator: "TUS, SCCL", status: 'Actiu' },
+    { codBus: '205', id: '2224-JKD', vin: 'WEB62852313704224', model: 'MERCEDES', bodywork: 'CITARO LE MÜ 2 portes', preInstallationDate: '08/01/26', operator: "AUTOCARS DEL PENEDÈS, SA", status: 'Actiu' },
+    { codBus: '161', id: '3335-HCR', vin: 'WEB62808313122335', model: 'MERCEDES', bodywork: 'CITARO 2 portes', preInstallationDate: '07/01/26', operator: "AUTOCARES JULIA, SL", status: 'Actiu' },
+    { codBus: '447', id: '4446-HCR', vin: 'WEB62809013122446', model: 'MERCEDES', bodywork: 'CITARO 3 portes', preInstallationDate: '06/01/26', operator: "ALSINA GRAELLS DE AUTO TRANSPORTES, SA", status: 'Actiu' },
+    { codBus: '414', id: '5557-LMS', vin: 'SUU241163MB023557', model: 'EVOBUS-SOLARIS', bodywork: 'URBINO 12 HYBRID', preInstallationDate: '14/01/26', operator: "AUTOCARS VENDRELL, SL", status: 'Fora de Servei' },
+    { codBus: '336', id: '6668-MCY', vin: 'WEB62852510616668', model: 'MERCEDES', bodywork: 'Citaro LE MÜ Hybrid', preInstallationDate: '02/02/26', operator: "MONTFERRI HERMANOS, SL", status: 'Actiu' },
 ];
 
 export const mockVehicles: Vehicle[] = rawVehicles.map((v) => {
   const operatorId = operatorMap.get(v.operator);
   if (!operatorId) {
-    console.warn(`Operador no encontrado para el vehículo con calca ${v.codBus}: ${v.operator}`);
+    console.warn(`Operador no trobat per al vehicle amb calca ${v.codBus}: ${v.operator}`);
     return {
       ...v,
       uniqueId: generateUniqueId(v.codBus, v.operator),
@@ -108,40 +108,40 @@ const generateEquipment = (): Equipment[] => {
   };
 
   // Create equipment for some vehicles
-  createEquipment('Pupitre', undefined, mockVehicles[0], 'Operativo', 'PUP-001');
-  createEquipment('Validadora INDRA', undefined, mockVehicles[0], 'Operativo', 'IND-001');
-  createEquipment('Material auxiliar', 'MMC', mockVehicles[0], 'Operativo', 'MMC-001');
+  createEquipment('Pupitre', undefined, mockVehicles[0], 'Operatiu', 'PUP-001');
+  createEquipment('Validadora INDRA', undefined, mockVehicles[0], 'Operatiu', 'IND-001');
+  createEquipment('Material auxiliar', 'MMC', mockVehicles[0], 'Operatiu', 'MMC-001');
   
-  createEquipment('Pupitre', undefined, mockVehicles[1], 'Operativo', 'PUP-002');
-  createEquipment('Validadora Inetum', undefined, mockVehicles[1], 'Operativo', 'INE-001');
+  createEquipment('Pupitre', undefined, mockVehicles[1], 'Operatiu', 'PUP-002');
+  createEquipment('Validadora Inetum', undefined, mockVehicles[1], 'Operatiu', 'INE-001');
   
-  createEquipment('Pupitre', undefined, mockVehicles[2], 'Requiere Reparación', 'PUP-003');
-  createEquipment('Terminal de consulta INDRA', undefined, mockVehicles[2], 'Operativo', 'CON-001');
+  createEquipment('Pupitre', undefined, mockVehicles[2], 'Requereix Reparació', 'PUP-003');
+  createEquipment('Terminal de consulta INDRA', undefined, mockVehicles[2], 'Operatiu', 'CON-001');
 
-  createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operativo', 'IND-002');
-  createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operativo', 'IND-003');
+  createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operatiu', 'IND-002');
+  createEquipment('Validadora INDRA', undefined, mockVehicles[3], 'Operatiu', 'IND-003');
 
   // Create unassigned equipment
-  createEquipment('Pupitre', undefined, null, 'En Stock', 'PUP-100', 'Almacén Principal');
-  createEquipment('Validadora INDRA', undefined, null, 'Requiere Reparación', 'IND-100', 'Taller Reparaciones');
-  createEquipment('Validadora Inetum', undefined, null, 'En Stock', 'INE-100', 'Almacén Operador 2');
-  createEquipment('Terminal de consulta INDRA', undefined, null, 'En Stock', 'CON-100', 'Almacén Principal');
+  createEquipment('Pupitre', undefined, null, 'En Estoc', 'PUP-100', 'Magatzem Principal');
+  createEquipment('Validadora INDRA', undefined, null, 'Requereix Reparació', 'IND-100', 'Taller Reparacions');
+  createEquipment('Validadora Inetum', undefined, null, 'En Estoc', 'INE-100', 'Magatzem Operador 2');
+  createEquipment('Terminal de consulta INDRA', undefined, null, 'En Estoc', 'CON-100', 'Magatzem Principal');
   
   // Create all subtypes of Material auxiliar
-  createEquipment('Material auxiliar', 'MMC', mockVehicles[4], 'Operativo', 'MMC-002');
-  createEquipment('Material auxiliar', 'Placa de conexión', null, 'En Stock', 'PLC-101', 'Almacén Principal');
-  createEquipment('Material auxiliar', 'Soporte', mockVehicles[5], 'Requiere Reparación', 'SOP-001');
-  createEquipment('Material auxiliar', 'Antena', null, 'En Stock', 'ANT-101', 'Almacén Operador 1');
-  createEquipment('Material auxiliar', 'Cambio de IP', mockVehicles[6], 'Operativo', 'CIP-001');
-  createEquipment('Material auxiliar', 'Kit de conexión HARTING', null, 'En Stock', 'HAR-101', 'Almacén Principal');
-  createEquipment('Material auxiliar', 'Cable de conexión', mockVehicles[7], 'Operativo', 'CAB-001');
-  createEquipment('Material auxiliar', 'Conector', null, 'Requiere Reparación', 'CON-102', 'Taller Reparaciones');
-  createEquipment('Material auxiliar', 'Fusible', mockVehicles[8], 'Operativo', 'FUS-001');
-  createEquipment('Material auxiliar', 'Perno', null, 'En Stock', 'PER-101', 'Almacén Principal');
-  createEquipment('Material auxiliar', 'Tanque', mockVehicles[9], 'Operativo', 'TAN-001');
-  createEquipment('Material auxiliar', 'Brida', null, 'En Stock', 'BRI-101', 'Almacén Principal');
-  createEquipment('Material auxiliar', 'Travesaño', mockVehicles[10], 'Operativo', 'TRA-001');
-  createEquipment('Material auxiliar', 'Barra', null, 'En Stock', 'BAR-101', 'Almacén Principal');
+  createEquipment('Material auxiliar', 'MMC', mockVehicles[4], 'Operatiu', 'MMC-002');
+  createEquipment('Material auxiliar', 'Placa de conexión', null, 'En Estoc', 'PLC-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Soporte', mockVehicles[5], 'Requereix Reparació', 'SOP-001');
+  createEquipment('Material auxiliar', 'Antena', null, 'En Estoc', 'ANT-101', 'Magatzem Operador 1');
+  createEquipment('Material auxiliar', 'Cambio de IP', mockVehicles[6], 'Operatiu', 'CIP-001');
+  createEquipment('Material auxiliar', 'Kit de conexión HARTING', null, 'En Estoc', 'HAR-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Cable de conexión', mockVehicles[7], 'Operatiu', 'CAB-001');
+  createEquipment('Material auxiliar', 'Conector', null, 'Requereix Reparació', 'CON-102', 'Taller Reparacions');
+  createEquipment('Material auxiliar', 'Fusible', mockVehicles[8], 'Operatiu', 'FUS-001');
+  createEquipment('Material auxiliar', 'Perno', null, 'En Estoc', 'PER-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Tanque', mockVehicles[9], 'Operatiu', 'TAN-001');
+  createEquipment('Material auxiliar', 'Brida', null, 'En Estoc', 'BRI-101', 'Magatzem Principal');
+  createEquipment('Material auxiliar', 'Travesaño', mockVehicles[10], 'Operatiu', 'TRA-001');
+  createEquipment('Material auxiliar', 'Barra', null, 'En Estoc', 'BAR-101', 'Magatzem Principal');
 
   return equipmentList;
 };
@@ -164,69 +164,69 @@ const today = new Date('2026-01-15T15:00:00');
 export const mockTasks: MaintenanceTask[] = [
     // === PENDIENTE (10) ===
     // 4 Vencidos (rojos)
-    { id: 'MT-P01', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-03T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P02', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: new Date('2026-01-07T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P03', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: new Date('2026-01-12T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P04', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2025-12-20T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P01', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-03T15:00:00'), status: 'Pendent' },
+    { id: 'MT-P02', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: new Date('2026-01-07T15:00:00'), status: 'Pendent' },
+    { id: 'MT-P03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: new Date('2026-01-12T15:00:00'), status: 'Pendent' },
+    { id: 'MT-P04', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2025-12-20T15:00:00'), status: 'Pendent' },
     
     // 2 Urgentes (naranjas)
-    { id: 'MT-P05', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-01-16T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P06', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-18T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P05', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-01-16T15:00:00'), status: 'Pendent' },
+    { id: 'MT-P06', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-01-18T15:00:00'), status: 'Pendent' },
 
     // 3 Próximos (amarillos)
-    { id: 'MT-P07', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: new Date('2026-01-23T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P08', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: new Date('2026-01-30T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P07', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: new Date('2026-01-23T15:00:00'), status: 'Pendent' },
+    { id: 'MT-P08', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: new Date('2026-01-30T15:00:00'), status: 'Pendent' },
     
     // 1 Normal (default)
-    { id: 'MT-P09', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-06', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-02-05T15:00:00'), status: 'Pendiente' },
-    { id: 'MT-P10', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-03-15T15:00:00'), status: 'Pendiente' },
+    { id: 'MT-P09', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-06', 0).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: new Date('2026-02-05T15:00:00'), status: 'Pendent' },
+    { id: 'MT-P10', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: new Date('2026-03-15T15:00:00'), status: 'Pendent' },
 
 
     // === EN PROGRESO (10) ===
-    { id: 'MT-IP01', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progreso', technician: 'Pau' },
-    { id: 'MT-IP02', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progreso', technician: 'Xavier' },
-    { id: 'MT-IP03', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 3 }), status: 'En Progreso', technician: 'Miquel' },
-    { id: 'MT-IP04', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'En Progreso', technician: 'Josep' },
-    { id: 'MT-IP05', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: today, status: 'En Progreso', technician: 'Carles' },
-    { id: 'MT-IP06', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progreso', technician: 'David' },
-    { id: 'MT-IP07', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 3).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: add(today, { weeks: 1 }), status: 'En Progreso', technician: 'Bernat' },
-    { id: 'MT-IP08', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 3).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 2 }), status: 'En Progreso', technician: 'Quim' },
-    { id: 'MT-IP09', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 3 }), status: 'En Progreso', technician: 'Toni' },
-    { id: 'MT-IP10', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: add(today, { days: 5 }), status: 'En Progreso', technician: 'Ramon' },
+    { id: 'MT-IP01', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 2).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Pau' },
+    { id: 'MT-IP02', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Xavier' },
+    { id: 'MT-IP03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Miquel' },
+    { id: 'MT-IP04', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Josep' },
+    { id: 'MT-IP05', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: today, status: 'En Progrés', technician: 'Carles' },
+    { id: 'MT-IP06', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David' },
+    { id: 'MT-IP07', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 3).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: add(today, { weeks: 1 }), status: 'En Progrés', technician: 'Bernat' },
+    { id: 'MT-IP08', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 3).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 2 }), status: 'En Progrés', technician: 'Quim' },
+    { id: 'MT-IP09', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Toni' },
+    { id: 'MT-IP10', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 1).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: add(today, { days: 5 }), status: 'En Progrés', technician: 'Ramon' },
 
     // === COMPLETADO (10) ===
-    { id: 'MT-C01', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 4).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Completado', technician: 'Pau' },
-    { id: 'MT-C02', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Xavier' },
-    { id: 'MT-C03', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 2).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { weeks: 3 }), status: 'Completado', technician: 'Miquel' },
-    { id: 'MT-C04', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 2).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(today, { days: 5 }), status: 'Completado', technician: 'Josep' },
-    { id: 'MT-C05', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { months: 1 }), status: 'Completado', technician: 'Carles' },
-    { id: 'MT-C06', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completado', technician: 'David' },
-    { id: 'MT-C07', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 5).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completado', technician: 'Bernat' },
-    { id: 'MT-C08', type: 'Preventivo', title: 'Mantenimiento 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 5).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completado', technician: 'Quim' },
-    { id: 'MT-C09', type: 'Preventivo', title: 'Mantenimiento 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Toni' },
-    { id: 'MT-C10', type: 'Preventivo', title: 'Mantenimiento 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 2).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completado', technician: 'Ramon' },
+    { id: 'MT-C01', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-01', 4).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Completat', technician: 'Pau' },
+    { id: 'MT-C02', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Xavier' },
+    { id: 'MT-C03', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-08', 2).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: sub(today, { weeks: 3 }), status: 'Completat', technician: 'Miquel' },
+    { id: 'MT-C04', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-04', 2).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: sub(today, { days: 5 }), status: 'Completat', technician: 'Josep' },
+    { id: 'MT-C05', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-11', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { months: 1 }), status: 'Completat', technician: 'Carles' },
+    { id: 'MT-C06', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-03', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 2 }), status: 'Completat', technician: 'David' },
+    { id: 'MT-C07', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-02', 5).id, equipmentType: 'Brida y Antena', frequency: 'Bianual', dueDate: sub(today, { months: 1, days: 1 }), status: 'Completat', technician: 'Bernat' },
+    { id: 'MT-C08', type: 'Preventiu', title: 'Manteniment 3M', vehicleId: findVehicleByOperatorAndIndex('op-01', 5).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { days: 10 }), status: 'Completat', technician: 'Quim' },
+    { id: 'MT-C09', type: 'Preventiu', title: 'Manteniment 1A', vehicleId: findVehicleByOperatorAndIndex('op-06', 2).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: sub(today, { weeks: 1 }), status: 'Completat', technician: 'Toni' },
+    { id: 'MT-C10', type: 'Preventiu', title: 'Manteniment 2A', vehicleId: findVehicleByOperatorAndIndex('op-09', 2).id, equipmentType: 'Antena', frequency: 'Bianual', dueDate: sub(today, { weeks: 6 }), status: 'Completat', technician: 'Ramon' },
 ];
 
 export const mockIncidents: Incident[] = [
     // VENCIDAS (Rojas) - Abiertas
-    { id: 'AV-001', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, issue: 'Pantalla pupitre completamente negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Abierto', reportedAt: new Date('2026-01-10T10:00:00'), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
-    { id: 'AV-002', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, issue: 'Sistema no arranca tras reinicio', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Abierto', reportedAt: new Date('2026-01-11T12:00:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
-    { id: 'AV-003', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, issue: 'Validadora INDRA sin respuesta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Abierto', reportedAt: new Date('2026-01-09T08:00:00'), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
+    { id: 'AV-001', vehicleId: findVehicleByOperatorAndIndex('op-01', 0).id, issue: 'Pantalla pupitre completament negra', reportedBy: 'Conductor', assignedTo: 'Jordi', status: 'Obert', reportedAt: new Date('2026-01-10T10:00:00'), slaDays: 3, priority: 'Crítica', equipmentType: 'Pupitre' },
+    { id: 'AV-002', vehicleId: findVehicleByOperatorAndIndex('op-02', 0).id, issue: 'Sistema no arrenca després de reinici', reportedBy: 'Conductor', assignedTo: 'Marc', status: 'Obert', reportedAt: new Date('2026-01-11T12:00:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Pupitre' },
+    { id: 'AV-003', vehicleId: findVehicleByOperatorAndIndex('op-03', 0).id, issue: 'Validadora INDRA sense resposta', reportedBy: 'Sistema', assignedTo: 'Pau', status: 'Obert', reportedAt: new Date('2026-01-09T08:00:00'), slaDays: 3, priority: 'Crítica', equipmentType: 'Validadora INDRA' },
     
     // URGENTES (Naranjas) - Abiertas
-    { id: 'AV-004', vehicleId: findVehicleByOperatorAndIndex('op-10', 0).id, issue: 'Impresora tickets atascada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Abierto', reportedAt: new Date('2026-01-12T19:00:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
-    { id: 'AV-005', vehicleId: findVehicleByOperatorAndIndex('op-07', 0).id, issue: 'Cable de antena suelto', reportedBy: 'Técnico', assignedTo: 'Xavier', status: 'Abierto', reportedAt: new Date('2026-01-12T21:00:00'), slaDays: 3, priority: 'Media', equipmentType: 'Antena' },
+    { id: 'AV-004', vehicleId: findVehicleByOperatorAndIndex('op-10', 0).id, issue: 'Impressora de tiquets embussada', reportedBy: 'Conductor', assignedTo: 'Oriol', status: 'Obert', reportedAt: new Date('2026-01-12T19:00:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Material auxiliar' },
+    { id: 'AV-005', vehicleId: findVehicleByOperatorAndIndex('op-07', 0).id, issue: 'Cable d\'antena solt', reportedBy: 'Tècnic', assignedTo: 'Xavier', status: 'Obert', reportedAt: new Date('2026-01-12T21:00:00'), slaDays: 3, priority: 'Mitjana', equipmentType: 'Antena' },
 
     // ABIERTAS NORMALES
-    { id: 'AV-006', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, issue: 'Lectura lenta de tarjetas', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Abierto', reportedAt: new Date('2026-01-14T09:00:00'), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
-    { id: 'AV-008', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, issue: 'Error E041 en validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Abierto', reportedAt: new Date('2026-01-13T22:30:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
+    { id: 'AV-006', vehicleId: findVehicleByOperatorAndIndex('op-08', 0).id, issue: 'Lectura lenta de targetes', reportedBy: 'Conductor', assignedTo: 'Miquel', status: 'Obert', reportedAt: new Date('2026-01-14T09:00:00'), slaDays: 3, priority: 'Mitjana', equipmentType: 'Validadora Inetum' },
+    { id: 'AV-008', vehicleId: findVehicleByOperatorAndIndex('op-04', 0).id, issue: 'Error E041 a la validadora', reportedBy: 'Sistema', assignedTo: 'Carles', status: 'Obert', reportedAt: new Date('2026-01-13T22:30:00'), slaDays: 3, priority: 'Alta', equipmentType: 'Validadora INDRA' },
 
     // EN PROGRESO
-    { id: 'AV-007', vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, issue: 'Luz LED intermitente', reportedBy: 'Técnico', assignedTo: 'Josep', status: 'En Progreso', reportedAt: new Date('2026-01-13T10:00:00'), slaDays: 3, priority: 'Baja', equipmentType: 'Material auxiliar' },
-    { id: 'AV-009', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, issue: 'Sonido de validación bajo', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progreso', reportedAt: new Date('2026-01-15T11:00:00'), slaDays: 3, priority: 'Media', equipmentType: 'Validadora Inetum' },
+    { id: 'AV-007', vehicleId: findVehicleByOperatorAndIndex('op-05', 0).id, issue: 'Llum LED intermitent', reportedBy: 'Tècnic', assignedTo: 'Josep', status: 'En Progrés', reportedAt: new Date('2026-01-13T10:00:00'), slaDays: 3, priority: 'Baixa', equipmentType: 'Material auxiliar' },
+    { id: 'AV-009', vehicleId: findVehicleByOperatorAndIndex('op-09', 0).id, issue: 'So de validació baix', reportedBy: 'Conductor', assignedTo: 'David', status: 'En Progrés', reportedAt: new Date('2026-01-15T11:00:00'), slaDays: 3, priority: 'Mitjana', equipmentType: 'Validadora Inetum' },
     
     // RESUELTAS
-    { id: 'AV-010', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, issue: 'Pantalla con píxeles muertos', reportedBy: 'Técnico', assignedTo: 'Bernat', status: 'Resuelto', reportedAt: new Date('2026-01-11T16:00:00'), slaDays: 3, priority: 'Baja', equipmentType: 'Terminal de consulta INDRA' },
+    { id: 'AV-010', vehicleId: findVehicleByOperatorAndIndex('op-11', 0).id, issue: 'Pantalla amb píxels morts', reportedBy: 'Tècnic', assignedTo: 'Bernat', status: 'Resolt', reportedAt: new Date('2026-01-11T16:00:00'), slaDays: 3, priority: 'Baixa', equipmentType: 'Terminal de consulta INDRA' },
 ];
 
 
@@ -234,83 +234,83 @@ export const mockInventory: InventoryItem[] = [
   // Material específico SERMETRA (con trazabilidad)
   {
     id: 'INV-101', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
-    category: 'Material específico SERMETRA', stock: 5, minStock: 2,
-    location: 'Almacén Central (Cornellà)', value: 1200, serialNumber: 'SRM-PUP-0101'
+    category: 'Material específic SERMETRA', stock: 5, minStock: 2,
+    location: 'Magatzem Central (Cornellà)', value: 1200, serialNumber: 'SRM-PUP-0101'
   },
   {
     id: 'INV-102', name: 'Validadora Inetum v4', sku: 'VAL-INE-V4-SRM',
-    category: 'Material específico SERMETRA', stock: 1, minStock: 5,
-    location: 'Almacén Central (Cornellà)', value: 850, serialNumber: 'SRM-VAL-2305'
+    category: 'Material específic SERMETRA', stock: 1, minStock: 5,
+    location: 'Magatzem Central (Cornellà)', value: 850, serialNumber: 'SRM-VAL-2305'
   },
   {
     id: 'INV-103', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
-    category: 'Material específico SERMETRA', stock: 1, minStock: 0,
-    location: 'Asignado', value: 1200, serialNumber: 'SRM-PUP-0089', assignedTo: mockVehicles[0].uniqueId
+    category: 'Material específic SERMETRA', stock: 1, minStock: 0,
+    location: 'Assignat', value: 1200, serialNumber: 'SRM-PUP-0089', assignedTo: mockVehicles[0].uniqueId
   },
    {
     id: 'INV-104', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
-    category: 'Material específico SERMETRA', stock: 1, minStock: 2,
-    location: 'Almacén Central (Cornellà)', value: 1200, serialNumber: 'SRM-PUP-0102'
+    category: 'Material específic SERMETRA', stock: 1, minStock: 2,
+    location: 'Magatzem Central (Cornellà)', value: 1200, serialNumber: 'SRM-PUP-0102'
   },
    {
     id: 'INV-105', name: 'Validadora INDRA v3', sku: 'VAL-IND-V3-SRM',
-    category: 'Material específico SERMETRA', stock: 3, minStock: 2,
-    location: 'Almacén Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3001'
+    category: 'Material específic SERMETRA', stock: 3, minStock: 2,
+    location: 'Magatzem Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3001'
   },
    {
     id: 'INV-106', name: 'Validadora INDRA v3', sku: 'VAL-IND-V3-SRM',
-    category: 'Material específico SERMETRA', stock: 3, minStock: 2,
-    location: 'Almacén Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3002'
+    category: 'Material específic SERMETRA', stock: 3, minStock: 2,
+    location: 'Magatzem Central (Cornellà)', value: 800, serialNumber: 'SRM-VAL-IND-3002'
   },
 
   // Material de adquisición libre (controlado por bolsa)
   {
     id: 'INV-201', name: 'Antena 4G/GPS', sku: 'ANT-4G-GPS-GEN',
-    category: 'Material de adquisición libre', stock: 12, minStock: 10,
-    location: 'Almacén Central (Cornellà)', value: 75
+    category: 'Material de adquisició lliure', stock: 12, minStock: 10,
+    location: 'Magatzem Central (Cornellà)', value: 75
   },
   {
     id: 'INV-202', name: 'Switch Ethernet 8-port', sku: 'SW-ETH-8P-RGD',
-    category: 'Material de adquisición libre', stock: 8, minStock: 5,
-    location: 'Almacén Op. TUS', value: 150
+    category: 'Material de adquisició lliure', stock: 8, minStock: 5,
+    location: 'Magatzem Op. TUS', value: 150
   },
   {
-    id: 'INV-203', name: 'Kit Conector HARTING', sku: 'CON-HAR-KIT',
-    category: 'Material de adquisición libre', stock: 2, minStock: 5,
-    location: 'Almacén Central (Cornellà)', value: 45
+    id: 'INV-203', name: 'Kit Connector HARTING', sku: 'CON-HAR-KIT',
+    category: 'Material de adquisició lliure', stock: 2, minStock: 5,
+    location: 'Magatzem Central (Cornellà)', value: 45
   },
 
   // Material genérico (consumibles)
   {
-    id: 'INV-301', name: 'Rollo Papel Térmico Pupitre', sku: 'PAP-PUP-58MM',
-    category: 'Material genérico', stock: 250, minStock: 100,
-    location: 'Almacén Central (Cornellà)'
+    id: 'INV-301', name: 'Rotlle Paper Tèrmic Pupitre', sku: 'PAP-PUP-58MM',
+    category: 'Material genèric', stock: 250, minStock: 100,
+    location: 'Magatzem Central (Cornellà)'
   },
   {
     id: 'INV-302', name: 'Fusible MiniATO 5A', sku: 'FUS-MATO-5A',
-    category: 'Material genérico', stock: 450, minStock: 200,
-    location: 'Almacén Central (Cornellà)'
+    category: 'Material genèric', stock: 450, minStock: 200,
+    location: 'Magatzem Central (Cornellà)'
   },
   {
-    id: 'INV-303', name: 'Bridas de nylon 20cm', sku: 'BRD-NYL-20CM-PK100',
-    category: 'Material genérico', stock: 88, minStock: 50,
-    location: 'Almacén Op. JULIA'
+    id: 'INV-303', name: 'Brides de niló 20cm', sku: 'BRD-NYL-20CM-PK100',
+    category: 'Material genèric', stock: 88, minStock: 50,
+    location: 'Magatzem Op. JULIA'
   }
 ];
 
 
 export const mockInstallations: Installation[] = [
-    { id: 'INST-001', vehicleId: 'VEH-NUEVO-450', vehicleModel: 'Mercedes Citaro 3P', operatorId: 'op-01', scheduledDate: '25/01/2026', technician: 'Jordi', status: 'En Progreso', materials: ['Pupitre: SN-PUP-NEW-001', 'Validadoras: 2 unidades', 'Cableado: Nuevo (carrocero)'] },
-    { id: 'INST-002', vehicleId: 'VEH-NUEVO-451', vehicleModel: 'Solaris Urbino 12 Hybrid', operatorId: 'op-07', scheduledDate: '28/01/2026', technician: 'Pau', status: 'Programada', materials: ['Pupitre: SN-PUP-NEW-002', 'Validadoras: 3 unidades', 'Kit de conexión HARTING'] },
+    { id: 'INST-001', vehicleId: 'VEH-NUEVO-450', vehicleModel: 'Mercedes Citaro 3P', operatorId: 'op-01', scheduledDate: '25/01/2026', technician: 'Jordi', status: 'En Progrés', materials: ['Pupitre: SN-PUP-NEW-001', 'Validadoras: 2 unitats', 'Cablejat: Nou (carrosser)'] },
+    { id: 'INST-002', vehicleId: 'VEH-NUEVO-451', vehicleModel: 'Solaris Urbino 12 Hybrid', operatorId: 'op-07', scheduledDate: '28/01/2026', technician: 'Pau', status: 'Programada', materials: ['Pupitre: SN-PUP-NEW-002', 'Validadoras: 3 unitats', 'Kit de connexió HARTING'] },
 ];
 
 export const mockDecommissionings: Decommissioning[] = [
-    { id: 'DECOM-001', vehicleId: 'VEH-BAJA-201', vehicleModel: 'Otokar Vectio LE', operatorId: 'op-02', reason: 'Fin vida útil vehículo', scheduledDate: '28/01/2026', status: 'Programada', materials: ['Pupitre: SN-PUP-JULIA-201', 'Validadoras: 3 unidades', 'Cableado: NO recuperar'] },
+    { id: 'DECOM-001', vehicleId: 'VEH-BAJA-201', vehicleModel: 'Otokar Vectio LE', operatorId: 'op-02', reason: 'Fi de vida útil del vehicle', scheduledDate: '28/01/2026', status: 'Programada', materials: ['Pupitre: SN-PUP-JULIA-201', 'Validadoras: 3 unitats', 'Cablejat: NO recuperar'] },
 ];
 
 export const mockTransfers: Transfer[] = [
     { id: 'TRANS-001', originVehicleId: 'VEH-ORIGEN-180', destinationVehicleId: 'VEH-DESTINO-480', originVehicleModel: 'Mercedes Citaro (2018)', destinationVehicleModel: 'Mercedes Citaro Hybrid', operatorId: 'op-08', status: 'Fase 1 OK', phase1_status: 'Completada', phase1_date: '15/12/2025', phase2_status: 'Programada', phase2_date: '02/02/2026' },
-    { id: 'TRANS-002', originVehicleId: 'VEH-ORIGEN-190', destinationVehicleId: 'VEH-DESTINO-490', originVehicleModel: 'Otokar Vectio', destinationVehicleModel: 'Solaris Urbino', operatorId: 'op-04', status: 'Programada', phase1_status: 'Pendiente', phase1_date: '27/01/2026', phase2_status: 'Pendiente', phase2_date: '05/02/2026' },
+    { id: 'TRANS-002', originVehicleId: 'VEH-ORIGEN-190', destinationVehicleId: 'VEH-DESTINO-490', originVehicleModel: 'Otokar Vectio', destinationVehicleModel: 'Solaris Urbino', operatorId: 'op-04', status: 'Programada', phase1_status: 'Pendent', phase1_date: '27/01/2026', phase2_status: 'Pendent', phase2_date: '05/02/2026' },
 ];
     
 export const mockDashboardData: DashboardData = {
@@ -322,11 +322,11 @@ export const mockDashboardData: DashboardData = {
     },
     maintenanceChartData: [
       { month: 'Ago', planned: 220, completed: 180 },
-      { month: 'Sep', planned: 210, completed: 190 },
+      { month: 'Set', planned: 210, completed: 190 },
       { month: 'Oct', planned: 250, completed: 230 },
       { month: 'Nov', planned: 240, completed: 240 },
-      { month: 'Dic', planned: 300, completed: 280 },
-      { month: 'Ene', planned: 150, completed: 90 },
+      { month: 'Des', planned: 300, completed: 280 },
+      { month: 'Gen', planned: 150, completed: 90 },
     ],
     operatorMetrics: mockOperators.slice(0, 5).map(op => ({
         operatorName: op.name,
@@ -340,7 +340,7 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
     {
         nombre: 'ALSINA GRAELLS',
         id: 'op-01',
-        estado: 'Activo',
+        estado: 'Actiu',
         ubicacionPrincipal: 'Barcelona',
         vehiculosOperativos: 48,
         vehiculosTotal: 50,
@@ -360,7 +360,7 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
     {
         nombre: 'AUTOCARES JULIA',
         id: 'op-02',
-        estado: 'Activo',
+        estado: 'Actiu',
         ubicacionPrincipal: 'Tarragona',
         vehiculosOperativos: 65,
         vehiculosTotal: 70,
@@ -380,7 +380,7 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
     {
         nombre: 'AUTOCARS DEL PENEDÈS',
         id: 'op-03',
-        estado: 'Activo',
+        estado: 'Actiu',
         ubicacionPrincipal: 'Girona',
         vehiculosOperativos: 28,
         vehiculosTotal: 30,
@@ -400,7 +400,7 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
     {
         nombre: 'AUTOCARS R. FONT',
         id: 'op-05',
-        estado: 'Inactivo',
+        estado: 'Inactiu',
         ubicacionPrincipal: 'Lleida',
         vehiculosOperativos: 0,
         vehiculosTotal: 15,
@@ -420,7 +420,7 @@ export const mockOperatorMetrics: OperatorMetrics[] = [
     {
         nombre: 'TUS, SCCL',
         id: 'op-11',
-        estado: 'Activo',
+        estado: 'Actiu',
         ubicacionPrincipal: 'Barcelona',
         vehiculosOperativos: 150,
         vehiculosTotal: 160,

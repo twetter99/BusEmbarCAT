@@ -74,7 +74,7 @@ const InventoryTable = ({ items }: { items: InventoryItem[] }) => {
   if (items.length === 0) {
     return (
       <div className="text-center text-muted-foreground py-12">
-        <p>No hay artículos en esta vista.</p>
+        <p>No hi ha articles en aquesta vista.</p>
       </div>
     );
   }
@@ -82,12 +82,12 @@ const InventoryTable = ({ items }: { items: InventoryItem[] }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Nombre del Artículo</TableHead>
+          <TableHead>Nom de l'Article</TableHead>
           <TableHead>SKU</TableHead>
-          <TableHead>Nº Serie</TableHead>
-          <TableHead>Categoría</TableHead>
-          <TableHead>Ubicación / Asignado</TableHead>
-          <TableHead className="text-right">Stock</TableHead>
+          <TableHead>Nº Sèrie</TableHead>
+          <TableHead>Categoria</TableHead>
+          <TableHead>Ubicació / Assignat</TableHead>
+          <TableHead className="text-right">Estoc</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -136,41 +136,41 @@ export default function InventoryPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Gestión de Inventario y Stock (SGI)</h1>
-          <p className="text-muted-foreground">Control centralizado de material y trazabilidad.</p>
+          <h1 className="text-2xl font-bold">Gestió d'Inventari i Estoc (SGI)</h1>
+          <p className="text-muted-foreground">Control centralitzat de material i traçabilitat.</p>
         </div>
         <div className="flex gap-2">
             <Button size="sm" variant="outline">
               <FilePlus className="mr-2 h-4 w-4" />
-              Registrar Movimiento
+              Registrar Moviment
             </Button>
             <Button size="sm">
               <PlusCircle className="mr-2 h-4 w-4" />
-              Añadir Artículo
+              Afegir Article
             </Button>
           </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <KPICard
-          title="Valor Total del Stock"
-          value={new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(stockValue)}
+          title="Valor Total de l'Estoc"
+          value={new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR' }).format(stockValue)}
           icon={Wallet}
         />
         <KPICard
-          title="Artículos Stock Bajo"
+          title="Articles Estoc Baix"
           value={lowStockItems}
           icon={AlertTriangle}
           variant={lowStockItems > 0 ? 'warning' : 'default'}
         />
         <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Bolsa Adquisición Libre</CardTitle>
+                <CardTitle className="text-sm font-medium">Bossa Adquisició Lliure</CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground text-primary" />
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold">{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(acquisitionBudget - acquisitionSpent)}</div>
-                <p className="text-xs text-muted-foreground">{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(acquisitionBudget)} de presupuesto</p>
+                <div className="text-2xl font-bold">{new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR' }).format(acquisitionBudget - acquisitionSpent)}</div>
+                <p className="text-xs text-muted-foreground">{new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR' }).format(acquisitionBudget)} de pressupost</p>
                 <Progress value={acquisitionProgress} className="mt-2 h-2" />
             </CardContent>
         </Card>
@@ -190,28 +190,28 @@ export default function InventoryPage() {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="central">
             <Archive className="mr-2 h-4 w-4" />
-            Almacén Principal
+            Magatzem Principal
           </TabsTrigger>
           <TabsTrigger value="operator">
             <Boxes className="mr-2 h-4 w-4" />
-            Almacenes Operador
+            Magatzems Operador
           </TabsTrigger>
           <TabsTrigger value="assigned">
             <PackageCheck className="mr-2 h-4 w-4" />
-            Material Asignado
+            Material Assignat
           </TabsTrigger>
           <TabsTrigger value="budget">
             <ClipboardList className="mr-2 h-4 w-4" />
-            Bolsa de Adquisición
+            Bossa d'Adquisició
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="central">
           <Card>
             <CardHeader>
-              <CardTitle>Almacén Principal (Cornellà)</CardTitle>
+              <CardTitle>Magatzem Principal (Cornellà)</CardTitle>
               <CardDescription>
-                Stock centralizado para distribución a operadores y proyectos.
+                Estoc centralitzat per a distribució a operadors i projectes.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -223,9 +223,9 @@ export default function InventoryPage() {
         <TabsContent value="operator">
           <Card>
             <CardHeader>
-              <CardTitle>Stock en Almacenes de Operador</CardTitle>
+              <CardTitle>Estoc en Magatzems d'Operador</CardTitle>
               <CardDescription>
-                Material delegado en las cocheras de los distintos operadores.
+                Material delegat a les cotxeres dels diferents operadors.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -237,9 +237,9 @@ export default function InventoryPage() {
         <TabsContent value="assigned">
            <Card>
             <CardHeader>
-              <CardTitle>Material Asignado a Vehículos</CardTitle>
+              <CardTitle>Material Assignat a Vehicles</CardTitle>
               <CardDescription>
-                Trazabilidad de componentes con número de serie instalados en la flota.
+                Traçabilitat de components amb número de sèrie instal·lats a la flota.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -251,14 +251,14 @@ export default function InventoryPage() {
         <TabsContent value="budget">
           <Card>
             <CardHeader>
-              <CardTitle>Control de la Bolsa de Adquisición Libre</CardTitle>
+              <CardTitle>Control de la Bossa d'Adquisició Lliure</CardTitle>
               <CardDescription>
-                Seguimiento del consumo y presupuesto para material de adquisición libre. El presupuesto total es de 66.600,00 €.
+                Seguiment del consum i pressupost per a material d'adquisició lliure. El pressupost total és de 66.600,00 €.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center text-muted-foreground py-12 border-2 border-dashed rounded-lg">
-                <p>Próximamente: Historial de movimientos y aprobaciones de presupuesto.</p>
+                <p>Pròximament: Historial de moviments i aprovacions de pressupost.</p>
               </div>
             </CardContent>
           </Card>

@@ -15,7 +15,7 @@ import {
 import { mockTasks, mockVehicles, mockOperators } from '@/lib/data';
 import type { MaintenanceTask } from '@/lib/types';
 import { format, formatDistanceToNow, differenceInDays } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ca } from 'date-fns/locale';
 import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -48,10 +48,10 @@ const urgencyBadgeVariant: { [key in UrgencyStatus]: 'destructive' | 'warning' |
 };
 
 const urgencyText: { [key in UrgencyStatus]: string } = {
-    'Vencido': 'Vencido',
-    'Urgente': 'Urgente',
-    'Próximo': 'Próximo',
-    'Normal': 'Pendiente',
+    'Vencido': 'Vençut',
+    'Urgente': 'Urgent',
+    'Próximo': 'Proper',
+    'Normal': 'Pendent',
 };
 
 const urgencyCardClass: { [key in UrgencyStatus]: string } = {
@@ -115,29 +115,29 @@ const TaskCard = ({ task }: { task: MaintenanceTask }) => {
                     })} />
                     <div className={cn("text-sm p-1 rounded-md", urgencyDateClass[urgency])}>
                        <span>
-                         {urgency === 'Vencido' ? 'Vencido ' : 'Vence '}
-                         {formatDistanceToNow(task.dueDate, { addSuffix: true, locale: es })}
+                         {urgency === 'Vencido' ? 'Vençut ' : 'Venç '}
+                         {formatDistanceToNow(task.dueDate, { addSuffix: true, locale: ca })}
                        </span>
                         <br />
-                       <span className="text-xs">({format(task.dueDate, 'd MMM, yyyy', { locale: es })})</span>
+                       <span className="text-xs">({format(task.dueDate, 'd MMM, yyyy', { locale: ca })})</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <Wrench className="h-4 w-4" />
-                    <span>Revisión de: {task.equipmentType}</span>
+                    <span>Revisió de: {task.equipmentType}</span>
                 </div>
                 {task.technician ? <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>Asignado a {task.technician}</span>
+                    <span>Assignat a {task.technician}</span>
                 </div> : <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span className="text-muted-foreground italic">Sin asignar</span>
+                    <span className="text-muted-foreground italic">Sense assignar</span>
                 </div>}
             </CardContent>
             <CardFooter>
                  <Button className="w-full" asChild>
                     <Link href={`/maintenance/preventive/${task.id}`}>
-                        Iniciar Intervención
+                        Iniciar Intervenció
                     </Link>
                 </Button>
             </CardFooter>
@@ -202,9 +202,9 @@ export default function DuePage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex items-center justify-between">
             <div>
-                <h1 className="text-2xl font-bold">Control de Vencimientos</h1>
+                <h1 className="text-2xl font-bold">Control de Venciments</h1>
                 <p className="text-muted-foreground">
-                    {filteredTasks.length} de {allPendingTasks.length} mantenimientos pendientes mostrados.
+                    {filteredTasks.length} de {allPendingTasks.length} manteniments pendents mostrats.
                 </p>
             </div>
         </div>
@@ -213,7 +213,7 @@ export default function DuePage() {
             filters={filters}
             onFilterChange={(newFilters) => setFilters(prev => ({...prev, ...newFilters}))}
             categories={frequencies}
-            categoryLabel="Frecuencia"
+            categoryLabel="Freqüència"
             operators={availableOperators}
         />
       
@@ -222,7 +222,7 @@ export default function DuePage() {
           <div key={urgency}>
             <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
                 <Badge variant={urgencyBadgeVariant[urgency as UrgencyStatus]}>{urgency}</Badge>
-                <span className='text-muted-foreground text-sm'>({tasks.length} tareas)</span>
+                <span className='text-muted-foreground text-sm'>({tasks.length} tasques)</span>
             </h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {tasks.map((task) => (
@@ -237,7 +237,7 @@ export default function DuePage() {
         <Card>
             <CardContent className='pt-6'>
                 <div className="text-center text-muted-foreground py-12">
-                    <p className="font-semibold">No hay mantenimientos pendientes que coincidan con los filtros.</p>
+                    <p className="font-semibold">No hi ha manteniments pendents que coincideixin amb els filtres.</p>
                 </div>
             </CardContent>
         </Card>

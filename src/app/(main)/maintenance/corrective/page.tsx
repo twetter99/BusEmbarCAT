@@ -16,7 +16,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockIncidents, mockVehicles, mockOperators } from '@/lib/data';
 import type { Incident } from '@/lib/types';
 import { format, formatDistanceToNow, differenceInDays, add } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ca } from 'date-fns/locale';
 import { User, Calendar, Wrench, Truck, AlertTriangle, Zap, Clock, Building } from 'lucide-react';
 import Link from 'next/link';
 import { FilterControls } from '@/components/layout/filter-controls';
@@ -63,10 +63,10 @@ const urgencyBadgeVariant: { [key in UrgencyStatus]: 'destructive' | 'warning' |
 };
 
 const urgencyText: { [key in UrgencyStatus]: string } = {
-    'Vencido': 'Vencido',
-    'Urgente': 'Urgente',
-    'Próximo': 'Próximo',
-    'Normal': 'Abierto',
+    'Vencido': 'Vençut',
+    'Urgente': 'Urgent',
+    'Próximo': 'Proper',
+    'Normal': 'Obert',
 };
 
 const urgencyCardClass: { [key in UrgencyStatus]: string } = {
@@ -91,9 +91,9 @@ const urgencyIcons: { [key in UrgencyStatus]: React.ElementType } = {
 };
 
 const buttonTextByStatus: { [key in Incident['status']]: string } = {
-    'Abierto': 'Ver Ficha',
-    'En Progreso': 'Ver Progreso',
-    'Resuelto': 'Ver Informe',
+    'Abierto': 'Veure Fitxa',
+    'En Progreso': 'Veure Progrés',
+    'Resuelto': 'Veure Informe',
 };
 
 const IncidentCard = ({ incident }: { incident: Incident }) => {
@@ -109,7 +109,7 @@ const IncidentCard = ({ incident }: { incident: Incident }) => {
                     <div>
                         <Badge variant={priorityVariant[incident.priority]} className="mb-2">{incident.priority}</Badge>
                         <CardTitle className="text-lg">{incident.issue}</CardTitle>
-                        <CardDescription>Mantenimiento Correctivo</CardDescription>
+                        <CardDescription>Manteniment Correctiu</CardDescription>
                     </div>
                      {incident.status === 'Abierto' ? (
                         <Badge variant={urgencyBadgeVariant[urgency]}>{urgencyText[urgency]}</Badge>
@@ -142,23 +142,23 @@ const IncidentCard = ({ incident }: { incident: Incident }) => {
                     })} />
                     <div className={cn("text-sm", incident.status === 'Abierto' && urgencyDateClass[urgency], 'p-1 rounded-md')}>
                        <span>
-                         {urgency === 'Vencido' ? 'Vencido ' : 'Vence '}
-                         {formatDistanceToNow(dueDate, { addSuffix: true, locale: es })}
+                         {urgency === 'Vencido' ? 'Vençut ' : 'Venç '}
+                         {formatDistanceToNow(dueDate, { addSuffix: true, locale: ca })}
                        </span>
                         <br />
-                       <span className="text-xs">({format(dueDate, 'd MMM, yyyy', { locale: es })})</span>
+                       <span className="text-xs">({format(dueDate, 'd MMM, yyyy', { locale: ca })})</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <Wrench className="h-4 w-4" />
-                    <span>Revisión de: {incident.equipmentType}</span>
+                    <span>Revisió de: {incident.equipmentType}</span>
                 </div>
                 {incident.assignedTo ? <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>Asignado a {incident.assignedTo}</span>
+                    <span>Assignat a {incident.assignedTo}</span>
                 </div> : <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span className="text-muted-foreground italic">Sin asignar</span>
+                    <span className="text-muted-foreground italic">Sense assignar</span>
                 </div>}
             </CardContent>
             <CardFooter>
@@ -260,9 +260,9 @@ export default function CorrectivePage() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
              <div className="flex items-center justify-between mb-4">
                  <TabsList className="grid w-full max-w-md grid-cols-3">
-                    <TabsTrigger value="Abierto">Abiertas ({allIncidentsByStatus['Abierto'].length})</TabsTrigger>
-                    <TabsTrigger value="En Progreso">En Reparación ({allIncidentsByStatus['En Progreso'].length})</TabsTrigger>
-                    <TabsTrigger value="Resuelto">Resueltas ({allIncidentsByStatus['Resuelto'].length})</TabsTrigger>
+                    <TabsTrigger value="Abierto">Obertes ({allIncidentsByStatus['Abierto'].length})</TabsTrigger>
+                    <TabsTrigger value="En Progreso">En Reparació ({allIncidentsByStatus['En Progreso'].length})</TabsTrigger>
+                    <TabsTrigger value="Resuelto">Resoltes ({allIncidentsByStatus['Resuelto'].length})</TabsTrigger>
                 </TabsList>
             </div>
             
@@ -272,7 +272,7 @@ export default function CorrectivePage() {
                 technicians={technicians}
                 showTechnicianFilter
                 categories={priorities}
-                categoryLabel="Prioridad"
+                categoryLabel="Prioritat"
                 operators={availableOperators}
             />
 
@@ -282,7 +282,7 @@ export default function CorrectivePage() {
                         {filteredIncidents.map(incident => <IncidentCard key={incident.id} incident={incident} />)}
                     </div>
                 ) : (
-                     <p className="text-muted-foreground text-center py-8">No hay averías que coincidan con los filtros seleccionados para el estado "{activeTab}".</p>
+                     <p className="text-muted-foreground text-center py-8">No hi ha avaries que coincideixin amb els filtres seleccionats per a l'estat "{activeTab}".</p>
                 )}
             </div>
         </Tabs>

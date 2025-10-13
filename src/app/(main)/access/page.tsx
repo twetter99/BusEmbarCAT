@@ -24,13 +24,13 @@ export default function AccessPage() {
     <main className="flex flex-1 flex-col items-center justify-center gap-4 p-4 md:gap-8 md:p-6">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Gestión de Acceso</CardTitle>
+          <CardTitle>Gestió d'Accés</CardTitle>
           <CardDescription>
-            Cierra tu sesión actual de forma segura.
+            Tanqueu la vostra sessió actual de forma segura.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button className="w-full" onClick={handleLogout}>Cerrar Sesión</Button>
+          <Button className="w-full" onClick={handleLogout}>Tancar Sessió</Button>
         </CardContent>
       </Card>
     </main>

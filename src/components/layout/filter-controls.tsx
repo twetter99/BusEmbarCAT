@@ -56,10 +56,10 @@ export function FilterControls({
                 onValueChange={(value) => handleFilterChange('operator', value)}
               >
                 <SelectTrigger id="operator-filter">
-                  <SelectValue placeholder="Filtrar por operador" />
+                  <SelectValue placeholder="Filtrar per operador" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos los operadores</SelectItem>
+                  <SelectItem value="all">Tots els operadors</SelectItem>
                   {operators.map((op) => (
                     <SelectItem key={op.id} value={op.id}>
                       {op.name}
@@ -77,10 +77,10 @@ export function FilterControls({
               onValueChange={(value) => handleFilterChange('category', value)}
             >
               <SelectTrigger id="category-filter">
-                <SelectValue placeholder={`Filtrar por ${categoryLabel.toLowerCase()}`} />
+                <SelectValue placeholder={`Filtrar per ${categoryLabel.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                 <SelectItem value="all">Todas</SelectItem>
+                 <SelectItem value="all">Totes</SelectItem>
                 {categories.map((cat) => (
                   <SelectItem key={cat} value={cat}>
                     {cat}
@@ -92,17 +92,17 @@ export function FilterControls({
 
           {showTechnicianFilter && (
             <div className="space-y-2">
-              <Label htmlFor="technician-filter">Técnico</Label>
+              <Label htmlFor="technician-filter">Tècnic</Label>
               <Select
                 value={filters.technician}
                 onValueChange={(value) => handleFilterChange('technician', value as string)}
               >
                 <SelectTrigger id="technician-filter">
-                  <SelectValue placeholder="Filtrar por técnico" />
+                  <SelectValue placeholder="Filtrar per tècnic" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos los técnicos</SelectItem>
-                  <SelectItem value="unassigned">Sin asignar</SelectItem>
+                  <SelectItem value="all">Tots els tècnics</SelectItem>
+                  <SelectItem value="unassigned">Sense assignar</SelectItem>
                   {technicians.map((tech) => (
                     <SelectItem key={tech} value={tech}>
                       {tech}
@@ -113,13 +113,9 @@ export function FilterControls({
             </div>
           )}
 
-          <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end">Limpiar Filtros</Button>
+          <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end">Netejar Filtres</Button>
         </div>
       </CardContent>
     </Card>
   );
 }
-
-    
-
-    

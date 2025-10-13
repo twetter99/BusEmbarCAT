@@ -29,14 +29,14 @@ const OperatorFilters = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
           <div className="lg:col-span-2">
             <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-              Buscar Operador
+              Cercar Operador
             </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
                 type="text"
-                placeholder="Buscar por nombre..."
+                placeholder="Cercar per nom..."
                 value={filters.query}
                 onChange={(e) => onFilterChange('query', e.target.value)}
                 className="pl-10"
@@ -45,17 +45,17 @@ const OperatorFilters = ({
           </div>
           <div>
             <label htmlFor="compliance-filter" className="block text-sm font-medium text-gray-700 mb-1">
-              Estado de Cumplimiento
+              Estat de Compliment
             </label>
             <Select
               value={filters.compliance}
               onValueChange={(value) => onFilterChange('compliance', value)}
             >
               <SelectTrigger id="compliance-filter">
-                <SelectValue placeholder="Filtrar por cumplimiento" />
+                <SelectValue placeholder="Filtrar per compliment" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos los estados</SelectItem>
+                <SelectItem value="all">Tots els estats</SelectItem>
                 {complianceStatuses.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
               </SelectContent>
             </Select>
@@ -78,8 +78,8 @@ export default function OperatorsPage() {
   };
 
   const complianceStatuses = [
-    { value: 'critical', label: 'Crítico' },
-    { value: 'at_risk', label: 'En Riesgo' },
+    { value: 'critical', label: 'Crític' },
+    { value: 'at_risk', label: 'En Risc' },
     { value: 'normal', label: 'Normal' },
   ] as const;
 
@@ -113,14 +113,14 @@ export default function OperatorsPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Gestión de Operadores</h1>
+          <h1 className="text-2xl font-bold">Gestió d'Operadors</h1>
           <p className="text-muted-foreground">
-            Supervisa el estado y rendimiento de todos los operadores de la flota.
+            Superviseu l'estat i rendiment de tots els operadors de la flota.
           </p>
         </div>
         <Button size="sm" className="gap-1">
           <PlusCircle className="h-4 w-4" />
-          Añadir Operador
+          Afegir Operador
         </Button>
       </div>
 
@@ -130,7 +130,7 @@ export default function OperatorsPage() {
         complianceStatuses={complianceStatuses}
       />
       
-      <p className="text-sm text-muted-foreground">{filteredOperators.length} operadores encontrados.</p>
+      <p className="text-sm text-muted-foreground">{filteredOperators.length} operadors trobats.</p>
 
       {filteredOperators.length > 0 ? (
         <div className="space-y-2">
@@ -142,8 +142,8 @@ export default function OperatorsPage() {
         <Card>
           <CardContent className="pt-6">
              <div className="text-center text-muted-foreground py-12">
-               <p className="font-semibold">No se encontraron operadores</p>
-               <p className="text-sm mt-1">Intenta ajustar o limpiar los filtros de búsqueda.</p>
+               <p className="font-semibold">No s'han trobat operadors</p>
+               <p className="text-sm mt-1">Intenteu ajustar o netejar els filtres de cerca.</p>
             </div>
           </CardContent>
         </Card>

@@ -37,7 +37,7 @@ import type { MaintenanceTask } from '@/lib/types';
 import { useAuth } from '@/hooks/use-auth';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ca } from 'date-fns/locale';
 
 // Simulación de datos en tiempo real para el progreso
 const useInterventionProgress = (taskId: string) => {
@@ -96,7 +96,7 @@ const InterventionRow = ({ task }: { task: MaintenanceTask }) => {
              <TableCell>
                 <div className='flex items-center gap-2'>
                     <User className="h-4 w-4 text-muted-foreground" />
-                    <span className='font-medium'>{task.technician || 'Sin Asignar'}</span>
+                    <span className='font-medium'>{task.technician || 'Sense Assignar'}</span>
                 </div>
             </TableCell>
             <TableCell>
@@ -111,8 +111,8 @@ const InterventionRow = ({ task }: { task: MaintenanceTask }) => {
                  <div className="flex items-center gap-2 text-sm">
                     <Clock className={`h-4 w-4 ${isDelayed ? 'text-destructive' : 'text-muted-foreground'}`} />
                     <div>
-                        {startTime && <div>Inicio: <span className="font-mono">{format(startTime, 'HH:mm')}</span></div>}
-                        {estimatedEndTime && <div>Fin est: <span className="font-mono">{format(estimatedEndTime, 'HH:mm')}</span></div>}
+                        {startTime && <div>Inici: <span className="font-mono">{format(startTime, 'HH:mm')}</span></div>}
+                        {estimatedEndTime && <div>Fi est: <span className="font-mono">{format(estimatedEndTime, 'HH:mm')}</span></div>}
                     </div>
                  </div>
             </TableCell>
@@ -120,7 +120,7 @@ const InterventionRow = ({ task }: { task: MaintenanceTask }) => {
                 {isDelayed && (
                     <Badge variant="destructive" className="animate-pulse">
                         <AlertCircle className="h-3 w-3 mr-1"/>
-                        Retrasado
+                        Retardat
                     </Badge>
                 )}
             </TableCell>
@@ -128,7 +128,7 @@ const InterventionRow = ({ task }: { task: MaintenanceTask }) => {
                  <Button asChild variant="outline" size="sm">
                     <Link href={`/maintenance/preventive/${task.id}`}>
                         <Eye className="h-4 w-4 mr-2" />
-                        Ver Ficha
+                        Veure Fitxa
                     </Link>
                 </Button>
             </TableCell>
@@ -183,51 +183,51 @@ export default function ActiveInterventionsPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Intervenciones Activas</CardTitle>
+                        <CardTitle className="text-sm font-medium">Intervencions Actives</CardTitle>
                         <Wrench className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{activeInterventions.length}</div>
-                        <p className="text-xs text-muted-foreground">Tareas "En Progreso" actualmente.</p>
+                        <p className="text-xs text-muted-foreground">Tasques "En Progrés" actualment.</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Técnicos Operando</CardTitle>
+                        <CardTitle className="text-sm font-medium">Tècnics Operant</CardTitle>
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{activeTechnicians}</div>
-                         <p className="text-xs text-muted-foreground">Técnicos con tareas asignadas ahora.</p>
+                         <p className="text-xs text-muted-foreground">Tècnics amb tasques assignades ara.</p>
                     </CardContent>
                 </Card>
                  <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Vehículos Intervenidos</CardTitle>
+                        <CardTitle className="text-sm font-medium">Vehicles Intervinguts</CardTitle>
                         <Truck className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{activeVehicles}</div>
-                         <p className="text-xs text-muted-foreground">Flota en mantenimiento activo.</p>
+                         <p className="text-xs text-muted-foreground">Flota en manteniment actiu.</p>
                     </CardContent>
                 </Card>
                  <Card className={delayedTasks > 0 ? 'border-destructive bg-destructive/10' : ''}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Alertas por Retraso</CardTitle>
+                        <CardTitle className="text-sm font-medium">Alertes per Retard</CardTitle>
                         <AlertCircle className={`h-4 w-4 ${delayedTasks > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
                     </CardHeader>
                     <CardContent>
                         <div className={`text-2xl font-bold ${delayedTasks > 0 ? 'text-destructive' : ''}`}>{delayedTasks}</div>
-                         <p className="text-xs text-muted-foreground">Intervenciones superando tiempo estimado.</p>
+                         <p className="text-xs text-muted-foreground">Intervencions superant el temps estimat.</p>
                     </CardContent>
                 </Card>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Torre de Control de Intervenciones</CardTitle>
+                    <CardTitle>Torre de Control d'Intervencions</CardTitle>
                     <CardDescription>
-                        Vista en tiempo real de todas las tareas de mantenimiento preventivo en ejecución.
+                        Vista en temps real de totes les tasques de manteniment preventiu en execució.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -235,14 +235,14 @@ export default function ActiveInterventionsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Intervención</TableHead>
-                                    <TableHead>Vehículo</TableHead>
+                                    <TableHead>Intervenció</TableHead>
+                                    <TableHead>Vehicle</TableHead>
                                     <TableHead>Operador</TableHead>
-                                    <TableHead>Técnico</TableHead>
-                                    <TableHead>Progreso</TableHead>
-                                    <TableHead>Tiempos</TableHead>
-                                    <TableHead>Estado</TableHead>
-                                    <TableHead className="text-right">Acciones</TableHead>
+                                    <TableHead>Tècnic</TableHead>
+                                    <TableHead>Progrés</TableHead>
+                                    <TableHead>Temps</TableHead>
+                                    <TableHead>Estat</TableHead>
+                                    <TableHead className="text-right">Accions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -254,9 +254,9 @@ export default function ActiveInterventionsPage() {
                     ) : (
                         <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg min-h-[400px]">
                             <PlayCircle className="h-16 w-16 text-muted-foreground mb-4" />
-                            <h3 className="text-xl font-semibold">No hay intervenciones activas</h3>
+                            <h3 className="text-xl font-semibold">No hi ha intervencions actives</h3>
                             <p className="text-muted-foreground mt-2 max-w-sm">
-                                No hay ningún mantenimiento preventivo en estado "En Progreso" en este momento. Las tareas activas aparecerán aquí en tiempo real.
+                                No hi ha cap manteniment preventiu en estat "En Progrés" en aquest moment. Les tasques actives apareixeran aquí en temps real.
                             </p>
                         </div>
                     )}

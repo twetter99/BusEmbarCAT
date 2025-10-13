@@ -36,7 +36,7 @@ import { format } from 'date-fns';
 
 const technicians = ['Jordi', 'Pau', 'Marc', 'Oriol', 'Xavier', 'Miquel', 'Josep', 'Carles', 'David', 'Bernat', 'Quim', 'Toni', 'Ramon', 'Ferran', 'Albert'];
 const vehicleModels = ['Mercedes Citaro', 'Solaris Urbino', 'Otokar Vectio'];
-const warehouses = ['Almacén A', 'Almacén B', 'Almacén C'];
+const warehouses = ['Magatzem A', 'Magatzem B', 'Magatzem C'];
 
 const availableSpecificEquipment = mockInventory.filter(
     item => item.category === 'Material específico SERMETRA' && item.stock > 0
@@ -48,14 +48,14 @@ const availableConsultTerminals = availableSpecificEquipment.filter(item => item
 
 // --- Installation Form ---
 const installationSchema = z.object({
-  vehicleId: z.string().min(1, 'ID de vehículo es requerido'),
-  licensePlate: z.string().min(1, 'Matrícula es requerida'),
-  model: z.string().min(1, 'Modelo es requerido'),
-  operatorId: z.string().min(1, 'Operador es requerido'),
+  vehicleId: z.string().min(1, 'ID de vehicle és requerit'),
+  licensePlate: z.string().min(1, 'Matrícula és requerida'),
+  model: z.string().min(1, 'Model és requerit'),
+  operatorId: z.string().min(1, 'Operador és requerit'),
   depot: z.string().optional(),
-  installDate: z.date({ required_error: 'Fecha de instalación es requerida' }),
-  technician: z.string().min(1, 'Técnico es requerido'),
-  priority: z.enum(['Normal', 'Urgente']),
+  installDate: z.date({ required_error: 'Data d\'instal·lació és requerida' }),
+  technician: z.string().min(1, 'Tècnic és requerit'),
+  priority: z.enum(['Normal', 'Urgent']),
   materials: z.object({
     pupitre: z.string().optional(),
     validators: z.array(z.string()).optional(),
@@ -81,7 +81,7 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
 
   const onSubmit = (data: InstallationFormData) => {
     console.log(data);
-    toast({ title: 'Instalación programada', description: 'La nueva instalación ha sido registrada.' });
+    toast({ title: 'Instal·lació programada', description: 'La nova instal·lació ha estat registrada.' });
     onOpenChange(false);
   };
 
@@ -90,14 +90,14 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Nueva Instalación</DialogTitle>
-            <DialogDescription>Rellena los datos para programar una nueva instalación de equipamiento.</DialogDescription>
+            <DialogTitle>Nova Instal·lació</DialogTitle>
+            <DialogDescription>Ompliu les dades per programar una nova instal·lació d'equipament.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
-            <h3 className="font-semibold text-lg">Información del Vehículo</h3>
+            <h3 className="font-semibold text-lg">Informació del Vehicle</h3>
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <Label htmlFor="vehicleId">ID Vehículo</Label>
+                    <Label htmlFor="vehicleId">ID Vehicle</Label>
                     <Input id="vehicleId" {...register('vehicleId')} />
                     {errors.vehicleId && <p className="text-destructive text-sm mt-1">{errors.vehicleId.message}</p>}
                 </div>
@@ -107,13 +107,13 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                     {errors.licensePlate && <p className="text-destructive text-sm mt-1">{errors.licensePlate.message}</p>}
                 </div>
                  <div>
-                    <Label htmlFor="model">Modelo</Label>
+                    <Label htmlFor="model">Model</Label>
                      <Controller
                         control={control}
                         name="model"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar modelo..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar model..." /></SelectTrigger>
                             <SelectContent>
                                 {vehicleModels.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
                             </SelectContent>
@@ -139,15 +139,15 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                     {errors.operatorId && <p className="text-destructive text-sm mt-1">{errors.operatorId.message}</p>}
                 </div>
                  <div>
-                    <Label htmlFor="depot">Cochera</Label>
+                    <Label htmlFor="depot">Cotxera</Label>
                     <Input id="depot" {...register('depot')} />
                 </div>
             </div>
 
-            <h3 className="font-semibold text-lg mt-4">Programación</h3>
+            <h3 className="font-semibold text-lg mt-4">Programació</h3>
              <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <Label>Fecha de instalación</Label>
+                    <Label>Data d'instal·lació</Label>
                     <Controller
                         control={control}
                         name="installDate"
@@ -162,7 +162,7 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                                     )}
                                     >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {field.value ? format(field.value, "PPP") : <span>Seleccionar fecha</span>}
+                                    {field.value ? format(field.value, "PPP") : <span>Seleccionar data</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
@@ -179,13 +179,13 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                     {errors.installDate && <p className="text-destructive text-sm mt-1">{errors.installDate.message}</p>}
                 </div>
                 <div>
-                    <Label htmlFor="technician">Técnico asignado</Label>
+                    <Label htmlFor="technician">Tècnic assignat</Label>
                     <Controller
                         control={control}
                         name="technician"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar técnico..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar tècnic..." /></SelectTrigger>
                             <SelectContent>
                                 {technicians.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                             </SelectContent>
@@ -195,7 +195,7 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                      {errors.technician && <p className="text-destructive text-sm mt-1">{errors.technician.message}</p>}
                 </div>
                 <div>
-                    <Label>Prioridad</Label>
+                    <Label>Prioritat</Label>
                     <Controller
                         control={control}
                         name="priority"
@@ -206,8 +206,8 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                                 <Label htmlFor="p-normal">Normal</Label>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="Urgente" id="p-urgente" />
-                                <Label htmlFor="p-urgente">Urgente</Label>
+                                <RadioGroupItem value="Urgent" id="p-urgente" />
+                                <Label htmlFor="p-urgente">Urgent</Label>
                             </div>
                         </RadioGroup>
                          )}
@@ -215,10 +215,10 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                 </div>
             </div>
 
-            <h3 className="font-semibold text-lg mt-4">Material Requerido</h3>
+            <h3 className="font-semibold text-lg mt-4">Material Requerit</h3>
             <div className="space-y-4">
                 <div>
-                    <Label htmlFor="pupitre">Pupitre (Nº Serie)</Label>
+                    <Label htmlFor="pupitre">Pupitre (Nº Sèrie)</Label>
                     <Controller
                         control={control}
                         name="materials.pupitre"
@@ -233,7 +233,7 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                     />
                 </div>
                 <div>
-                    <Label htmlFor="validators">Validadoras (Nº Serie)</Label>
+                    <Label htmlFor="validators">Validadoras (Nº Sèrie)</Label>
                     {/* This could be a multi-select component in a real app */}
                     <Controller
                         control={control}
@@ -249,7 +249,7 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                     />
                 </div>
                 <div>
-                    <Label htmlFor="consultTerminal">Terminal de consulta (Nº Serie)</Label>
+                    <Label htmlFor="consultTerminal">Terminal de consulta (Nº Sèrie)</Label>
                     <Controller
                         control={control}
                         name="materials.consultTerminal"
@@ -265,19 +265,19 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                 </div>
                  <div className="flex items-center space-x-2">
                     <Checkbox id="auxMaterial" {...register('materials.auxMaterial')} />
-                    <Label htmlFor="auxMaterial">Material auxiliar completo (cableado, conectores...)</Label>
+                    <Label htmlFor="auxMaterial">Material auxiliar complet (cablejat, connectors...)</Label>
                 </div>
                  <div>
-                    <Label htmlFor="wiring">Estado Cableado</Label>
+                    <Label htmlFor="wiring">Estat Cablejat</Label>
                     <Controller
                         control={control}
                         name="materials.wiring"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar estado..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar estat..." /></SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="carrocero">Suministrado por carrocero</SelectItem>
-                                <SelectItem value="pendiente">Pendiente de suministro</SelectItem>
+                                <SelectItem value="carrocero">Subministrat per carrosser</SelectItem>
+                                <SelectItem value="pendiente">Pendent de subministrament</SelectItem>
                             </SelectContent>
                         </Select>
                         )}
@@ -285,14 +285,14 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
                 </div>
             </div>
              <div className="mt-4">
-                <Label htmlFor="observations">Observaciones</Label>
+                <Label htmlFor="observations">Observacions</Label>
                 <Textarea id="observations" {...register('observations')} />
              </div>
 
           </div>
           <DialogFooter>
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
-            <Button type="submit">Programar Instalación</Button>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel·lar</Button>
+            <Button type="submit">Programar Instal·lació</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -302,11 +302,11 @@ export function NewInstallationForm({ isOpen, onOpenChange }: { isOpen: boolean,
 
 // --- Decommissioning Form ---
 const decommissioningSchema = z.object({
-  vehicleId: z.string().min(1, 'Debe seleccionar un vehículo'),
+  vehicleId: z.string().min(1, 'Heu de seleccionar un vehicle'),
   reason: z.enum(['Baja definitiva vehículo', 'Preparación para traspaso', 'Reparación mayor', 'Cambio de operador']),
-  decommissionDate: z.date({ required_error: 'Fecha es requerida' }),
-  technician: z.string().min(1, 'Técnico es requerido'),
-  materialDestination: z.string().min(1, 'Destino es requerido'),
+  decommissionDate: z.date({ required_error: 'La data és requerida' }),
+  technician: z.string().min(1, 'El tècnic és requerit'),
+  materialDestination: z.string().min(1, 'El destí és requerit'),
 });
 
 type DecommissioningFormData = z.infer<typeof decommissioningSchema>;
@@ -320,8 +320,8 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
     console.log(data);
     // Here you would trigger the logic to update inventory status
     toast({ 
-        title: 'Desinstalación programada', 
-        description: `El material se devolverá a ${data.materialDestination}. El stock se actualizará al completar.`
+        title: 'Desinstal·lació programada', 
+        description: `El material es retornarà a ${data.materialDestination}. L'estoc s'actualitzarà en completar.`
     });
     onOpenChange(false);
   };
@@ -331,18 +331,18 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Nueva Desinstalación</DialogTitle>
-             <DialogDescription>Rellena los datos para programar una nueva desinstalación.</DialogDescription>
+            <DialogTitle>Nova Desinstal·lació</DialogTitle>
+             <DialogDescription>Ompliu les dades per programar una nova desinstal·lació.</DialogDescription>
           </DialogHeader>
            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
                 <div>
-                    <Label htmlFor="vehicleId">Vehículo a Desinstalar</Label>
+                    <Label htmlFor="vehicleId">Vehicle a Desinstal·lar</Label>
                     <Controller
                         control={control}
                         name="vehicleId"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar vehículo..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar vehicle..." /></SelectTrigger>
                             <SelectContent>
                                 {mockVehicles.filter(v => v.status === 'Activo').map(v => <SelectItem key={v.uniqueId} value={v.uniqueId}>{v.uniqueId} ({v.id})</SelectItem>)}
                             </SelectContent>
@@ -352,18 +352,18 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                      {errors.vehicleId && <p className="text-destructive text-sm mt-1">{errors.vehicleId.message}</p>}
                 </div>
                  <div>
-                    <Label htmlFor="reason">Motivo de la desinstalación</Label>
+                    <Label htmlFor="reason">Motiu de la desinstal·lació</Label>
                     <Controller
                         control={control}
                         name="reason"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar motivo..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar motiu..." /></SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Baja definitiva vehículo">Baja definitiva vehículo</SelectItem>
-                                <SelectItem value="Preparación para traspaso">Preparación para traspaso</SelectItem>
-                                <SelectItem value="Reparación mayor">Reparación mayor</SelectItem>
-                                <SelectItem value="Cambio de operador">Cambio de operador</SelectItem>
+                                <SelectItem value="Baja definitiva vehículo">Baixa definitiva vehicle</SelectItem>
+                                <SelectItem value="Preparación para traspaso">Preparació per a traspàs</SelectItem>
+                                <SelectItem value="Reparación mayor">Reparació major</SelectItem>
+                                <SelectItem value="Cambio de operador">Canvi d'operador</SelectItem>
                             </SelectContent>
                         </Select>
                         )}
@@ -371,10 +371,10 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                     {errors.reason && <p className="text-destructive text-sm mt-1">{String(errors.reason.message)}</p>}
                 </div>
                 
-                <h3 className="font-semibold text-lg mt-4">Programación</h3>
+                <h3 className="font-semibold text-lg mt-4">Programació</h3>
                 <div className="grid grid-cols-2 gap-4">
                      <div>
-                        <Label>Fecha desinstalación</Label>
+                        <Label>Data desinstal·lació</Label>
                         <Controller
                             control={control}
                             name="decommissionDate"
@@ -383,7 +383,7 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                                     <PopoverTrigger asChild>
                                         <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}>
                                             <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {field.value ? format(field.value, "PPP") : <span>Seleccionar fecha</span>}
+                                            {field.value ? format(field.value, "PPP") : <span>Seleccionar data</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus /></PopoverContent>
@@ -393,13 +393,13 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                         {errors.decommissionDate && <p className="text-destructive text-sm mt-1">{errors.decommissionDate.message}</p>}
                     </div>
                      <div>
-                        <Label htmlFor="technician">Técnico asignado</Label>
+                        <Label htmlFor="technician">Tècnic assignat</Label>
                         <Controller
                             control={control}
                             name="technician"
                             render={({ field }) => (
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <SelectTrigger><SelectValue placeholder="Seleccionar técnico..." /></SelectTrigger>
+                                <SelectTrigger><SelectValue placeholder="Seleccionar tècnic..." /></SelectTrigger>
                                 <SelectContent>
                                     {technicians.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                                 </SelectContent>
@@ -411,17 +411,17 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                 </div>
 
                 <div>
-                    <Label htmlFor="materialDestination">Destino del material recuperado</Label>
+                    <Label htmlFor="materialDestination">Destí del material recuperat</Label>
                     <Controller
                         control={control}
                         name="materialDestination"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar destino..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar destí..." /></SelectTrigger>
                             <SelectContent>
                                 {warehouses.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}
-                                 <SelectItem value="Traspaso directo">Traspaso directo</SelectItem>
-                                 <SelectItem value="Taller de reparaciones">Taller de reparaciones</SelectItem>
+                                 <SelectItem value="Traspaso directo">Traspàs directe</SelectItem>
+                                 <SelectItem value="Taller de reparaciones">Taller de reparacions</SelectItem>
                             </SelectContent>
                         </Select>
                         )}
@@ -430,8 +430,8 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
                 </div>
           </div>
           <DialogFooter>
-             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
-             <Button type="submit">Programar Desinstalación</Button>
+             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel·lar</Button>
+             <Button type="submit">Programar Desinstal·lació</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -441,11 +441,11 @@ export function NewDecommissioningForm({ isOpen, onOpenChange }: { isOpen: boole
 
 // --- Transfer Form ---
 const transferSchema = z.object({
-    originVehicleId: z.string().min(1, 'Debe seleccionar un vehículo de origen'),
-    destinationVehicleId: z.string().min(1, 'ID de vehículo destino es requerido'),
-    destinationLicensePlate: z.string().min(1, 'Matrícula destino es requerida'),
-    destinationModel: z.string().min(1, 'Modelo destino es requerido'),
-    destinationOperatorId: z.string().min(1, 'Operador destino es requerido'),
+    originVehicleId: z.string().min(1, 'Heu de seleccionar un vehicle d\'origen'),
+    destinationVehicleId: z.string().min(1, 'ID de vehicle destí és requerit'),
+    destinationLicensePlate: z.string().min(1, 'Matrícula destí és requerida'),
+    destinationModel: z.string().min(1, 'Model destí és requerit'),
+    destinationOperatorId: z.string().min(1, 'Operador destí és requerit'),
     transferType: z.enum(['directo', 'dos_fases']),
     decommissionDate: z.date().optional(),
     installDate: z.date().optional(),
@@ -458,7 +458,7 @@ const transferSchema = z.object({
     }
     return true;
 }, {
-    message: "Las fechas de desinstalación e instalación son requeridas para traspaso en 2 fases",
+    message: "Les dates de desinstal·lació i instal·lació són requerides per a traspàs en 2 fases",
     path: ["installDate"]
 });
 
@@ -476,7 +476,7 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
 
   const onSubmit = (data: TransferFormData) => {
     console.log(data);
-    toast({ title: 'Traspaso programado', description: 'El nuevo traspaso ha sido registrado.' });
+    toast({ title: 'Traspàs programat', description: 'El nou traspàs ha estat registrat.' });
     onOpenChange(false);
   };
   return (
@@ -484,19 +484,19 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Nuevo Traspaso</DialogTitle>
-            <DialogDescription>Rellena los datos para programar un nuevo traspaso de equipamiento.</DialogDescription>
+            <DialogTitle>Nou Traspàs</DialogTitle>
+            <DialogDescription>Ompliu les dades per programar un nou traspàs d'equipament.</DialogDescription>
           </DialogHeader>
            <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
-                <h3 className="font-semibold text-lg">Vehículo Origen</h3>
+                <h3 className="font-semibold text-lg">Vehicle Origen</h3>
                 <div>
-                    <Label htmlFor="originVehicleId">Seleccionar vehículo origen</Label>
+                    <Label htmlFor="originVehicleId">Seleccionar vehicle origen</Label>
                      <Controller
                         control={control}
                         name="originVehicleId"
                         render={({ field }) => (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger><SelectValue placeholder="Seleccionar vehículo..." /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder="Seleccionar vehicle..." /></SelectTrigger>
                             <SelectContent>
                                 {mockVehicles.filter(v => v.status === 'Activo').map(v => <SelectItem key={v.uniqueId} value={v.uniqueId}>{v.uniqueId} ({v.id})</SelectItem>)}
                             </SelectContent>
@@ -506,26 +506,26 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
                     {errors.originVehicleId && <p className="text-destructive text-sm mt-1">{errors.originVehicleId.message}</p>}
                 </div>
 
-                <h3 className="font-semibold text-lg mt-4">Vehículo Destino</h3>
+                <h3 className="font-semibold text-lg mt-4">Vehicle Destí</h3>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <Label htmlFor="destinationVehicleId">ID Vehículo Destino</Label>
+                        <Label htmlFor="destinationVehicleId">ID Vehicle Destí</Label>
                         <Input id="destinationVehicleId" {...register('destinationVehicleId')} />
                         {errors.destinationVehicleId && <p className="text-destructive text-sm mt-1">{errors.destinationVehicleId.message}</p>}
                     </div>
                     <div>
-                        <Label htmlFor="destinationLicensePlate">Matrícula Destino</Label>
+                        <Label htmlFor="destinationLicensePlate">Matrícula Destí</Label>
                         <Input id="destinationLicensePlate" {...register('destinationLicensePlate')} />
                          {errors.destinationLicensePlate && <p className="text-destructive text-sm mt-1">{errors.destinationLicensePlate.message}</p>}
                     </div>
                     <div>
-                        <Label htmlFor="destinationModel">Modelo Destino</Label>
+                        <Label htmlFor="destinationModel">Model Destí</Label>
                         <Controller
                             control={control}
                             name="destinationModel"
                             render={({ field }) => (
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <SelectTrigger><SelectValue placeholder="Seleccionar modelo..." /></SelectTrigger>
+                                <SelectTrigger><SelectValue placeholder="Seleccionar model..." /></SelectTrigger>
                                 <SelectContent>{vehicleModels.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}</SelectContent>
                             </Select>
                             )}
@@ -548,16 +548,16 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
                     </div>
                 </div>
 
-                <h3 className="font-semibold text-lg mt-4">Tipo y Programación</h3>
+                <h3 className="font-semibold text-lg mt-4">Tipus i Programació</h3>
                  <div>
-                    <Label>Tipo de Traspaso</Label>
+                    <Label>Tipus de Traspàs</Label>
                     <Controller
                         control={control}
                         name="transferType"
                         render={({ field }) => (
                         <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4 items-center mt-2">
-                            <div className="flex items-center space-x-2"><RadioGroupItem value="directo" id="t-directo" /><Label htmlFor="t-directo">Traspaso directo (mismo día)</Label></div>
-                            <div className="flex items-center space-x-2"><RadioGroupItem value="dos_fases" id="t-fases" /><Label htmlFor="t-fases">Traspaso en 2 fases</Label></div>
+                            <div className="flex items-center space-x-2"><RadioGroupItem value="directo" id="t-directo" /><Label htmlFor="t-directo">Traspàs directe (mateix dia)</Label></div>
+                            <div className="flex items-center space-x-2"><RadioGroupItem value="dos_fases" id="t-fases" /><Label htmlFor="t-fases">Traspàs en 2 fases</Label></div>
                         </RadioGroup>
                         )}
                     />
@@ -565,35 +565,35 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
                  {transferType === 'dos_fases' && (
                     <div className="grid grid-cols-2 gap-4 mt-2 border p-4 rounded-md">
                         <div>
-                            <Label>Fecha desinstalación</Label>
+                            <Label>Data desinstal·lació</Label>
                              <Controller
                                 control={control} name="decommissionDate" render={({ field }) => (
                                 <Popover>
-                                    <PopoverTrigger asChild><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Seleccionar fecha</span>}</Button></PopoverTrigger>
+                                    <PopoverTrigger asChild><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Seleccionar data</span>}</Button></PopoverTrigger>
                                     <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus /></PopoverContent>
                                 </Popover>
                             )}/>
                              {errors.decommissionDate && <p className="text-destructive text-sm mt-1">{errors.decommissionDate.message}</p>}
                         </div>
                          <div>
-                            <Label>Fecha instalación estimada</Label>
+                            <Label>Data instal·lació estimada</Label>
                              <Controller
                                 control={control} name="installDate" render={({ field }) => (
                                 <Popover>
-                                    <PopoverTrigger asChild><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Seleccionar fecha</span>}</Button></PopoverTrigger>
+                                    <PopoverTrigger asChild><Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !field.value && "text-muted-foreground")}><CalendarIcon className="mr-2 h-4 w-4" />{field.value ? format(field.value, "PPP") : <span>Seleccionar data</span>}</Button></PopoverTrigger>
                                     <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus /></PopoverContent>
                                 </Popover>
                             )}/>
                             {errors.installDate && <p className="text-destructive text-sm mt-1">{errors.installDate.message}</p>}
                         </div>
                          <div className="col-span-2">
-                             <Label htmlFor="tempWarehouse">Almacén temporal</Label>
+                             <Label htmlFor="tempWarehouse">Magatzem temporal</Label>
                              <Controller
                                 control={control}
                                 name="tempWarehouse"
                                 render={({ field }) => (
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <SelectTrigger><SelectValue placeholder="Seleccionar almacén..." /></SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder="Seleccionar magatzem..." /></SelectTrigger>
                                     <SelectContent>{warehouses.map(w => <SelectItem key={w} value={w}>{w}</SelectItem>)}</SelectContent>
                                 </Select>
                                 )}
@@ -603,13 +603,13 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
                  )}
                   <div className="grid grid-cols-2 gap-4 mt-2">
                        <div>
-                           <Label htmlFor="technician1">Técnico {transferType === 'dos_fases' ? 'fase 1' : ''}</Label>
+                           <Label htmlFor="technician1">Tècnic {transferType === 'dos_fases' ? 'fase 1' : ''}</Label>
                             <Controller
                                 control={control}
                                 name="technician1"
                                 render={({ field }) => (
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <SelectTrigger><SelectValue placeholder="Seleccionar técnico..." /></SelectTrigger>
+                                    <SelectTrigger><SelectValue placeholder="Seleccionar tècnic..." /></SelectTrigger>
                                     <SelectContent>{technicians.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                                 </Select>
                                 )}
@@ -617,13 +617,13 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
                        </div>
                         {transferType === 'dos_fases' && (
                              <div>
-                                <Label htmlFor="technician2">Técnico fase 2</Label>
+                                <Label htmlFor="technician2">Tècnic fase 2</Label>
                                  <Controller
                                     control={control}
                                     name="technician2"
                                     render={({ field }) => (
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <SelectTrigger><SelectValue placeholder="Seleccionar técnico..." /></SelectTrigger>
+                                        <SelectTrigger><SelectValue placeholder="Seleccionar tècnic..." /></SelectTrigger>
                                         <SelectContent>{technicians.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                                     </Select>
                                     )}
@@ -633,8 +633,8 @@ export function NewTransferForm({ isOpen, onOpenChange }: { isOpen: boolean, onO
                   </div>
            </div>
           <DialogFooter>
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
-            <Button type="submit">Programar Traspaso</Button>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel·lar</Button>
+            <Button type="submit">Programar Traspàs</Button>
           </DialogFooter>
         </form>
       </DialogContent>

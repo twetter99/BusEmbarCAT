@@ -41,7 +41,7 @@ const LocationCell = ({ item }: { item: Equipment }) => {
             return (
                 <Link href={`/vehicles/${vehicle.uniqueId}`} className="flex items-center gap-2 text-primary hover:underline">
                     <LinkIcon className="h-4 w-4" />
-                    <span>Vehículo {vehicle.uniqueId} ({vehicle.id})</span>
+                    <span>Vehicle {vehicle.uniqueId} ({vehicle.id})</span>
                 </Link>
             )
         }
@@ -54,7 +54,7 @@ const LocationCell = ({ item }: { item: Equipment }) => {
     return (
         <span className="flex items-center gap-2 text-muted-foreground">
             {icon}
-            {item.location || 'Sin asignar'}
+            {item.location || 'Sense assignar'}
         </span>
     );
 };
@@ -86,36 +86,36 @@ const FilterControls = ({
         <CardContent className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
                 <div className="lg:col-span-2 relative">
-                     <Label htmlFor="search" className="sr-only">Buscar</Label>
+                     <Label htmlFor="search" className="sr-only">Cercar</Label>
                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                      <Input 
                         id="search"
-                        placeholder="Buscar por nº de serie, tipo..."
+                        placeholder="Cercar per nº de sèrie, tipus..."
                         value={filters.query}
                         onChange={(e) => handleFilterChange('query', e.target.value)}
                         className="pl-10"
                     />
                 </div>
                 <div>
-                     <Label htmlFor="type" className="text-sm font-medium">Tipo de Equipo</Label>
+                     <Label htmlFor="type" className="text-sm font-medium">Tipus d'Equip</Label>
                      <Select value={filters.type} onValueChange={(value) => handleFilterChange('type', value)}>
                         <SelectTrigger id="type">
-                            <SelectValue placeholder="Filtrar por tipo..." />
+                            <SelectValue placeholder="Filtrar per tipus..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
+                            <SelectItem value="all">Tots</SelectItem>
                             {equipmentTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
                 <div>
-                     <Label htmlFor="status" className="text-sm font-medium">Estado</Label>
+                     <Label htmlFor="status" className="text-sm font-medium">Estat</Label>
                      <Select value={filters.status} onValueChange={(value) => handleFilterChange('status', value)}>
                         <SelectTrigger id="status">
-                            <SelectValue placeholder="Filtrar por estado..." />
+                            <SelectValue placeholder="Filtrar per estat..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
+                            <SelectItem value="all">Tots</SelectItem>
                             {statuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                         </SelectContent>
                      </Select>
@@ -124,15 +124,15 @@ const FilterControls = ({
                      <Label htmlFor="operator" className="text-sm font-medium">Operador</Label>
                      <Select value={filters.operator} onValueChange={(value) => handleFilterChange('operator', value)}>
                         <SelectTrigger id="operator">
-                            <SelectValue placeholder="Filtrar por operador..." />
+                            <SelectValue placeholder="Filtrar per operador..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
+                            <SelectItem value="all">Tots</SelectItem>
                             {operators.map(op => <SelectItem key={op.id} value={op.id}>{op.name}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
-                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end lg:col-start-5">Limpiar Filtros</Button>
+                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end lg:col-start-5">Netejar Filtres</Button>
             </div>
         </CardContent>
     </Card>
@@ -195,14 +195,14 @@ export default function EquipmentPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Gestión de Equipamiento</h1>
+            <h1 className="text-2xl font-bold">Gestió d'Equipament</h1>
             <p className="text-muted-foreground">
-              {filteredEquipment.length} de {userEquipment.length} equipos mostrados.
+              {filteredEquipment.length} de {userEquipment.length} equips mostrats.
             </p>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Añadir Equipamiento
+            Afegir Equipament
           </Button>
         </div>
 
@@ -219,11 +219,11 @@ export default function EquipmentPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Número de Serie</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Ubicación</TableHead>
+                <TableHead>Número de Sèrie</TableHead>
+                <TableHead>Tipus</TableHead>
+                <TableHead>Ubicació</TableHead>
                 <TableHead>Operador</TableHead>
-                <TableHead>Estado</TableHead>
+                <TableHead>Estat</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

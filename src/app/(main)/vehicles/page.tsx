@@ -24,7 +24,7 @@ import { PlusCircle, FileText, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { format, differenceInDays } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ca } from 'date-fns/locale';
 import { Label } from '@/components/ui/label';
 
 type MaintenanceStatus = 'Vencido' | 'Vence esta semana' | 'Próximo' | 'Al día';
@@ -69,11 +69,11 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
         .sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime());
         
     if (overdueTasks.length > 0) {
-        return <Badge variant="destructive">Vencido</Badge>
+        return <Badge variant="destructive">Vençut</Badge>
     }
 
     if (upcomingTasks.length === 0) {
-        return <Badge variant='outline'>Al día</Badge>;
+        return <Badge variant='outline'>Al dia</Badge>;
     }
     
     const nextTask = upcomingTasks[0];
@@ -86,7 +86,7 @@ const NextMaintenanceCell = ({ vehicleId }: { vehicleId: string }) => {
         variant = 'attention';
     }
 
-    return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy', {locale: es})}</Badge>;
+    return <Badge variant={variant}>{format(nextTask.dueDate, 'dd/MM/yyyy', {locale: ca})}</Badge>;
 }
 
 const FilterControls = ({
@@ -116,11 +116,11 @@ const FilterControls = ({
         <CardContent className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
                 <div className="lg:col-span-2 relative">
-                     <Label htmlFor="search" className="sr-only">Buscar</Label>
+                     <Label htmlFor="search" className="sr-only">Cercar</Label>
                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                      <Input 
                         id="search"
-                        placeholder="Buscar por ID, matrícula, modelo..."
+                        placeholder="Cercar per ID, matrícula, model..."
                         value={filters.query}
                         onChange={(e) => handleFilterChange('query', e.target.value)}
                         className="pl-10"
@@ -130,39 +130,39 @@ const FilterControls = ({
                      <Label htmlFor="operator" className="text-sm font-medium">Operador</Label>
                      <Select value={filters.operator} onValueChange={(value) => handleFilterChange('operator', value)}>
                         <SelectTrigger id="operator">
-                            <SelectValue placeholder="Filtrar por operador..." />
+                            <SelectValue placeholder="Filtrar per operador..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
+                            <SelectItem value="all">Tots</SelectItem>
                             {operators.map(op => <SelectItem key={op.id} value={op.id}>{op.name}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
                 <div>
-                     <Label htmlFor="status" className="text-sm font-medium">Estado Vehículo</Label>
+                     <Label htmlFor="status" className="text-sm font-medium">Estat Vehicle</Label>
                      <Select value={filters.status} onValueChange={(value) => handleFilterChange('status', value)}>
                         <SelectTrigger id="status">
-                            <SelectValue placeholder="Filtrar por estado..." />
+                            <SelectValue placeholder="Filtrar per estat..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
+                            <SelectItem value="all">Tots</SelectItem>
                             {statuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
                 <div>
-                     <Label htmlFor="maintenance" className="text-sm font-medium">Mantenimiento</Label>
+                     <Label htmlFor="maintenance" className="text-sm font-medium">Manteniment</Label>
                      <Select value={filters.maintenance} onValueChange={(value) => handleFilterChange('maintenance', value)}>
                         <SelectTrigger id="maintenance">
-                            <SelectValue placeholder="Filtrar por mant..." />
+                            <SelectValue placeholder="Filtrar per mant..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
+                            <SelectItem value="all">Tots</SelectItem>
                             {maintenanceStatuses.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                         </SelectContent>
                      </Select>
                 </div>
-                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end lg:col-start-5">Limpiar Filtros</Button>
+                 <Button onClick={clearFilters} variant="ghost" className="w-full md:w-auto self-end lg:col-start-5">Netejar Filtres</Button>
             </div>
         </CardContent>
     </Card>
@@ -220,14 +220,14 @@ export default function VehiclesPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Listado Completo de Vehículos</h1>
+            <h1 className="text-2xl font-bold">Llistat Complet de Vehicles</h1>
             <p className="text-muted-foreground">
-              {filteredVehicles.length} de {userVehicles.length} vehículos mostrados.
+              {filteredVehicles.length} de {userVehicles.length} vehicles mostrats.
             </p>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Añadir Vehículo
+            Afegir Vehicle
           </Button>
         </div>
 
@@ -244,13 +244,13 @@ export default function VehiclesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID Único</TableHead>
+                <TableHead>ID Únic</TableHead>
                 <TableHead>Matrícula</TableHead>
-                <TableHead>Modelo</TableHead>
+                <TableHead>Model</TableHead>
                 <TableHead>Operador</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Próx. Mant.</TableHead>
-                <TableHead>Acciones</TableHead>
+                <TableHead>Estat</TableHead>
+                <TableHead>Pròx. Mant.</TableHead>
+                <TableHead>Accions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -270,7 +270,7 @@ export default function VehiclesPage() {
                     <Button asChild variant="outline" size="sm">
                       <Link href={`/vehicles/${vehicle.uniqueId}`}>
                         <FileText className="h-4 w-4 mr-2"/>
-                        Ver Ficha
+                        Veure Fitxa
                       </Link>
                     </Button>
                   </TableCell>

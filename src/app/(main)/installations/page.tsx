@@ -42,7 +42,7 @@ const InstallationCard = ({ item }: { item: Installation }) => {
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div>
-                        <CardTitle className="text-lg">Nueva Instalación</CardTitle>
+                        <CardTitle className="text-lg">Nova Instal·lació</CardTitle>
                         <CardDescription>{item.vehicleModel}</CardDescription>
                     </div>
                     <Badge variant={statusVariant[item.status]}>{item.status}</Badge>
@@ -66,19 +66,19 @@ const InstallationCard = ({ item }: { item: Installation }) => {
                 {item.technician && (
                      <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-muted-foreground" />
-                        <span>Técnico: {item.technician}</span>
+                        <span>Tècnic: {item.technician}</span>
                     </div>
                 )}
                 <Separator />
                 <div className="space-y-1">
-                    <h4 className="font-semibold">Material asignado:</h4>
+                    <h4 className="font-semibold">Material assignat:</h4>
                     <ul className="list-disc list-inside text-muted-foreground">
                         {item.materials.map(material => <li key={material}>{material}</li>)}
                     </ul>
                 </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">Ver Ficha de Instalación</Button>
+                <Button className="w-full">Veure Fitxa d'Instal·lació</Button>
             </CardFooter>
         </Card>
     );
@@ -91,7 +91,7 @@ const DecommissioningCard = ({ item }: { item: Decommissioning }) => {
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div>
-                        <CardTitle className="text-lg">Desinstalación</CardTitle>
+                        <CardTitle className="text-lg">Desinstal·lació</CardTitle>
                         <CardDescription>{item.reason}</CardDescription>
                     </div>
                     <Badge variant={statusVariant[item.status]}>{item.status}</Badge>
@@ -123,7 +123,7 @@ const DecommissioningCard = ({ item }: { item: Decommissioning }) => {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">Ver Ficha de Desinstalación</Button>
+                <Button className="w-full">Veure Fitxa de Desinstal·lació</Button>
             </CardFooter>
         </Card>
     );
@@ -136,7 +136,7 @@ const TransferCard = ({ item }: { item: Transfer }) => {
             <CardHeader>
                  <div className="flex justify-between items-start">
                     <div>
-                        <CardTitle className="text-lg">Traspaso</CardTitle>
+                        <CardTitle className="text-lg">Traspàs</CardTitle>
                         <CardDescription>{item.originVehicleModel} → {item.destinationVehicleModel}</CardDescription>
                     </div>
                     <Badge variant={statusVariant[item.status]}>{item.status}</Badge>
@@ -159,21 +159,21 @@ const TransferCard = ({ item }: { item: Transfer }) => {
                     <div className="flex items-center gap-2">
                         <PackageOpen className="h-4 w-4 text-muted-foreground"/>
                         <div>
-                            <p className="font-semibold">Fase 1 - Desinstalación: <span className="font-normal text-primary">{item.phase1_status}</span></p>
-                            <p className="text-xs text-muted-foreground">Fecha: {item.phase1_date}</p>
+                            <p className="font-semibold">Fase 1 - Desinstal·lació: <span className="font-normal text-primary">{item.phase1_status}</span></p>
+                            <p className="text-xs text-muted-foreground">Data: {item.phase1_date}</p>
                         </div>
                     </div>
                      <div className="flex items-center gap-2">
                         <PackageCheck className="h-4 w-4 text-muted-foreground"/>
                          <div>
-                            <p className="font-semibold">Fase 2 - Instalación: <span className="font-normal text-primary">{item.phase2_status}</span></p>
-                            <p className="text-xs text-muted-foreground">Fecha: {item.phase2_date}</p>
+                            <p className="font-semibold">Fase 2 - Instal·lació: <span className="font-normal text-primary">{item.phase2_status}</span></p>
+                            <p className="text-xs text-muted-foreground">Data: {item.phase2_date}</p>
                         </div>
                     </div>
                 </div>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">Ver Ficha de Traspaso</Button>
+                <Button className="w-full">Veure Fitxa de Traspàs</Button>
             </CardFooter>
         </Card>
     );
@@ -235,27 +235,27 @@ export default function InstallationsPage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
         <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Operaciones Lote 2</h1>
-              <p className="text-muted-foreground">Instalaciones, Desinstalaciones y Traspasos</p>
+              <h1 className="text-2xl font-bold">Operacions Lot 2</h1>
+              <p className="text-muted-foreground">Instal·lacions, Desinstal·lacions i Traspassos</p>
             </div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" /> Nueva Operación
+                        <PlusCircle className="mr-2 h-4 w-4" /> Nova Operació
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onSelect={() => setInstallationFormOpen(true)}>
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        Nueva Instalación
+                        Nova Instal·lació
                     </DropdownMenuItem>
                     <DropdownMenuItem onSelect={() => setDecommissioningFormOpen(true)}>
                          <PackageOpen className="mr-2 h-4 w-4" />
-                        Nueva Desinstalación
+                        Nova Desinstal·lació
                     </DropdownMenuItem>
                     <DropdownMenuItem onSelect={() => setTransferFormOpen(true)}>
                          <ArrowRight className="mr-2 h-4 w-4" />
-                        Nuevo Traspaso
+                        Nou Traspàs
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -263,18 +263,18 @@ export default function InstallationsPage() {
 
        <Card>
         <CardHeader>
-            <CardTitle>KPIs de Rendimiento (Lote 2)</CardTitle>
-            <CardDescription>Métricas clave para la auditoría de servicio de SERMETRA.</CardDescription>
+            <CardTitle>KPIs de Rendiment (Lot 2)</CardTitle>
+            <CardDescription>Mètriques clau per a l'auditoria de servei de SERMETRA.</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-               <KPICard title="Cumplimiento SLA Instalación" value="95%" subtext="Operaciones en ≤ 2 días laborables" icon={Target} />
-               <KPICard title="Tiempo Medio de Ciclo" value="1.8 días" subtext="Promedio desde OT a cierre" icon={Clock} />
-               <KPICard title="Tasa de Éxito (FTR)" value="98%" subtext="Instalaciones sin incidencias en 15 días" icon={CheckCircle} />
+               <KPICard title="Compliment SLA Instal·lació" value="95%" subtext="Operacions en ≤ 2 dies laborables" icon={Target} />
+               <KPICard title="Temps Mitjà de Cicle" value="1.8 dies" subtext="Mitjana des d'OT a tancament" icon={Clock} />
+               <KPICard title="Taxa d'Èxit (FTR)" value="98%" subtext="Instal·lacions sense incidències en 15 dies" icon={CheckCircle} />
                <KPICard 
-                    title="Consumo Bolsa de Material" 
-                    value={new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(budgetTotal - budgetSpent)} 
-                    subtext={`de ${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(budgetTotal)}`} 
+                    title="Consum Bossa de Material" 
+                    value={new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR' }).format(budgetTotal - budgetSpent)} 
+                    subtext={`de ${new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR' }).format(budgetTotal)}`} 
                     icon={DollarSign}
                     progress={budgetProgress}
                 />
@@ -286,12 +286,12 @@ export default function InstallationsPage() {
         <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="new-installations">
-              Nuevas Instalaciones ({newInstallationsCount})
+              Noves Instal·lacions ({newInstallationsCount})
             </TabsTrigger>
             <TabsTrigger value="decommissioning">
-              Desinstalaciones ({decommissioningsCount})
+              Desinstal·lacions ({decommissioningsCount})
             </TabsTrigger>
-            <TabsTrigger value="transfers">Traspasos ({transfersCount})</TabsTrigger>
+            <TabsTrigger value="transfers">Traspassos ({transfersCount})</TabsTrigger>
             <TabsTrigger value="history">Historial (0)</TabsTrigger>
           </TabsList>
         </div>
@@ -316,7 +316,7 @@ export default function InstallationsPage() {
                 <CardContent className="pt-6">
                     <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg">
                         <p className="text-muted-foreground">
-                        No hay historial de operaciones disponible.
+                        No hi ha historial d'operacions disponible.
                         </p>
                     </div>
                 </CardContent>

@@ -32,15 +32,15 @@ export default function LoginPage() {
         } else {
           toast({
             variant: 'destructive',
-            title: 'Error de inicio de sesión automático',
-            description: 'No se pudo encontrar el usuario de prueba.',
+            title: "Error d'inici de sessió automàtic",
+            description: "No s'ha pogut trobar l'usuari de prova.",
           });
         }
       } catch (error) {
         toast({
           variant: 'destructive',
           title: 'Error del servidor',
-          description: 'No se pudo conectar con el servidor. Inténtalo más tarde.',
+          description: "No s'ha pogut connectar amb el servidor. Intenteu-ho més tard.",
         });
       }
     };
@@ -55,9 +55,9 @@ export default function LoginPage() {
           <div className="mx-auto mb-4 flex items-center justify-center size-14 bg-primary rounded-2xl">
             <Bus className="size-8 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">Iniciando Sesión</CardTitle>
+          <CardTitle className="text-2xl">Iniciant Sessió</CardTitle>
           <CardDescription>
-            Accediendo al modo de pruebas...
+            Accedint al mode de proves...
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center items-center h-20">

@@ -129,16 +129,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       }
     }
     // Specific check for detail pages
-    if (pathname.startsWith('/vehicles/')) return 'Ficha del Vehículo';
+    if (pathname.startsWith('/vehicles/')) return 'Fitxa del Vehicle';
     if (pathname.startsWith('/maintenance/preventive/')) {
         const parts = pathname.split('/');
         const subPage = parts[parts.length - 1];
         const subItem = navItems.main.find(i => i.id === 'maintenance')?.subItems?.find(s => s.href.endsWith(subPage));
         if (subItem) return subItem.label;
-        return 'Mantenimiento Preventivo';
+        return 'Manteniment Preventiu';
     }
     
-    return 'Panel de control';
+    return 'Tauler de control';
   }
 
   if (!user) return null;
@@ -164,7 +164,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <SidebarSeparator />
 
                 <SidebarGroup>
-                    <SidebarGroupLabel>Configuración</SidebarGroupLabel>
+                    <SidebarGroupLabel>Configuració</SidebarGroupLabel>
                      {renderNavItems(navItems.config, user.role, pathname)}
                 </SidebarGroup>
             </SidebarMenu>
@@ -184,12 +184,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent className="w-56 mb-2" side="top" align="start">
-                    <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                    <DropdownMenuLabel>El Meu Compte</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem><User className="mr-2 h-4 w-4" /><span>Perfil</span></DropdownMenuItem>
-                    <DropdownMenuItem><Settings className="mr-2 h-4 w-4" /><span>Configuración</span></DropdownMenuItem>
+                    <DropdownMenuItem><Settings className="mr-2 h-4 w-4" /><span>Configuració</span></DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" /><span>Cerrar sesión</span></DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" /><span>Tancar sessió</span></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarFooter>
@@ -209,16 +209,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                            {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} />}
                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                          </Avatar>
-                         <span className="sr-only">Menú de usuario</span>
+                         <span className="sr-only">Menú d'usuari</span>
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                    <DropdownMenuLabel>El Meu Compte</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Perfil</DropdownMenuItem>
-                    <DropdownMenuItem>Configuración</DropdownMenuItem>
+                    <DropdownMenuItem>Configuració</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>Cerrar sesión</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>Tancar sessió</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

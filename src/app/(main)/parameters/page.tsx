@@ -24,35 +24,36 @@ export default function ParametersPage() {
       <div className="flex justify-center">
         <Card className="w-full max-w-2xl">
           <CardHeader>
-            <CardTitle>Parámetros Generales</CardTitle>
+            <CardTitle>Paràmetres Generals</CardTitle>
             <CardDescription>
-              Ajusta la configuración general de la aplicación.
+              Ajusteu la configuració general de l'aplicació.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="company-name">Nombre de la Empresa</Label>
+              <Label htmlFor="company-name">Nom de l'Empresa</Label>
               <Input id="company-name" defaultValue="BusEmbarCAT" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="language">Idioma</Label>
-              <Select defaultValue="es">
+              <Select defaultValue="ca">
                 <SelectTrigger id="language">
                   <SelectValue placeholder="Seleccionar idioma" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="en">Inglés</SelectItem>
+                  <SelectItem value="ca">Català</SelectItem>
+                  <SelectItem value="es">Espanyol</SelectItem>
+                  <SelectItem value="en">Anglès</SelectItem>
                 </SelectContent>
               </Select>
             </div>
              <div className="space-y-2">
-              <Label htmlFor="default-sla">SLA por defecto para incidencias (días)</Label>
+              <Label htmlFor="default-sla">SLA per defecte per a incidències (dies)</Label>
               <Input id="default-sla" type="number" defaultValue="3" />
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="ml-auto">Guardar Cambios</Button>
+            <Button className="ml-auto">Guardar Canvis</Button>
           </CardFooter>
         </Card>
       </div>

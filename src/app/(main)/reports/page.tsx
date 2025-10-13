@@ -23,37 +23,37 @@ import {
 } from 'lucide-react';
 
 const kpis = [
-    { label: "Total Vehículos", value: "2,500" },
-    { label: "SLA Cumplimiento", value: "94%" },
-    { label: "Mantenimientos Pendientes", value: "45" },
-    { label: "Operadores Críticos", value: "3" },
-    { label: "Material Stock Crítico", value: "8 artículos" },
-    { label: "Vencimientos Próximos", value: "12 esta semana" },
-    { label: "Presupuestos Pendientes", value: "5 esperando aprobación" },
-    { label: "Cumplimiento Intervalos", value: "94% preventivos al día"},
-    { label: "Bossa Disponible", value: "€45,000 restantes"},
+    { label: "Total Vehicles", value: "2,500" },
+    { label: "Compliment SLA", value: "94%" },
+    { label: "Manteniments Pendents", value: "45" },
+    { label: "Operadors Crítics", value: "3" },
+    { label: "Material Estoc Crític", value: "8 articles" },
+    { label: "Venciments Propers", value: "12 aquesta setmana" },
+    { label: "Pressupostos Pendents", value: "5 esperant aprovació" },
+    { label: "Compliment Intervals", value: "94% preventius al dia"},
+    { label: "Bossa Disponible", value: "€45,000 restants"},
 ];
 
 const operationalReports = [
-    "Cumplimiento SLAs por Operador",
-    "Análisis Preventivo vs Correctivo",
-    "Eficiencia de Técnicos",
-    "Incidencias por Operador",
-    "Estado de Flota Global",
-    "Consumo de Material por Operador",
+    "Compliment SLAs per Operador",
+    "Anàlisi Preventiu vs Correctiu",
+    "Eficiència de Tècnics",
+    "Incidències per Operador",
+    "Estat de Flota Global",
+    "Consum de Material per Operador",
     "Control de Bossa d'Adquisició",
-    "Tiempo de Resolución vs SLA",
-    "Cumplimiento Intervalos Mantenimiento"
+    "Temps de Resolució vs SLA",
+    "Compliment Intervals Manteniment"
 ]
 
 const predictiveAnalytics = [
-    "Predicción de Mantenimientos",
-    "Análisis de Patrones de Averías",
-    "Optimización de Recursos",
-    "Proyección de Demanda de Material",
-    "Predicción de Consumo de Material",
-    "Análisis de Eficiencia por Zona",
-    "Alertas Tempranas de Vencimientos"
+    "Predicció de Manteniments",
+    "Anàlisi de Patrons d'Avaries",
+    "Optimització de Recursos",
+    "Projecció de Demanda de Material",
+    "Predicció de Consum de Material",
+    "Anàlisi d'Eficiència per Zona",
+    "Alertes Primerenques de Venciments"
 ]
 
 export default function ReportsPage() {
@@ -65,26 +65,26 @@ export default function ReportsPage() {
           <CardHeader>
              <div className="flex items-start justify-between">
                  <div>
-                    <CardTitle>Documento de Actividad Mensual</CardTitle>
-                    <CardDescription>Reporte automático requerido por el pliego de SERMETRA. Genera con un solo clic el informe completo con traspassos, instalaciones, desinstalaciones, albaranes, material y estado de la bolsa de estoc.</CardDescription>
+                    <CardTitle>Document d'Activitat Mensual</CardTitle>
+                    <CardDescription>Informe automàtic requerit pel plec de SERMETRA. Genereu amb un sol clic l'informe complet amb traspassos, instal·lacions, desinstal·lacions, albarans, material i estat de la bossa d'estoc.</CardDescription>
                  </div>
                  <FileText className="h-8 w-8 text-primary" />
              </div>
           </CardHeader>
           <CardContent className="flex-grow space-y-4">
             <div>
-                <p className="text-sm text-muted-foreground">Último reporte generado:</p>
-                <p className="font-semibold">Septiembre 2025</p>
+                <p className="text-sm text-muted-foreground">Últim informe generat:</p>
+                <p className="font-semibold">Setembre 2025</p>
             </div>
              <div>
-                <p className="text-sm text-muted-foreground">Estado actual:</p>
-                <p className="font-semibold text-green-600">Generado automáticamente y listo para descargar.</p>
+                <p className="text-sm text-muted-foreground">Estat actual:</p>
+                <p className="font-semibold text-green-600">Generat automàticament i llest per descarregar.</p>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-end gap-2 border-t pt-6 flex-wrap">
-            <Button variant="outline"><Calendar className="mr-2 h-4 w-4" /> Anteriores</Button>
-            <Button variant="outline"><Eye className="mr-2 h-4 w-4" /> Preview</Button>
-            <Button variant="outline"><Sliders className="mr-2 h-4 w-4" /> Personalizar</Button>
+            <Button variant="outline"><Calendar className="mr-2 h-4 w-4" /> Anteriors</Button>
+            <Button variant="outline"><Eye className="mr-2 h-4 w-4" /> Previsualització</Button>
+            <Button variant="outline"><Sliders className="mr-2 h-4 w-4" /> Personalitzar</Button>
             <Button variant="outline"><Settings className="mr-2 h-4 w-4" /> Programar</Button>
             <Button><Download className="mr-2 h-4 w-4" /> Generar Informe Actual</Button>
           </CardFooter>
@@ -95,8 +95,8 @@ export default function ReportsPage() {
           <CardHeader>
              <div className="flex items-start justify-between">
                 <div>
-                    <CardTitle>KPIs Globales del Sistema</CardTitle>
-                    <CardDescription>Métricas clave en tiempo real.</CardDescription>
+                    <CardTitle>KPIs Globals del Sistema</CardTitle>
+                    <CardDescription>Mètriques clau en temps real.</CardDescription>
                 </div>
                 <BarChart2 className="h-8 w-8 text-primary" />
             </div>
@@ -118,8 +118,8 @@ export default function ReportsPage() {
           <CardHeader>
             <div className="flex items-start justify-between">
                 <div>
-                    <CardTitle>Reportes Operativos</CardTitle>
-                    <CardDescription>Informes predefinidos para la gestión diaria.</CardDescription>
+                    <CardTitle>Informes Operatius</CardTitle>
+                    <CardDescription>Informes predefinits per a la gestió diària.</CardDescription>
                 </div>
                 <TrendingUp className="h-8 w-8 text-primary" />
             </div>
@@ -129,7 +129,7 @@ export default function ReportsPage() {
                 {operationalReports.map((report) => (
                    <li key={report} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
                        <span>{report}</span>
-                       <Button variant="ghost" size="sm">Ver</Button>
+                       <Button variant="ghost" size="sm">Veure</Button>
                    </li>
                 ))}
             </ul>
@@ -142,7 +142,7 @@ export default function ReportsPage() {
             <div className="flex items-start justify-between">
                 <div>
                     <CardTitle>Analítica Predictiva</CardTitle>
-                    <CardDescription>Herramientas de IA para la optimización.</CardDescription>
+                    <CardDescription>Eines d'IA per a l'optimització.</CardDescription>
                 </div>
                 <BrainCircuit className="h-8 w-8 text-primary" />
             </div>
@@ -152,7 +152,7 @@ export default function ReportsPage() {
                 {predictiveAnalytics.map((tool) => (
                    <li key={tool} className="flex items-center justify-between hover:bg-muted/50 p-2 rounded-md transition-colors">
                        <span>{tool}</span>
-                       <Button variant="ghost" size="sm">Analizar</Button>
+                       <Button variant="ghost" size="sm">Analitzar</Button>
                    </li>
                 ))}
             </ul>

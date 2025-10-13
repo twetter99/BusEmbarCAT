@@ -41,11 +41,11 @@ import { Progress } from '@/components/ui/progress';
 
 const chartConfig = {
   planned: {
-    label: 'Programados',
+    label: 'Programats',
     color: 'hsl(var(--secondary))',
   },
   completed: {
-    label: 'Completados',
+    label: 'Completats',
     color: 'hsl(var(--primary))',
   },
 } satisfies ChartConfig;
@@ -86,17 +86,17 @@ const KPICard = ({ title, value, icon: Icon, subtext, variant = 'default' }: { t
 const OperatorStatusTable = ({ data }: { data: OperatorMetric[] }) => (
     <Card>
         <CardHeader>
-            <CardTitle>Estado por Operador</CardTitle>
-            <CardDescription>Resumen del estado de la flota y mantenimientos por cada operador.</CardDescription>
+            <CardTitle>Estat per Operador</CardTitle>
+            <CardDescription>Resum de l'estat de la flota i manteniments per cada operador.</CardDescription>
         </CardHeader>
         <CardContent>
              <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Operador</TableHead>
-                        <TableHead className="text-center">Vehículos Activos</TableHead>
-                        <TableHead className="text-center">En Mantenimiento</TableHead>
-                        <TableHead className="text-center">SLA Cumplido</TableHead>
+                        <TableHead className="text-center">Vehicles Actius</TableHead>
+                        <TableHead className="text-center">En Manteniment</TableHead>
+                        <TableHead className="text-center">SLA Complert</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -127,18 +127,18 @@ export default function DashboardPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-           <KPICard title="Cumplimiento SLA" value={`${kpis.slaCompliance}%`} icon={ShieldCheck} subtext="Últimos 30 días" />
-           <KPICard title="Incidencias Críticas" value={kpis.criticalIncidents} icon={Siren} subtext="Abiertas actualmente" variant="destructive" />
-           <KPICard title="Stock Crítico" value={kpis.criticalStockItems} icon={Boxes} subtext="Artículos bajo mínimos" variant="warning" />
-           <KPICard title="Total Vehículos" value={kpis.totalVehicles.toLocaleString('es-ES')} icon={Truck} subtext="Flota gestionada" />
+           <KPICard title="Compliment SLA" value={`${kpis.slaCompliance}%`} icon={ShieldCheck} subtext="Últims 30 dies" />
+           <KPICard title="Incidències Crítiques" value={kpis.criticalIncidents} icon={Siren} subtext="Obertes actualment" variant="destructive" />
+           <KPICard title="Estoc Crític" value={kpis.criticalStockItems} icon={Boxes} subtext="Articles sota mínims" variant="warning" />
+           <KPICard title="Total Vehicles" value={kpis.totalVehicles.toLocaleString('ca-ES')} icon={Truck} subtext="Flota gestionada" />
        </div>
       
        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
           <div className="lg:col-span-3">
              <Card>
                 <CardHeader>
-                    <CardTitle>Resumen de Mantenimientos (Últimos 6 meses)</CardTitle>
-                     <CardDescription>Comparativa de tareas de mantenimiento programadas vs. completadas.</CardDescription>
+                    <CardTitle>Resum de Manteniments (Últims 6 mesos)</CardTitle>
+                     <CardDescription>Comparativa de tasques de manteniment programades vs. completades.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ChartContainer config={chartConfig} className="h-[300px] w-full">

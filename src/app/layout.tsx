@@ -6,7 +6,7 @@ import { AuthProvider } from '@/hooks/use-auth';
 
 export const metadata: Metadata = {
   title: 'BusEmbarCAT',
-  description: 'Gestiona tu flota con facilidad.',
+  description: 'Gestioneu la vostra flota amb facilitat.',
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="ca">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

@@ -47,7 +47,7 @@ const FormField = ({ label, type, id }: { label: string, type: string, id: strin
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Seleccionar fecha</span>}
+              {date ? format(date, "PPP") : <span>Seleccionar data</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
@@ -117,11 +117,11 @@ export default function MaintenanceDetailPage() {
       <div className="flex flex-1 items-center justify-center p-4">
         <Card className="w-full max-w-md text-center">
             <CardHeader>
-                <CardTitle>Tarea no encontrada</CardTitle>
-                <CardDescription>La tarea de mantenimiento que buscas no existe.</CardDescription>
+                <CardTitle>Tasca no trobada</CardTitle>
+                <CardDescription>La tasca de manteniment que cerqueu no existeix.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Button onClick={() => router.back()}>Volver</Button>
+                <Button onClick={() => router.back()}>Tornar</Button>
             </CardContent>
         </Card>
       </div>
@@ -138,10 +138,10 @@ export default function MaintenanceDetailPage() {
             <Card className="w-full max-w-md text-center">
                 <CardHeader>
                     <CardTitle>Checklist no disponible</CardTitle>
-                    <CardDescription>No hay un checklist definido para la frecuencia "{task.frequency}".</CardDescription>
+                    <CardDescription>No hi ha un checklist definit per a la freqüència "{task.frequency}".</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Button onClick={() => router.back()}>Volver</Button>
+                    <Button onClick={() => router.back()}>Tornar</Button>
                 </CardContent>
             </Card>
         </div>
@@ -160,15 +160,15 @@ export default function MaintenanceDetailPage() {
        <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" onClick={() => router.back()}>
           <ArrowLeft className="h-4 w-4" />
-          <span className="sr-only">Volver</span>
+          <span className="sr-only">Tornar</span>
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold">{`Mantenimiento Preventivo: ${task.frequency}`}</h1>
-          <p className="text-muted-foreground">Ficha de Mantenimiento para {vehicle?.uniqueId}</p>
+          <h1 className="text-2xl font-bold">{`Manteniment Preventiu: ${task.frequency}`}</h1>
+          <p className="text-muted-foreground">Fitxa de Manteniment per a {vehicle?.uniqueId}</p>
         </div>
         <div className="w-full max-w-xs space-y-2">
             <div className="flex justify-between text-sm font-medium">
-                <span>Progreso</span>
+                <span>Progrés</span>
                 <span>0/{allTasks.length}</span>
             </div>
             <Progress value={0} />
@@ -186,7 +186,7 @@ export default function MaintenanceDetailPage() {
                 <Card>
                     <CardHeader><CardTitle>{checklistData.observations.title}</CardTitle></CardHeader>
                     <CardContent>
-                        <Textarea id={checklistData.observations.id} placeholder="Añadir comentarios, repuestos utilizados, etc." rows={5}/>
+                        <Textarea id={checklistData.observations.id} placeholder="Afegir comentaris, recanvis utilitzats, etc." rows={5}/>
                     </CardContent>
                 </Card>
             )}
@@ -224,13 +224,13 @@ export default function MaintenanceDetailPage() {
             )}
 
             <Card>
-                <CardHeader><CardTitle>Acciones</CardTitle></CardHeader>
+                <CardHeader><CardTitle>Accions</CardTitle></CardHeader>
                 <CardContent className="space-y-2">
-                    <Button className="w-full">Guardar Progreso</Button>
+                    <Button className="w-full">Guardar Progrés</Button>
                     <Button variant="outline" className="w-full">Generar PDF</Button>
                     <Button variant="default" className="w-full bg-green-600 hover:bg-green-700 text-white">
                         <Check className="mr-2 h-4 w-4" />
-                        Completar Mantenimiento
+                        Completar Manteniment
                     </Button>
                 </CardContent>
             </Card>
@@ -239,5 +239,3 @@ export default function MaintenanceDetailPage() {
     </main>
   );
 }
-
-    

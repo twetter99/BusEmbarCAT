@@ -33,13 +33,13 @@ import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { differenceInDays, format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ca } from 'date-fns/locale';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const statusVariant: { [key in OperatorMetrics['estado']]: 'default' | 'destructive' | 'secondary' | 'success' } = {
-  Activo: 'success',
-  Inactivo: 'secondary',
-  Suspendido: 'destructive',
+  Actiu: 'success',
+  Inactiu: 'secondary',
+  Suspès: 'destructive',
 };
 
 const slaVariant = (value: number, threshold: number) => {
@@ -115,7 +115,7 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
                     </div>
                      <div className="flex items-center gap-2">
                         <Badge variant={statusVariant[operator.estado]}>{operator.estado}</Badge>
-                        {totalAlerts > 0 && <Badge variant={alertBadgeVariant}>{totalAlerts} Alertas</Badge>}
+                        {totalAlerts > 0 && <Badge variant={alertBadgeVariant}>{totalAlerts} Alertes</Badge>}
                         <Badge variant="outline">{operator.vehiculosOperativos}/{operator.vehiculosTotal} Veh.</Badge>
                         <ChevronDown className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                     </div>
@@ -123,24 +123,24 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
                  <div className="flex items-center gap-x-4 gap-y-1 text-xs text-muted-foreground mt-2 flex-wrap">
                     <span>ID: {operator.id}</span>
                     <Separator orientation="vertical" className="h-4" />
-                    <span>Ubicación: {operator.ubicacionPrincipal}</span>
+                    <span>Ubicació: {operator.ubicacionPrincipal}</span>
                      <Separator orientation="vertical" className="h-4" />
-                    <span>Próx. Mant: {format(new Date(operator.proximoMantenimiento), 'dd/MM/yy')}</span>
+                    <span>Pròx. Mant: {format(new Date(operator.proximoMantenimiento), 'dd/MM/yy')}</span>
                      <Separator orientation="vertical" className="h-4" />
-                    <span>SLA Correctivos: {operator.slaCorrectivos.toFixed(1)}d</span>
+                    <span>SLA Correctius: {operator.slaCorrectivos.toFixed(1)}d</span>
                      <Separator orientation="vertical" className="h-4" />
-                    <span>Calidad: {operator.calidadServicio}</span>
+                    <span>Qualitat: {operator.calidadServicio}</span>
                 </div>
             </CollapsibleTrigger>
             <CollapsibleContent asChild>
                 <div className="p-4 flex flex-col">
                     <div className="grid md:grid-cols-3 gap-6">
                         <div className="space-y-4">
-                            <h4 className="font-semibold text-sm">Flota y Equipamiento</h4>
-                            <MetricItem icon={Truck} label="Vehículos Operativos" value={`${operator.vehiculosOperativos} / ${operator.vehiculosTotal}`} />
-                            <MetricItem icon={Wrench} label="En Mantenimiento" value={operator.vehiculosMantenimiento} />
-                            <MetricItem icon={HardDrive} label="Equipos T-mobilitat" value={operator.equiposTMobilitat} />
-                            <MetricItem icon={Calendar} label="Próximo Mant." value={
+                            <h4 className="font-semibold text-sm">Flota i Equipament</h4>
+                            <MetricItem icon={Truck} label="Vehicles Operatius" value={`${operator.vehiculosOperativos} / ${operator.vehiculosTotal}`} />
+                            <MetricItem icon={Wrench} label="En Manteniment" value={operator.vehiculosMantenimiento} />
+                            <MetricItem icon={HardDrive} label="Equips T-mobilitat" value={operator.equiposTMobilitat} />
+                            <MetricItem icon={Calendar} label="Pròxim Mant." value={
                                 <Badge variant={nextMaintenanceDays < 7 ? 'warning' : 'outline'}>
                                     {format(new Date(operator.proximoMantenimiento), 'dd/MM/yyyy')}
                                 </Badge>
@@ -148,19 +148,19 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
                         </div>
                         
                         <div className="space-y-4">
-                            <h4 className="font-semibold text-sm">Cumplimiento y SLA</h4>
-                            <MetricItem icon={ShieldCheck} label="SLA Correctivos" value={
-                                <Badge variant={slaVariant(operator.slaCorrectivos, 3)}>{operator.slaCorrectivos.toFixed(1)} días</Badge>
+                            <h4 className="font-semibold text-sm">Compliment i SLA</h4>
+                            <MetricItem icon={ShieldCheck} label="SLA Correctius" value={
+                                <Badge variant={slaVariant(operator.slaCorrectivos, 3)}>{operator.slaCorrectivos.toFixed(1)} dies</Badge>
                             } />
-                            <MetricItem icon={ShieldCheck} label="SLA Instalaciones" value={
-                                <Badge variant={slaVariant(operator.slaInstalaciones, 4)}>{operator.slaInstalaciones.toFixed(1)} días</Badge>
+                            <MetricItem icon={ShieldCheck} label="SLA Instal·lacions" value={
+                                <Badge variant={slaVariant(operator.slaInstalaciones, 4)}>{operator.slaInstalaciones.toFixed(1)} dies</Badge>
                             } />
-                            <MetricItem icon={BarChart} label="Calidad Servicio" value={
+                            <MetricItem icon={BarChart} label="Qualitat Servei" value={
                                 <Badge variant={operator.calidadServicio === 'A' ? 'success' : operator.calidadServicio === 'B' ? 'warning' : 'destructive'}>{operator.calidadServicio}</Badge>
                             }/>
                             <div>
                                 <div className="flex justify-between mb-1 text-sm text-muted-foreground">
-                                    <span>Mant. Preventivos</span>
+                                    <span>Mant. Preventius</span>
                                     <span className="font-semibold">{operator.cumplimientoPreventivos}%</span>
                                 </div>
                                 <Progress value={operator.cumplimientoPreventivos} className="h-2" />
@@ -168,19 +168,19 @@ export const OperatorCard = ({ operator }: { operator: OperatorMetrics }) => {
                         </div>
                         
                         <div className="space-y-2">
-                            <h4 className="font-semibold text-sm">Alertas Críticas</h4>
+                            <h4 className="font-semibold text-sm">Alertes Crítiques</h4>
                             <div className="grid grid-cols-2 gap-2">
-                                <AlertItem icon={Calendar} label="Vencidos" value={operator.mantenimientosVencidos} />
-                                <AlertItem icon={Siren} label="Abiertas" value={operator.incidenciasAbiertas} variant="warning"/>
-                                <AlertItem icon={Bell} label="Escaladas" value={operator.incidenciasEscaladas} />
+                                <AlertItem icon={Calendar} label="Vençuts" value={operator.mantenimientosVencidos} />
+                                <AlertItem icon={Siren} label="Obertes" value={operator.incidenciasAbiertas} variant="warning"/>
+                                <AlertItem icon={Bell} label="Escalades" value={operator.incidenciasEscaladas} />
                             </div>
-                            {operator.stockCritico && <AlertItem icon={TriangleAlert} label="Stock Crítico" value="Requiere atención" variant="warning" />}
+                            {operator.stockCritico && <AlertItem icon={TriangleAlert} label="Estoc Crític" value="Requereix atenció" variant="warning" />}
                         </div>
                     </div>
                     <Separator className="my-4" />
                     <div className="flex justify-between items-center">
                         <div className="grid grid-cols-3 gap-2">
-                            <Button variant="secondary" size="sm"><FileText className="h-4 w-4 mr-1"/>Reporte</Button>
+                            <Button variant="secondary" size="sm"><FileText className="h-4 w-4 mr-1"/>Informe</Button>
                             <Button variant="secondary" size="sm"><Truck className="h-4 w-4 mr-1"/>Flota</Button>
                             <Button variant="secondary" size="sm"><Wrench className="h-4 w-4 mr-1"/>Mant.</Button>
                         </div>

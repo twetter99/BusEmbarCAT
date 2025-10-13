@@ -31,25 +31,25 @@ export default function UsersAndRolesPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Usuarios y Roles</CardTitle>
+            <CardTitle>Usuaris i Rols</CardTitle>
             <CardDescription>
-              Gestiona los usuarios y sus permisos de acceso al sistema.
+              Gestioneu els usuaris i els seus permisos d'accés al sistema.
             </CardDescription>
           </div>
           <Button size="sm" className="gap-1">
             <PlusCircle className="h-4 w-4" />
-            Añadir Usuario
+            Afegir Usuari
           </Button>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead>Nom</TableHead>
+                <TableHead>Correu electrònic</TableHead>
                 <TableHead>Rol</TableHead>
-                <TableHead>Operador Asignado</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead>Operador Assignat</TableHead>
+                <TableHead className="text-right">Accions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
