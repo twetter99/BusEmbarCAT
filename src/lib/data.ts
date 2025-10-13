@@ -190,10 +190,7 @@ export const mockTasks: MaintenanceTask[] = [
     { id: 'MT-IP02', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-02', 2).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Xavier' },
     { id: 'MT-IP03', type: 'Preventiu', title: 'Manteniment Bianual', vehicleId: findVehicleByOperatorAndIndex('op-08', 1).id, equipmentType: 'Baterías CPU', frequency: 'Bianual', dueDate: add(today, { days: 3 }), status: 'En Progrés', technician: 'Miquel' },
     { id: 'MT-IP04', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-04', 1).id, equipmentType: 'Limpieza Validadora', frequency: 'Anual', dueDate: add(today, { days: 1 }), status: 'En Progrés', technician: 'Josep' },
-    // Dades addicionals per si es necessiten més
-    { id: 'MT-IP05', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-11', 1).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: today, status: 'En Progrés', technician: 'Carles' },
-    { id: 'MT-IP06', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-03', 1).id, equipmentType: 'Soporte y Barras', frequency: 'Anual', dueDate: add(today, { days: 4 }), status: 'En Progrés', technician: 'David' },
-
+    
     // === COMPLETAT (per a Historial) ===
     { id: 'MT-C01', type: 'Preventiu', title: 'Manteniment Anual', vehicleId: findVehicleByOperatorAndIndex('op-01', 4).id, equipmentType: 'Bornes y Pupitre', frequency: 'Anual', dueDate: sub(today, { days: 2 }), status: 'Completado', technician: 'Pau' },
     { id: 'MT-C02', type: 'Preventiu', title: 'Manteniment Trimestral', vehicleId: findVehicleByOperatorAndIndex('op-02', 4).id, equipmentType: 'Placa conexiones', frequency: 'Trimestral', dueDate: sub(today, { weeks: 1 }), status: 'Completado', technician: 'Xavier' },
