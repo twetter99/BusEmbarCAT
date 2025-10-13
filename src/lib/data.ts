@@ -1,5 +1,6 @@
 
-import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData, OperatorMetrics } from '@/lib/types';
+
+import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User, EquipmentType, Operator, Installation, Decommissioning, Transfer, DashboardData, OperatorMetrics, InventoryCategory } from '@/lib/types';
 import { add, sub } from 'date-fns';
 
 export const mockOperators: Operator[] = [
@@ -230,12 +231,58 @@ export const mockIncidents: Incident[] = [
 
 
 export const mockInventory: InventoryItem[] = [
-    { id: 'INV-001', name: 'Cable de red 2m', sku: 'CAB-NET-2M', category: 'Genérico', stock: 150, location: 'Almacén Principal' },
-    { id: 'INV-002', name: 'Rollo de papel térmico', sku: 'PAP-THER-ROLL', category: 'Genérico', stock: 300, location: 'Almacén Principal' },
-    { id: 'INV-003', name: 'Validadora Inetum v3', sku: 'VAL-INETUM-V3', category: 'Específico del Proveedor', stock: 12, location: 'Almacén Operador' },
-    { id: 'INV-004', name: 'Tornillos M4', sku: 'HW-SCREW-M4', category: 'Stock Libre', stock: 2500, location: 'Almacén Principal' },
-    { id: 'INV-005', name: 'Lector de tarjetas RFID', sku: 'COMP-RFID-READER', category: 'Específico del Proveedor', stock: 35, location: 'Almacén Operador' },
+  // Material específico SERMETRA (con trazabilidad)
+  {
+    id: 'INV-101', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
+    category: 'Material específico SERMETRA', stock: 5, minStock: 2,
+    location: 'Almacén Central (Cornellà)', value: 1200, serialNumber: 'SRM-PUP-0101'
+  },
+  {
+    id: 'INV-102', name: 'Validadora Inetum v4', sku: 'VAL-INE-V4-SRM',
+    category: 'Material específico SERMETRA', stock: 1, minStock: 5,
+    location: 'Almacén Central (Cornellà)', value: 850, serialNumber: 'SRM-VAL-2305'
+  },
+  {
+    id: 'INV-103', name: 'Pupitre Conductor v2.1', sku: 'PUP-V2.1-SRM',
+    category: 'Material específico SERMETRA', stock: 1, minStock: 0,
+    location: 'Asignado', value: 1200, serialNumber: 'SRM-PUP-0089', assignedTo: mockVehicles[0].uniqueId
+  },
+
+  // Material de adquisición libre (controlado por bolsa)
+  {
+    id: 'INV-201', name: 'Antena 4G/GPS', sku: 'ANT-4G-GPS-GEN',
+    category: 'Material de adquisición libre', stock: 12, minStock: 10,
+    location: 'Almacén Central (Cornellà)', value: 75
+  },
+  {
+    id: 'INV-202', name: 'Switch Ethernet 8-port', sku: 'SW-ETH-8P-RGD',
+    category: 'Material de adquisición libre', stock: 8, minStock: 5,
+    location: 'Almacén Op. TUS', value: 150
+  },
+  {
+    id: 'INV-203', name: 'Kit Conector HARTING', sku: 'CON-HAR-KIT',
+    category: 'Material de adquisición libre', stock: 2, minStock: 5,
+    location: 'Almacén Central (Cornellà)', value: 45
+  },
+
+  // Material genérico (consumibles)
+  {
+    id: 'INV-301', name: 'Rollo Papel Térmico Pupitre', sku: 'PAP-PUP-58MM',
+    category: 'Material genérico', stock: 250, minStock: 100,
+    location: 'Almacén Central (Cornellà)'
+  },
+  {
+    id: 'INV-302', name: 'Fusible MiniATO 5A', sku: 'FUS-MATO-5A',
+    category: 'Material genérico', stock: 450, minStock: 200,
+    location: 'Almacén Central (Cornellà)'
+  },
+  {
+    id: 'INV-303', name: 'Bridas de nylon 20cm', sku: 'BRD-NYL-20CM-PK100',
+    category: 'Material genérico', stock: 88, minStock: 50,
+    location: 'Almacén Op. JULIA'
+  }
 ];
+
 
 export const mockInstallations: Installation[] = [
     { id: 'INST-001', vehicleId: 'VEH-NUEVO-450', vehicleModel: 'Mercedes Citaro 3P', operatorId: 'op-01', scheduledDate: '25/01/2026', technician: 'Jordi', status: 'En Progreso', materials: ['Pupitre: SN-PUP-NEW-001', 'Validadoras: 2 unidades', 'Cableado: Nuevo (carrocero)'] },

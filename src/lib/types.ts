@@ -1,5 +1,6 @@
 
 
+
 export type Role = 'Administrador' | 'Operador' | 'Sermetra';
 
 export type User = {
@@ -112,14 +113,21 @@ export type Incident = {
   equipmentType: EquipmentType;
 };
 
+export type InventoryCategory = 'Material genérico' | 'Material de adquisición libre' | 'Material específico SERMETRA';
+
 export type InventoryItem = {
   id: string;
   name: string;
   sku: string;
-  category: 'Genérico' | 'Stock Libre' | 'Específico del Proveedor';
+  category: InventoryCategory;
   stock: number;
+  minStock: number;
   location: string;
+  value?: number;
+  serialNumber?: string;
+  assignedTo?: string; // vehicle uniqueId or warehouse
 };
+
 
 export type ChecklistItem = {
   id: string;
