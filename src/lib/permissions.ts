@@ -28,6 +28,7 @@ import {
   ShieldAlert,
   BarChart3,
   Calendar as CalendarIcon,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -68,6 +69,7 @@ export const navItems: NavConfig = {
       },
       { id: 'inventory', href: '/inventory', label: 'Inventari i Estoc', icon: Boxes },
       { id: 'reports', href: '/reports', label: 'Informes i Analítica', icon: FileText },
+      { id: 'contrato-c4', href: '/contrato-c4-2025', label: 'Contracte C-4/2025', icon: FileSpreadsheet },
     ],
     config: [
         { id: 'users', href: '/users', label: 'Usuaris i Rols', icon: Users },
@@ -103,7 +105,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Sermetra': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters',
+            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],

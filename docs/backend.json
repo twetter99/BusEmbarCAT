@@ -119,6 +119,94 @@
         "id",
         "name"
       ]
+    },
+    "WorkOrder": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WorkOrder",
+      "description": "Represents a work order for a technician.",
+      "type": "object",
+      "properties": {
+        "planRef": {
+          "type": "string",
+          "description": "Reference to the MaintenancePlan document."
+        },
+        "technicianRef": {
+          "type": "string",
+          "description": "Reference to the User (technician) document."
+        },
+        "cochera": {
+          "type": "string",
+          "description": "The depot where the work is to be performed."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Pendiente",
+            "Completada"
+          ],
+          "description": "The status of the work order."
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the work order was completed."
+        },
+        "checklistResults": {
+          "type": "object",
+          "description": "The results of the checklist."
+        },
+        "evidencePhotos": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "URLs to the evidence photos."
+        }
+      }
+    },
+    "MaintenancePlan": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MaintenancePlan",
+      "description": "Defines a maintenance plan.",
+      "type": "object",
+      "properties": {
+        "checklistId": {
+          "type": "string",
+          "description": "The ID of the checklist to be used."
+        }
+      }
+    },
+    "Checklist": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Checklist",
+      "description": "Defines a checklist for a maintenance task.",
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "checkbox",
+                  "photo",
+                  "text"
+                ]
+              }
+            }
+          },
+          "description": "The steps of the checklist."
+        }
+      }
     }
   },
   "auth": {
@@ -189,6 +277,54 @@
             {
               "name": "operatorId",
               "description": "The unique identifier for the operator."
+            }
+          ]
+        }
+      },
+      {
+        "path": "contrato_c4_2025_workOrders/{workOrderId}",
+        "definition": {
+          "entityName": "WorkOrder",
+          "schema": {
+            "$ref": "#/backend/entities/WorkOrder"
+          },
+          "description": "Collection to store work orders for the C-4/2025 contract.",
+          "params": [
+            {
+              "name": "workOrderId",
+              "description": "The unique identifier for the work order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "contrato_c4_2025_maintenancePlans/{planId}",
+        "definition": {
+          "entityName": "MaintenancePlan",
+          "schema": {
+            "$ref": "#/backend/entities/MaintenancePlan"
+          },
+          "description": "Collection to store maintenance plans for the C-4/2025 contract.",
+          "params": [
+            {
+              "name": "planId",
+              "description": "The unique identifier for the maintenance plan."
+            }
+          ]
+        }
+      },
+      {
+        "path": "contrato_c4_2025_checklists/{checklistId}",
+        "definition": {
+          "entityName": "Checklist",
+          "schema": {
+            "$ref": "#/backend/entities/Checklist"
+          },
+          "description": "Collection to store checklists for the C-4/2025 contract.",
+          "params": [
+            {
+              "name": "checklistId",
+              "description": "The unique identifier for the checklist."
             }
           ]
         }

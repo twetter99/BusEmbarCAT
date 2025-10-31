@@ -1,27 +1,26 @@
 /**
- * @description This ruleset enforces access control for equipment definitions and inventory related to the 'Contrato C-4/2025'.
- * Data is segregated into distinct collections for definitions and inventory. The ruleset currently allows public read access
- * but restricts writes. It is designed with future role-based access control in mind.
+ * @description This ruleset enforces access control for the application.
+ * It segregates data by contract and function. Public read access is granted
+ * to most collections, but write access is restricted.
  * @dataStructure
- * - `/contrato_c4_2025_definitions/{definitionId}`: Stores equipment definitions.
- * - `/contrato_c4_2025_inventory/{equipmentId}`: Tracks the physical inventory of equipment.
- * - `/vehicles/{vehicleId}`: Stores vehicle data. EquipmentInventory documents will reference these.
- * - `/operators/{operatorId}`: Stores operator data. Vehicle documents will reference these.
+ * - `/contrato_c4_2025_definitions/{definitionId}`: Equipment definitions for C-4/2025.
+ * - `/contrato_c4_2025_inventory/{equipmentId}`: Equipment inventory for C-4/2025.
+ * - `/contrato_c4_2025_workOrders/{workOrderId}`: Work orders for C-4/2025.
+ * - `/contrato_c4_2025_maintenancePlans/{planId}`: Maintenance plans for C-4/2025.
+ * - `/contrato_c4_2025_checklists/{checklistId}`: Checklists for C-4/2025.
+ * - `/vehicles/{vehicleId}`: Vehicle data.
+ * - `/operators/{operatorId}`: Operator data.
  * @keySecurityDecisions
- * - Public read access is granted to both equipment definitions and inventory.
- * - Write access is restricted and should be further refined in future iterations with role-based access control.
- * - Future iterations should consider denormalizing role information onto the documents to avoid costly `get()` calls in security rules.
+ * - Public read access is granted to most collections for ease of development.
+ * - Write access is restricted and should be refined with role-based access control.
+ * - Future iterations should consider denormalizing role information onto documents.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows read-only access to equipment definitions. Write access is currently denied but intended for future role-based control.
-     * @path /contrato_c4_2025_definitions/{definitionId}
-     * @allow (get, list) Anyone can read equipment definitions.
-     * @deny (create, update, delete) No one can create, update, or delete equipment definitions without proper authorization.
-     * @principle Allows public read access but restricts write access, with a placeholder for future role-based control.
+     * @description Allows read-only access to equipment definitions for C-4/2025.
      */
     match /contrato_c4_2025_definitions/{definitionId} {
       allow get, list: if true;
@@ -29,11 +28,7 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows read-only access to equipment inventory. Write access is currently denied but intended for future role-based control.
-     * @path /contrato_c4_2025_inventory/{equipmentId}
-     * @allow (get, list) Anyone can read equipment inventory.
-     * @deny (create, update, delete) No one can create, update, or delete equipment inventory without proper authorization.
-     * @principle Allows public read access but restricts write access, with a placeholder for future role-based control.
+     * @description Allows read-only access to equipment inventory for C-4/2025.
      */
     match /contrato_c4_2025_inventory/{equipmentId} {
       allow get, list: if true;
@@ -41,23 +36,39 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows read-only access to vehicle data. Write access is currently denied but intended for future role-based control.
-     * @path /vehicles/{vehicleId}
-     * @allow (get, list) Anyone can read vehicle data.
-     * @deny (create, update, delete) No one can create, update, or delete vehicle data without proper authorization.
-     * @principle Allows public read access but restricts write access, with a placeholder for future role-based control.
+     * @description Allows read-only access to work orders for C-4/2025.
+     */
+    match /contrato_c4_2025_workOrders/{workOrderId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+    
+    /**
+     * @description Allows read-only access to maintenance plans for C-4/2025.
+     */
+    match /contrato_c4_2025_maintenancePlans/{planId} {
+        allow get, list: if true;
+        allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows read-only access to checklists for C-4/2025.
+     */
+    match /contrato_c4_2025_checklists/{checklistId} {
+        allow get, list: if true;
+        allow create, update, delete: if false;
+    }
+    
+    /**
+     * @description Allows read-only access to vehicle data.
      */
     match /vehicles/{vehicleId} {
       allow get, list: if true;
       allow create, update, delete: if false;
     }
 
-        /**
-     * @description Allows read-only access to operator data. Write access is currently denied but intended for future role-based control.
-     * @path /operators/{operatorId}
-     * @allow (get, list) Anyone can read operator data.
-     * @deny (create, update, delete) No one can create, update, or delete operator data without proper authorization.
-     * @principle Allows public read access but restricts write access, with a placeholder for future role-based control.
+    /**
+     * @description Allows read-only access to operator data.
      */
     match /operators/{operatorId} {
       allow get, list: if true;
