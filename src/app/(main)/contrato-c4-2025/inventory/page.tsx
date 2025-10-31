@@ -63,3 +63,5 @@ export default function ContratoC4InventoryPage() {
     </main>
   );
 }
+
+    
