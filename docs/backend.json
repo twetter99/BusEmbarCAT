@@ -1,0 +1,199 @@
+{
+  "entities": {
+    "EquipmentDefinition": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EquipmentDefinition",
+      "type": "object",
+      "description": "Defines the type of equipment to be maintained under a contract.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the equipment definition (e.g., validadora_magnetica_svv).",
+          "format": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the equipment (e.g., Validadora Magnética SVV)."
+        },
+        "models": {
+          "type": "array",
+          "description": "An array of strings representing the models of the equipment (e.g., [\"INDRA\", \"ASCOM\"]).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contractId": {
+          "type": "string",
+          "description": "The contract ID associated with this equipment definition (e.g., C-4/2025)."
+        },
+        "maintenanceLevel": {
+          "type": "string",
+          "description": "The maintenance level for this equipment (e.g., Preventivo Nivel 2)."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "models",
+        "contractId",
+        "maintenanceLevel"
+      ]
+    },
+    "EquipmentInventory": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EquipmentInventory",
+      "type": "object",
+      "description": "Represents a physical piece of equipment installed and tracked as part of the contract inventory.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the equipment inventory item.",
+          "format": "string"
+        },
+        "definitionRef": {
+          "type": "string",
+          "description": "Reference to the EquipmentDefinition. (Relationship: EquipmentDefinition 1:N EquipmentInventory)"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model of the equipment (e.g., INDRA, ASCOM)."
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "The unique serial number of the equipment."
+        },
+        "vehicleRef": {
+          "type": "string",
+          "description": "Reference to the Vehicle. (Relationship: Vehicle 1:N EquipmentInventory)"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the equipment (e.g., Activa, De Baixa)."
+        }
+      },
+      "required": [
+        "id",
+        "definitionRef",
+        "model",
+        "serialNumber",
+        "vehicleRef",
+        "status"
+      ]
+    },
+    "Vehicle": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Vehicle",
+      "type": "object",
+      "description": "Represents a vehicle in the fleet.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the vehicle."
+        },
+        "operatorId": {
+          "type": "string",
+          "description": "Reference to the Operator. (Relationship: Operator 1:N Vehicle)"
+        }
+      },
+      "required": [
+        "id",
+        "operatorId"
+      ]
+    },
+    "Operator": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Operator",
+      "type": "object",
+      "description": "Represents an operator of the fleet.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the operator."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the operator."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "contrato_c4_2025_definitions/{definitionId}",
+        "definition": {
+          "entityName": "EquipmentDefinition",
+          "schema": {
+            "$ref": "#/backend/entities/EquipmentDefinition"
+          },
+          "description": "Collection to store definitions of equipment types for the C-4/2025 contract.",
+          "params": [
+            {
+              "name": "definitionId",
+              "description": "The unique identifier for the equipment definition."
+            }
+          ]
+        }
+      },
+      {
+        "path": "contrato_c4_2025_inventory/{equipmentId}",
+        "definition": {
+          "entityName": "EquipmentInventory",
+          "schema": {
+            "$ref": "#/backend/entities/EquipmentInventory"
+          },
+          "description": "Collection to store the inventory of equipment for the C-4/2025 contract. Includes a reference to the equipment definition and the vehicle.",
+          "params": [
+            {
+              "name": "equipmentId",
+              "description": "The unique identifier for the equipment inventory item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "vehicles/{vehicleId}",
+        "definition": {
+          "entityName": "Vehicle",
+          "schema": {
+            "$ref": "#/backend/entities/Vehicle"
+          },
+          "description": "Collection to store vehicles in the fleet.  EquipmentInventory documents will reference these.",
+          "params": [
+            {
+              "name": "vehicleId",
+              "description": "The unique identifier for the vehicle."
+            }
+          ]
+        }
+      },
+      {
+        "path": "operators/{operatorId}",
+        "definition": {
+          "entityName": "Operator",
+          "schema": {
+            "$ref": "#/backend/entities/Operator"
+          },
+          "description": "Collection to store operators in the fleet.  Vehicle documents will reference these.",
+          "params": [
+            {
+              "name": "operatorId",
+              "description": "The unique identifier for the operator."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure is designed to manage equipment definitions and inventory for the 'Contrato C-4/2025' while ensuring data separation and supporting key business requirements. The design adheres to the core principles of Authorization Independence, Clarity of Intent, DBAC, and QAPs. Authorization independence is not a concern in this specific design, as no role-based access is being configured. Future iterations must consider authorization and should use denormalization to copy relevant authorization data into subcollections to avoid `get()` calls in security rules.\n\n**Authorization Independence (Future):** Although not implemented in the base design, future role-based access should denormalize authorization context. For example, if access to `contrato_c4_2025_inventory` documents needs to be restricted based on vehicle ownership or operator roles, these roles should be denormalized into the `EquipmentInventory` documents.\n\n**Structural Segregation (Homogeneous Security Posture):** The structure uses distinct collections (`contrato_c4_2025_definitions` and `contrato_c4_2025_inventory`) to segregate data based on function, ensuring that all documents within a collection share similar security requirements.\n\n**Access Modeling:** This design uses path-based ownership via `vehicleRef`, allowing for easy retrieval of equipment associated with a particular vehicle. Future considerations may involve adding a `members` map to the `EquipmentInventory` to support collaborative access if required.\n\n**QAPs:** The structure supports secure `list` operations by ensuring data segregation. Listing equipment definitions or inventory items can be done securely without exposing unauthorized data.\n\n**Invariants:** The structure supports the integrity of relationships using document references (e.g., `definitionRef` in `EquipmentInventory` ensures a valid link to `EquipmentDefinition`).\n\n**Explanation of Collections:**\n\n*   **`contrato_c4_2025_definitions`:** Stores equipment definitions, providing a central repository of equipment types to be maintained under the contract. Each document defines a specific type of equipment (e.g., 'Validadora Magnética SVV') and includes details such as name, models, contract ID, and maintenance level.\n*   **`contrato_c4_2025_inventory`:** Tracks the physical inventory of equipment installed on vehicles. Each document represents an individual piece of equipment and includes references to the equipment definition and the vehicle it is installed on, along with its serial number and status. The `status` field is critical for managing equipment lifecycle and billing adjustments."
+  }
+}
