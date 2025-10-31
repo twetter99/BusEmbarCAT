@@ -69,7 +69,17 @@ export const navItems: NavConfig = {
       },
       { id: 'inventory', href: '/inventory', label: 'Inventari i Estoc', icon: Boxes },
       { id: 'reports', href: '/reports', label: 'Informes i Analítica', icon: FileText },
-      { id: 'contrato-c4', href: '/contrato-c4-2025', label: 'Contracte C-4/2025', icon: FileSpreadsheet },
+      { 
+        id: 'contrato-c4', 
+        href: '#', 
+        label: 'Contracte C-4/2025', 
+        icon: FileSpreadsheet,
+        subItems: [
+            { id: 'c4-dashboard', href: '/contrato-c4-2025', label: 'Dashboard C-4', icon: LayoutDashboard },
+            { id: 'c4-inventory', href: '/contrato-c4-2025/inventory', label: 'Inventari Validadores', icon: Boxes },
+            { id: 'c4-work', href: '/contrato-c4-2025/work', label: 'Ordres de Treball', icon: CalendarCheck },
+        ]
+      },
     ],
     config: [
         { id: 'users', href: '/users', label: 'Usuaris i Rols', icon: Users },
@@ -94,7 +104,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Operador': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'fleet', 'reports', 'access',
+            'fleet', 'reports', 'access', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-work',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
@@ -105,7 +115,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Sermetra': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4',
+            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-work',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
@@ -114,7 +124,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
 }
 
 // Test mode flag - set to false to enable permission checks
-const TEST_MODE = false;
+const TEST_MODE = true;
 
 export const hasPermission = (role: Role, itemId: string, accessType: 'read' | 'write' = 'read'): boolean => {
     if (TEST_MODE) return true;

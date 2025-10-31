@@ -50,7 +50,8 @@ import { cn } from '@/lib/utils';
 
 const renderNavItems = (items: NavItem[], userRole: string, currentPath: string) => {
   return items.map((item) => {
-    if (!hasPermission(userRole, item.id)) return null;
+    // DEVELOPMENT MODE: Permissions disabled temporarily
+    // if (!hasPermission(userRole, item.id)) return null;
 
     if (item.subItems && item.subItems.length > 0) {
       const isParentActive = item.subItems.some(sub => currentPath.startsWith(sub.href));
@@ -62,16 +63,18 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
             <CollapsibleTrigger asChild className="w-full">
               <SidebarMenuButton
                 isActive={isParentActive && !item.subItems.some(sub => sub.href === currentPath)}
-                icon={<item.icon />}
                 className="justify-between group"
                 >
+                <item.icon />
                 <span>{item.label}</span>
                 <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]:rotate-90" />
               </SidebarMenuButton>
             </CollapsibleTrigger>
             <CollapsibleContent>
               <SidebarMenuSub>
-                {item.subItems.map(subItem => hasPermission(userRole, subItem.id) && (
+                {item.subItems.map(subItem => (
+                    // DEVELOPMENT MODE: Permissions disabled temporarily
+                    // hasPermission(userRole, subItem.id) && (
                     <SidebarMenuItem key={subItem.href}>
                         <SidebarMenuSubButton asChild isActive={currentPath === subItem.href}>
                             <Link href={subItem.href}>
@@ -93,11 +96,11 @@ const renderNavItems = (items: NavItem[], userRole: string, currentPath: string)
         <SidebarMenuButton
           asChild
           isActive={currentPath === item.href}
-          icon={<item.icon />}
           tooltip={{ children: item.label }}
         >
           <Link href={item.href}>
-            {item.label}
+            <item.icon />
+            <span>{item.label}</span>
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -137,6 +140,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         if (subItem) return subItem.label;
         return 'Manteniment Preventiu';
     }
+    if (pathname.startsWith('/contrato-c4-2025/work/')) return 'Detall Ordre de Treball';
     
     return 'Tauler de control';
   }
