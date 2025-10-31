@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -31,5 +32,7 @@ const nextConfig: NextConfig = {
     ],
   },
 };
+
+// Force restart
 
 export default nextConfig;

@@ -142,5 +142,3 @@ export const hasPermission = (role: Role, itemId: string, accessType: 'read' | '
     
     return false;
 }
-
-    
