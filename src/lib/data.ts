@@ -64,10 +64,16 @@ export const mockOperators: Operator[] = [
     { id: 'op-42', name: 'HISPANO HILARIENCA, SAU', status: 'Actiu', grupo: 'TEISA', vehiculosContrato: 22 },
 ];
 
+// Credenciales demo para login (en producción esto iría en backend)
+export const demoCredentials: { [email: string]: { password: string; userId: string } } = {
+    'juan@busembarcat.cat': { password: 'Consorcio2025*', userId: 'user-001' },
+    'sermetra@busembarcat.cat': { password: 'Sermetra2025*', userId: 'user-003' },
+};
+
 export const mockUsers: User[] = [
-    { id: 'user-001', name: 'Usuari Administrador', email: 'admin@busembacat.com', role: 'Administrador' },
+    { id: 'user-001', name: 'Juan García', email: 'juan@busembarcat.cat', role: 'Administrador' },
     { id: 'user-002', name: 'Usuari Operador', email: 'operator@busembacat.com', role: 'Operador', operatorId: 'op-01' },
-    { id: 'user-003', name: 'Usuari Sermetra', email: 'sermetra@busembacat.com', role: 'Sermetra' },
+    { id: 'user-003', name: 'Sermetra Operacions', email: 'sermetra@busembarcat.cat', role: 'Sermetra' },
 ];
 
 const operatorMap = new Map(mockOperators.map(op => [op.name, op.id]));
