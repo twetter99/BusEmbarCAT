@@ -141,6 +141,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         return 'Manteniment Preventiu';
     }
     if (pathname.startsWith('/contrato-c4-2025/work/')) return 'Detall Ordre de Treball';
+    if (pathname.startsWith('/contrato-c4-2025/planning')) return 'Planificació';
+    if (pathname.startsWith('/contrato-c4-2025/tracking')) return 'Seguiment i Informes';
+    
+    // Contrato C-5/2025
+    if (pathname === '/contrato-c5-2025') return 'Dashboard C-5/2025';
+    if (pathname.startsWith('/contrato-c5-2025/pedidos')) return 'Comandes i Fabricació';
+    if (pathname.startsWith('/contrato-c5-2025/inventario')) return 'Inventari i Traçabilitat';
+    if (pathname.startsWith('/contrato-c5-2025/logistica')) return 'Logística i Pick&Pack';
+    if (pathname.startsWith('/contrato-c5-2025/garantias')) return 'Garanties i RMA';
+    if (pathname.startsWith('/contrato-c5-2025/reporting')) return 'Informes i KPIs';
     
     return 'Tauler de control';
   }

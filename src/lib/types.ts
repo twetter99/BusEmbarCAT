@@ -9,10 +9,24 @@ export type User = {
   operatorId?: string;
 };
 
+// Grupos empresariales de operadores
+export type GrupoEmpresarial = 
+  | 'Independiente'
+  | 'Avanza'
+  | 'Direxis'
+  | 'Empresa Plana'
+  | 'Monbus'
+  | 'Moventia'
+  | 'Sagalés'
+  | 'Soler i Sauret'
+  | 'TEISA';
+
 export type Operator = {
   id: string;
   name: string;
   status: 'Actiu' | 'Inactiu';
+  grupo: GrupoEmpresarial;
+  vehiculosContrato: number; // Número de vehículos según contrato C5
 }
 
 export type Vehicle = {
@@ -218,6 +232,7 @@ export interface OperatorMetrics {
   id: string;
   estado: 'Actiu' | 'Inactiu' | 'Suspès';
   ubicacionPrincipal: string;
+  grupo?: GrupoEmpresarial;
   
   vehiculosOperativos: number;
   vehiculosTotal: number;

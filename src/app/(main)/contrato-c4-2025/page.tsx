@@ -5,7 +5,9 @@ import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Package, TrendingDown, CheckCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { AlertCircle, Package, TrendingDown, AlertTriangle, Calendar } from 'lucide-react';
+import { C4_TOTAL_VALIDADORES, C4_REVISIONS_PER_ANY, c4TotalRevisionsAnuals } from '@/lib/contract-c4';
 
 // Tipos para las colecciones
 type InventoryItem = {
@@ -58,6 +60,45 @@ const MOCK_WORK_ORDERS: WorkOrder[] = [
   { id: 'OT-CMG-26010', planRef: 'plan-trimestral', technicianRef: 'tech-005', cochera: 'Gabriel Castellà, 7 Igualada', status: 'Incidència' },
 ];
 
+// Planificaciones mock para detectar alertas
+type PlanningSchedule = {
+  cotxera: string;
+  operador: string;
+  dates: string[];
+  cmgAuthorized?: boolean;
+};
+
+const MOCK_SCHEDULES: PlanningSchedule[] = [
+  {
+    cotxera: 'Barcelona - Casablanca',
+    operador: 'TRANSPORTS CIUTAT COMTAL, SA',
+    dates: ['2026-01-05', '2026-01-06', '2026-01-07'], // 3 días consecutivos - VIOLACIÓN
+  },
+];
+
+// Función para detectar días consecutivos
+function detectConsecutiveDays(dates: string[]): boolean {
+  if (dates.length < 3) return false;
+  
+  const sortedDates = [...dates].sort();
+  let consecutiveCount = 1;
+  
+  for (let i = 1; i < sortedDates.length; i++) {
+    const prevDate = new Date(sortedDates[i - 1]);
+    const currDate = new Date(sortedDates[i]);
+    const diffDays = Math.floor((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) {
+      consecutiveCount++;
+      if (consecutiveCount > 2) return true;
+    } else {
+      consecutiveCount = 1;
+    }
+  }
+  
+  return false;
+}
+
 // Colores para el gráfico de tarta
 const CHART_COLORS = {
   pendent: 'hsl(var(--destructive))',
@@ -68,7 +109,21 @@ const CHART_COLORS = {
 export default function ContratoC4DashboardPage() {
   const [inventoryData] = useState<InventoryItem[]>(MOCK_INVENTORY);
   const [workOrdersData] = useState<WorkOrder[]>(MOCK_WORK_ORDERS);
+  const [schedules] = useState<PlanningSchedule[]>(MOCK_SCHEDULES);
   const [isLoading] = useState(false);
+
+  // Total oficial según Pliego C-4/2025 (centralizado)
+  const totalInventari = C4_TOTAL_VALIDADORES;
+  const revisionsPerAny = C4_REVISIONS_PER_ANY; // 1 revisió per semestre
+  const totalRevisionsPlanificades = c4TotalRevisionsAnuals();
+
+  // Detectar violaciones de planificación
+  const violations = useMemo(() => {
+    return schedules.filter(schedule => {
+      const hasViolation = detectConsecutiveDays(schedule.dates);
+      return hasViolation && !schedule.cmgAuthorized;
+    });
+  }, [schedules]);
 
   // Calcular KPIs
   const kpis = useMemo(() => {
@@ -77,9 +132,9 @@ export default function ContratoC4DashboardPage() {
     
     // KPI 3: Reducción a facturar = (Unidades de Baja / 25) * 2.5%
     const reduccioFacturar = (unitatsBaixa / 25) * 2.5;
-    const percentatgeBaixa = inventoryData.length > 0 
-      ? (unitatsBaixa / inventoryData.length) * 100 
-      : 0;
+    
+    // Porcentaje de bajas sobre total oficial del PPT
+    const percentatgeBaixa = (unitatsBaixa / totalInventari) * 100;
 
     return {
       parcViu,
@@ -87,7 +142,9 @@ export default function ContratoC4DashboardPage() {
       reduccioFacturar,
       percentatgeBaixa,
     };
-  }, [inventoryData]);
+  }, [inventoryData, totalInventari]);
+
+  
 
   // Datos para el gráfico de OTs
   const chartData = useMemo(() => {
@@ -113,8 +170,8 @@ export default function ContratoC4DashboardPage() {
         </p>
       </div>
 
-      {/* KPIs Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+  {/* KPIs Grid */}
+  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         {/* KPI 1: Parc Viu */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -148,7 +205,27 @@ export default function ContratoC4DashboardPage() {
               <>
                 <div className="text-2xl font-bold">{kpis.unitatsBaixa.toLocaleString('ca-ES')}</div>
                 <p className="text-xs text-muted-foreground">
-                  {kpis.percentatgeBaixa.toFixed(1)}% del total de l'inventari
+                  {kpis.percentatgeBaixa.toFixed(2)}% del total oficial (1.198 unitats)
+                </p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* KPI: Revisions Planificades (anual) */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Revisions Planificades</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-20" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{totalRevisionsPlanificades.toLocaleString('ca-ES')}</div>
+                <p className="text-xs text-muted-foreground">
+                  {revisionsPerAny} revisions/any × {totalInventari.toLocaleString('ca-ES')} unitats
                 </p>
               </>
             )}
@@ -177,28 +254,71 @@ export default function ContratoC4DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* KPI 4: Total OTs Completades */}
-        <Card>
+        {/* KPI 4: Alertes PPT */}
+        <Card className={violations.length > 0 ? 'border-destructive' : ''}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">OTs Completades</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Alertes PPT</CardTitle>
+            <AlertTriangle className={`h-4 w-4 ${violations.length > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <Skeleton className="h-8 w-20" />
             ) : (
               <>
-                <div className="text-2xl font-bold">
-                  {chartData.find(d => d.name === 'Completades')?.value || 0}
+                <div className={`text-2xl font-bold ${violations.length > 0 ? 'text-destructive' : ''}`}>
+                  {violations.length}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Ordres de treball finalitzades
+                  {violations.length > 0 ? 'Dies consecutius excedits' : 'Cap incidència detectada'}
                 </p>
               </>
             )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Tarjeta de alertas de planificación */}
+      {violations.length > 0 && (
+        <Card className="border-destructive">
+          <CardHeader>
+            <div className="flex items-start gap-4">
+              <AlertTriangle className="h-6 w-6 text-destructive mt-1" />
+              <div className="flex-1">
+                <CardTitle className="text-destructive">Incompliments PPT C-4/2025 Detectats</CardTitle>
+                <CardDescription className="mt-2">
+                  El Plec de Prescripcions Tècniques (PPT) estableix un màxim de 2 dies consecutius 
+                  de manteniment per cotxera. Les planificacions següents superen aquest límit:
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {violations.map((v, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start justify-between p-3 border rounded-lg bg-muted/30"
+                >
+                  <div className="flex-1">
+                    <p className="font-medium">{v.cotxera}</p>
+                    <p className="text-sm text-muted-foreground">{v.operador}</p>
+                    <p className="text-sm mt-1">
+                      <strong>{v.dates.length} dies consecutius programats</strong>
+                    </p>
+                  </div>
+                  <Badge variant="destructive">Excedeix límit</Badge>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg">
+              <p className="text-sm text-amber-900 dark:text-amber-200">
+                <strong>Acció requerida:</strong> Reviseu la planificació al mòdul de "Planificació" 
+                o sol·liciteu autorització excepcional del CMG (Coordinador Manteniment General).
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Gráfico de OTs */}
       <Card>
@@ -256,7 +376,7 @@ export default function ContratoC4DashboardPage() {
             <div className="flex justify-between">
               <span className="text-muted-foreground">Total d'unitats a l'inventari:</span>
               <span className="font-medium">
-                {inventoryData.length}
+                {totalInventari.toLocaleString('ca-ES')}
               </span>
             </div>
             <div className="flex justify-between">

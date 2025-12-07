@@ -76,8 +76,24 @@ export const navItems: NavConfig = {
         icon: FileSpreadsheet,
         subItems: [
             { id: 'c4-dashboard', href: '/contrato-c4-2025', label: 'Dashboard C-4', icon: LayoutDashboard },
-            { id: 'c4-inventory', href: '/contrato-c4-2025/inventory', label: 'Inventari Validadores', icon: Boxes },
+            { id: 'c4-planning', href: '/contrato-c4-2025/planning', label: 'Planificació', icon: CalendarIcon },
             { id: 'c4-work', href: '/contrato-c4-2025/work', label: 'Ordres de Treball', icon: CalendarCheck },
+            { id: 'c4-tracking', href: '/contrato-c4-2025/tracking', label: 'Seguiment i Informes', icon: FileText },
+            { id: 'c4-inventory', href: '/contrato-c4-2025/inventory', label: 'Inventari Validadores', icon: Boxes },
+        ]
+      },
+      { 
+        id: 'contrato-c5', 
+        href: '#', 
+        label: 'Contracte C-5/2025', 
+        icon: Boxes,
+        subItems: [
+            { id: 'c5-dashboard', href: '/contrato-c5-2025', label: 'Dashboard C-5', icon: LayoutDashboard },
+            { id: 'c5-pedidos', href: '/contrato-c5-2025/pedidos', label: 'Comandes i Fabricació', icon: FileSpreadsheet },
+            { id: 'c5-inventario', href: '/contrato-c5-2025/inventario', label: 'Inventari i Traçabilitat', icon: Boxes },
+            { id: 'c5-logistica', href: '/contrato-c5-2025/logistica', label: 'Logística i Pick&Pack', icon: Truck },
+            { id: 'c5-garantias', href: '/contrato-c5-2025/garantias', label: 'Garanties i RMA', icon: ShieldCheck },
+            { id: 'c5-reporting', href: '/contrato-c5-2025/reporting', label: 'Informes i KPIs', icon: BarChart3 },
         ]
       },
     ],
@@ -104,7 +120,8 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Operador': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'fleet', 'reports', 'access', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-work',
+            'fleet', 'reports', 'access', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-planning', 'c4-work', 'c4-tracking',
+            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-garantias', 'c5-reporting',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
@@ -115,7 +132,8 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
     'Sermetra': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
-            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-work',
+            'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-planning', 'c4-work', 'c4-tracking',
+            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-garantias', 'c5-reporting',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],

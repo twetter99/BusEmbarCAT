@@ -3,17 +3,65 @@ import type { Vehicle, Equipment, MaintenanceTask, Incident, InventoryItem, User
 import { add, sub, set } from 'date-fns';
 
 export const mockOperators: Operator[] = [
-    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', status: 'Actiu' },
-    { id: 'op-02', name: 'AUTOCARES JULIA, SL', status: 'Actiu' },
-    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA', status: 'Actiu' },
-    { id: 'op-04', name: 'AUTOCARS PRAT, SA', status: 'Actiu' },
-    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU', status: 'Inactiu' },
-    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL', status: 'Actiu' },
-    { id: 'op-07', name: 'AUTOCORB, SA', status: 'Actiu' },
-    { id: 'op-08', name: 'HISPANO LLACUNENSE, SL', status: 'Actiu' },
-    { id: 'op-09', name: 'MONTFERRI HERMANOS, SL', status: 'Actiu' },
-    { id: 'op-10', name: 'TRANSPORTES MIR', status: 'Inactiu' },
-    { id: 'op-11', name: 'TUS, SCCL', status: 'Actiu' }
+    // Independientes (sin grupo)
+    { id: 'op-01', name: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 60 },
+    { id: 'op-02', name: 'AUTOCARES JULIÀ, SL', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 3 },
+    { id: 'op-03', name: 'AUTOCARS DEL PENEDÈS, SA', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 3 },
+    { id: 'op-04', name: 'AUTOCARS PRAT, SA', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 4 },
+    { id: 'op-05', name: 'AUTOCARS R. FONT, SAU', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 36 },
+    { id: 'op-06', name: 'AUTOCARS VENDRELL, SL', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 19 },
+    { id: 'op-07', name: 'AUTOCORB, SA', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 25 },
+    { id: 'op-08', name: 'BUS CASTELLVI, SA', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 8 },
+    { id: 'op-09', name: 'LA HISPANO DE FUENTE EN SEGURES SA', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 6 },
+    { id: 'op-10', name: 'HISPANO LLACUNENSE, SL', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 26 },
+    { id: 'op-11', name: 'MONTFERRI HERMANOS, SL', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 14 },
+    { id: 'op-12', name: 'TRANSPORTS MIR', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 14 },
+    { id: 'op-13', name: 'TUS, SCCL', status: 'Actiu', grupo: 'Independiente', vehiculosContrato: 70 },
+    
+    // Grupo Avanza
+    { id: 'op-14', name: 'UTE BAIX LLOBREGAT', status: 'Actiu', grupo: 'Avanza', vehiculosContrato: 205 },
+    { id: 'op-15', name: 'CTSA-Mataró Bus', status: 'Actiu', grupo: 'Avanza', vehiculosContrato: 30 },
+    { id: 'op-16', name: 'RubíBus CTSL', status: 'Actiu', grupo: 'Avanza', vehiculosContrato: 22 },
+    { id: 'op-17', name: 'TMESA', status: 'Actiu', grupo: 'Avanza', vehiculosContrato: 71 },
+    
+    // Grupo Direxis
+    { id: 'op-18', name: 'MASATS TRANSPORTS GENERALS, SA', status: 'Actiu', grupo: 'Direxis', vehiculosContrato: 24 },
+    { id: 'op-19', name: 'TRANSPORTES GENERALES DE OLESA, SA', status: 'Actiu', grupo: 'Direxis', vehiculosContrato: 38 },
+    { id: 'op-20', name: 'TUSGSAL', status: 'Actiu', grupo: 'Direxis', vehiculosContrato: 346 },
+    
+    // Grupo Empresa Plana
+    { id: 'op-21', name: 'CINTOI BUS, SL', status: 'Actiu', grupo: 'Empresa Plana', vehiculosContrato: 85 },
+    { id: 'op-22', name: 'EMPRESA PLANA, SL', status: 'Actiu', grupo: 'Empresa Plana', vehiculosContrato: 27 },
+    
+    // Grupo Monbus
+    { id: 'op-23', name: 'UTE HORTA I GRÀCIA', status: 'Actiu', grupo: 'Monbus', vehiculosContrato: 15 },
+    { id: 'op-24', name: 'LA HISPANO IGUALADINA, SL', status: 'Actiu', grupo: 'Monbus', vehiculosContrato: 121 },
+    { id: 'op-25', name: 'UTE Port', status: 'Actiu', grupo: 'Monbus', vehiculosContrato: 15 },
+    { id: 'op-26', name: 'UTE SANT BOI, BARCELONA Y OTROS', status: 'Actiu', grupo: 'Monbus', vehiculosContrato: 96 },
+    
+    // Grupo Moventia
+    { id: 'op-27', name: 'EMPRESA CASAS, SA', status: 'Actiu', grupo: 'Moventia', vehiculosContrato: 74 },
+    { id: 'op-28', name: 'MARFINA BUS, SA - LA VALLESANA, SA', status: 'Actiu', grupo: 'Moventia', vehiculosContrato: 140 },
+    { id: 'op-29', name: 'MOVENTIA L\'HOSPITALET', status: 'Actiu', grupo: 'Moventia', vehiculosContrato: 117 },
+    { id: 'op-30', name: 'TRANSPORTS CIUTAT COMTAL, SA', status: 'Actiu', grupo: 'Moventia', vehiculosContrato: 25 },
+    { id: 'op-31', name: 'TRANSPORTS PUJOL I PUJOL', status: 'Actiu', grupo: 'Moventia', vehiculosContrato: 5 },
+    
+    // Grupo Sagalés
+    { id: 'op-32', name: 'OSONA BUS, SA', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 72 },
+    { id: 'op-33', name: 'BARCELONA BUS, SL', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 86 },
+    { id: 'op-34', name: 'CINGLES BUS, SA', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 34 },
+    { id: 'op-35', name: 'EMPRESA SAGALÉS, SA', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 95 },
+    { id: 'op-36', name: 'FERROCARRILES Y TRANSPORTES, SA', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 74 },
+    { id: 'op-37', name: 'MANRESA BUS, SA', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 21 },
+    { id: 'op-38', name: 'BAGES BUS, SA', status: 'Actiu', grupo: 'Sagalés', vehiculosContrato: 55 },
+    
+    // Grupo Soler i Sauret
+    { id: 'op-39', name: 'UTE VALLDOREIX', status: 'Actiu', grupo: 'Soler i Sauret', vehiculosContrato: 5 },
+    { id: 'op-40', name: 'SOLER Y SAURET, SA', status: 'Actiu', grupo: 'Soler i Sauret', vehiculosContrato: 109 },
+    
+    // Grupo TEISA
+    { id: 'op-41', name: 'TEISA', status: 'Actiu', grupo: 'TEISA', vehiculosContrato: 36 },
+    { id: 'op-42', name: 'HISPANO HILARIENCA, SAU', status: 'Actiu', grupo: 'TEISA', vehiculosContrato: 22 },
 ];
 
 export const mockUsers: User[] = [
@@ -386,104 +434,63 @@ export const mockDashboardData: DashboardData = {
 };
 
 export const mockOperatorMetrics: OperatorMetrics[] = [
-    {
-        nombre: 'ALSINA GRAELLS',
-        id: 'op-01',
-        estado: 'Actiu',
-        ubicacionPrincipal: 'Barcelona',
-        vehiculosOperativos: 48,
-        vehiculosTotal: 50,
-        vehiculosMantenimiento: 2,
-        vehiculosBaja: 0,
-        equiposTMobilitat: 150,
-        proximoMantenimiento: '2026-01-18T00:00:00.000Z',
-        slaCorrectivos: 2.1,
-        slaInstalaciones: 3.5,
-        cumplimientoPreventivos: 98,
-        calidadServicio: 'A',
-        mantenimientosVencidos: 1,
-        incidenciasAbiertas: 3,
-        incidenciasEscaladas: 0,
-        stockCritico: false,
-    },
-    {
-        nombre: 'AUTOCARES JULIA',
-        id: 'op-02',
-        estado: 'Actiu',
-        ubicacionPrincipal: 'Tarragona',
-        vehiculosOperativos: 65,
-        vehiculosTotal: 70,
-        vehiculosMantenimiento: 5,
-        vehiculosBaja: 0,
-        equiposTMobilitat: 210,
-        proximoMantenimiento: '2026-01-16T00:00:00.000Z',
-        slaCorrectivos: 3.2,
-        slaInstalaciones: 4.1,
-        cumplimientoPreventivos: 85,
-        calidadServicio: 'C',
-        mantenimientosVencidos: 5,
-        incidenciasAbiertas: 8,
-        incidenciasEscaladas: 2,
-        stockCritico: true,
-    },
-    {
-        nombre: 'AUTOCARS DEL PENEDÈS',
-        id: 'op-03',
-        estado: 'Actiu',
-        ubicacionPrincipal: 'Girona',
-        vehiculosOperativos: 28,
-        vehiculosTotal: 30,
-        vehiculosMantenimiento: 1,
-        vehiculosBaja: 1,
-        equiposTMobilitat: 90,
-        proximoMantenimiento: '2026-01-25T00:00:00.000Z',
-        slaCorrectivos: 2.8,
-        slaInstalaciones: 3.9,
-        cumplimientoPreventivos: 92,
-        calidadServicio: 'B',
-        mantenimientosVencidos: 2,
-        incidenciasAbiertas: 4,
-        incidenciasEscaladas: 1,
-        stockCritico: false,
-    },
-    {
-        nombre: 'AUTOCARS R. FONT',
-        id: 'op-05',
-        estado: 'Inactiu',
-        ubicacionPrincipal: 'Lleida',
-        vehiculosOperativos: 0,
-        vehiculosTotal: 15,
-        vehiculosMantenimiento: 0,
-        vehiculosBaja: 15,
-        equiposTMobilitat: 0,
-        proximoMantenimiento: new Date().toISOString(),
-        slaCorrectivos: 0,
-        slaInstalaciones: 0,
-        cumplimientoPreventivos: 100,
-        calidadServicio: 'A',
-        mantenimientosVencidos: 0,
-        incidenciasAbiertas: 0,
-        incidenciasEscaladas: 0,
-        stockCritico: false,
-    },
-    {
-        nombre: 'TUS, SCCL',
-        id: 'op-11',
-        estado: 'Actiu',
-        ubicacionPrincipal: 'Barcelona',
-        vehiculosOperativos: 150,
-        vehiculosTotal: 160,
-        vehiculosMantenimiento: 8,
-        vehiculosBaja: 2,
-        equiposTMobilitat: 480,
-        proximoMantenimiento: '2026-02-01T00:00:00.000Z',
-        slaCorrectivos: 1.8,
-        slaInstalaciones: 2.5,
-        cumplimientoPreventivos: 99,
-        calidadServicio: 'A',
-        mantenimientosVencidos: 0,
-        incidenciasAbiertas: 1,
-        incidenciasEscaladas: 0,
-        stockCritico: false,
-    }
+    // Independientes
+    { nombre: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', id: 'op-01', estado: 'Actiu', ubicacionPrincipal: 'Barcelona', vehiculosOperativos: 58, vehiculosTotal: 60, vehiculosMantenimiento: 2, vehiculosBaja: 0, equiposTMobilitat: 180, proximoMantenimiento: '2026-01-18T00:00:00.000Z', slaCorrectivos: 2.1, slaInstalaciones: 3.5, cumplimientoPreventivos: 98, calidadServicio: 'A', mantenimientosVencidos: 1, incidenciasAbiertas: 3, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'AUTOCARES JULIÀ, SL', id: 'op-02', estado: 'Actiu', ubicacionPrincipal: 'Barcelona', vehiculosOperativos: 3, vehiculosTotal: 3, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 9, proximoMantenimiento: '2026-01-20T00:00:00.000Z', slaCorrectivos: 1.5, slaInstalaciones: 2.8, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'AUTOCARS DEL PENEDÈS, SA', id: 'op-03', estado: 'Actiu', ubicacionPrincipal: 'Vilafranca del Penedès', vehiculosOperativos: 3, vehiculosTotal: 3, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 9, proximoMantenimiento: '2026-01-22T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.2, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'AUTOCARS PRAT, SA', id: 'op-04', estado: 'Actiu', ubicacionPrincipal: 'El Prat de Llobregat', vehiculosOperativos: 4, vehiculosTotal: 4, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 12, proximoMantenimiento: '2026-01-25T00:00:00.000Z', slaCorrectivos: 1.8, slaInstalaciones: 3.0, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'AUTOCARS R. FONT, SAU', id: 'op-05', estado: 'Actiu', ubicacionPrincipal: 'Lleida', vehiculosOperativos: 34, vehiculosTotal: 36, vehiculosMantenimiento: 2, vehiculosBaja: 0, equiposTMobilitat: 108, proximoMantenimiento: '2026-01-28T00:00:00.000Z', slaCorrectivos: 2.5, slaInstalaciones: 3.8, cumplimientoPreventivos: 94, calidadServicio: 'B', mantenimientosVencidos: 1, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'AUTOCARS VENDRELL, SL', id: 'op-06', estado: 'Actiu', ubicacionPrincipal: 'El Vendrell', vehiculosOperativos: 18, vehiculosTotal: 19, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 57, proximoMantenimiento: '2026-01-30T00:00:00.000Z', slaCorrectivos: 2.2, slaInstalaciones: 3.5, cumplimientoPreventivos: 96, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'AUTOCORB, SA', id: 'op-07', estado: 'Actiu', ubicacionPrincipal: 'Corbera de Llobregat', vehiculosOperativos: 24, vehiculosTotal: 25, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 75, proximoMantenimiento: '2026-02-01T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.2, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'BUS CASTELLVI, SA', id: 'op-08', estado: 'Actiu', ubicacionPrincipal: 'Castellví de Rosanes', vehiculosOperativos: 8, vehiculosTotal: 8, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 24, proximoMantenimiento: '2026-02-05T00:00:00.000Z', slaCorrectivos: 1.5, slaInstalaciones: 2.5, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'LA HISPANO DE FUENTE EN SEGURES SA', id: 'op-09', estado: 'Actiu', ubicacionPrincipal: 'Girona', vehiculosOperativos: 6, vehiculosTotal: 6, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 18, proximoMantenimiento: '2026-02-08T00:00:00.000Z', slaCorrectivos: 1.8, slaInstalaciones: 3.0, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'HISPANO LLACUNENSE, SL', id: 'op-10', estado: 'Actiu', ubicacionPrincipal: 'Igualada', vehiculosOperativos: 25, vehiculosTotal: 26, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 78, proximoMantenimiento: '2026-02-10T00:00:00.000Z', slaCorrectivos: 2.3, slaInstalaciones: 3.6, cumplimientoPreventivos: 95, calidadServicio: 'A', mantenimientosVencidos: 1, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'MONTFERRI HERMANOS, SL', id: 'op-11', estado: 'Actiu', ubicacionPrincipal: 'Reus', vehiculosOperativos: 13, vehiculosTotal: 14, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 42, proximoMantenimiento: '2026-02-12T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.3, cumplimientoPreventivos: 98, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'TRANSPORTS MIR', id: 'op-12', estado: 'Actiu', ubicacionPrincipal: 'Girona', vehiculosOperativos: 13, vehiculosTotal: 14, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 42, proximoMantenimiento: '2026-02-15T00:00:00.000Z', slaCorrectivos: 2.1, slaInstalaciones: 3.4, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'TUS, SCCL', id: 'op-13', estado: 'Actiu', ubicacionPrincipal: 'Sabadell', vehiculosOperativos: 68, vehiculosTotal: 70, vehiculosMantenimiento: 2, vehiculosBaja: 0, equiposTMobilitat: 210, proximoMantenimiento: '2026-01-16T00:00:00.000Z', slaCorrectivos: 1.8, slaInstalaciones: 2.5, cumplimientoPreventivos: 99, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    
+    // Grupo Avanza
+    { nombre: 'UTE BAIX LLOBREGAT', id: 'op-14', estado: 'Actiu', ubicacionPrincipal: 'Sant Boi de Llobregat', vehiculosOperativos: 198, vehiculosTotal: 205, vehiculosMantenimiento: 5, vehiculosBaja: 2, equiposTMobilitat: 615, proximoMantenimiento: '2026-01-14T00:00:00.000Z', slaCorrectivos: 2.5, slaInstalaciones: 3.8, cumplimientoPreventivos: 92, calidadServicio: 'B', mantenimientosVencidos: 3, incidenciasAbiertas: 8, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'CTSA-Mataró Bus', id: 'op-15', estado: 'Actiu', ubicacionPrincipal: 'Mataró', vehiculosOperativos: 29, vehiculosTotal: 30, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 90, proximoMantenimiento: '2026-01-20T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.2, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'RubíBus CTSL', id: 'op-16', estado: 'Actiu', ubicacionPrincipal: 'Rubí', vehiculosOperativos: 21, vehiculosTotal: 22, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 66, proximoMantenimiento: '2026-01-22T00:00:00.000Z', slaCorrectivos: 1.9, slaInstalaciones: 3.0, cumplimientoPreventivos: 98, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'TMESA', id: 'op-17', estado: 'Actiu', ubicacionPrincipal: 'Terrassa', vehiculosOperativos: 68, vehiculosTotal: 71, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 213, proximoMantenimiento: '2026-01-18T00:00:00.000Z', slaCorrectivos: 2.2, slaInstalaciones: 3.5, cumplimientoPreventivos: 95, calidadServicio: 'A', mantenimientosVencidos: 1, incidenciasAbiertas: 3, incidenciasEscaladas: 0, stockCritico: false },
+    
+    // Grupo Direxis
+    { nombre: 'MASATS TRANSPORTS GENERALS, SA', id: 'op-18', estado: 'Actiu', ubicacionPrincipal: 'Granollers', vehiculosOperativos: 23, vehiculosTotal: 24, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 72, proximoMantenimiento: '2026-01-25T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.2, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'TRANSPORTES GENERALES DE OLESA, SA', id: 'op-19', estado: 'Actiu', ubicacionPrincipal: 'Olesa de Montserrat', vehiculosOperativos: 36, vehiculosTotal: 38, vehiculosMantenimiento: 2, vehiculosBaja: 0, equiposTMobilitat: 114, proximoMantenimiento: '2026-01-28T00:00:00.000Z', slaCorrectivos: 2.3, slaInstalaciones: 3.6, cumplimientoPreventivos: 94, calidadServicio: 'B', mantenimientosVencidos: 1, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'TUSGSAL', id: 'op-20', estado: 'Actiu', ubicacionPrincipal: 'Badalona', vehiculosOperativos: 338, vehiculosTotal: 346, vehiculosMantenimiento: 6, vehiculosBaja: 2, equiposTMobilitat: 1038, proximoMantenimiento: '2026-01-12T00:00:00.000Z', slaCorrectivos: 2.8, slaInstalaciones: 4.0, cumplimientoPreventivos: 90, calidadServicio: 'B', mantenimientosVencidos: 5, incidenciasAbiertas: 12, incidenciasEscaladas: 2, stockCritico: true },
+    
+    // Grupo Empresa Plana
+    { nombre: 'CINTOI BUS, SL', id: 'op-21', estado: 'Actiu', ubicacionPrincipal: 'Vilanova i la Geltrú', vehiculosOperativos: 82, vehiculosTotal: 85, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 255, proximoMantenimiento: '2026-01-20T00:00:00.000Z', slaCorrectivos: 2.4, slaInstalaciones: 3.7, cumplimientoPreventivos: 93, calidadServicio: 'B', mantenimientosVencidos: 2, incidenciasAbiertas: 4, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'EMPRESA PLANA, SL', id: 'op-22', estado: 'Actiu', ubicacionPrincipal: 'Vilanova i la Geltrú', vehiculosOperativos: 26, vehiculosTotal: 27, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 81, proximoMantenimiento: '2026-01-24T00:00:00.000Z', slaCorrectivos: 2.1, slaInstalaciones: 3.4, cumplimientoPreventivos: 96, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    
+    // Grupo Monbus
+    { nombre: 'UTE HORTA I GRÀCIA', id: 'op-23', estado: 'Actiu', ubicacionPrincipal: 'Barcelona', vehiculosOperativos: 14, vehiculosTotal: 15, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 45, proximoMantenimiento: '2026-01-26T00:00:00.000Z', slaCorrectivos: 1.8, slaInstalaciones: 2.9, cumplimientoPreventivos: 98, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'LA HISPANO IGUALADINA, SL', id: 'op-24', estado: 'Actiu', ubicacionPrincipal: 'Igualada', vehiculosOperativos: 117, vehiculosTotal: 121, vehiculosMantenimiento: 3, vehiculosBaja: 1, equiposTMobilitat: 363, proximoMantenimiento: '2026-01-15T00:00:00.000Z', slaCorrectivos: 2.6, slaInstalaciones: 3.9, cumplimientoPreventivos: 91, calidadServicio: 'B', mantenimientosVencidos: 3, incidenciasAbiertas: 6, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'UTE Port', id: 'op-25', estado: 'Actiu', ubicacionPrincipal: 'Barcelona Port', vehiculosOperativos: 14, vehiculosTotal: 15, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 45, proximoMantenimiento: '2026-01-28T00:00:00.000Z', slaCorrectivos: 1.9, slaInstalaciones: 3.0, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'UTE SANT BOI, BARCELONA Y OTROS', id: 'op-26', estado: 'Actiu', ubicacionPrincipal: 'Sant Boi de Llobregat', vehiculosOperativos: 93, vehiculosTotal: 96, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 288, proximoMantenimiento: '2026-01-17T00:00:00.000Z', slaCorrectivos: 2.4, slaInstalaciones: 3.7, cumplimientoPreventivos: 93, calidadServicio: 'B', mantenimientosVencidos: 2, incidenciasAbiertas: 5, incidenciasEscaladas: 1, stockCritico: false },
+    
+    // Grupo Moventia
+    { nombre: 'EMPRESA CASAS, SA', id: 'op-27', estado: 'Actiu', ubicacionPrincipal: 'Mataró', vehiculosOperativos: 71, vehiculosTotal: 74, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 222, proximoMantenimiento: '2026-01-19T00:00:00.000Z', slaCorrectivos: 2.3, slaInstalaciones: 3.6, cumplimientoPreventivos: 94, calidadServicio: 'B', mantenimientosVencidos: 1, incidenciasAbiertas: 4, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'MARFINA BUS, SA - LA VALLESANA, SA', id: 'op-28', estado: 'Actiu', ubicacionPrincipal: 'Mollet del Vallès', vehiculosOperativos: 135, vehiculosTotal: 140, vehiculosMantenimiento: 4, vehiculosBaja: 1, equiposTMobilitat: 420, proximoMantenimiento: '2026-01-14T00:00:00.000Z', slaCorrectivos: 2.7, slaInstalaciones: 3.9, cumplimientoPreventivos: 91, calidadServicio: 'B', mantenimientosVencidos: 4, incidenciasAbiertas: 7, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'MOVENTIA L\'HOSPITALET', id: 'op-29', estado: 'Actiu', ubicacionPrincipal: 'L\'Hospitalet de Llobregat', vehiculosOperativos: 113, vehiculosTotal: 117, vehiculosMantenimiento: 3, vehiculosBaja: 1, equiposTMobilitat: 351, proximoMantenimiento: '2026-01-16T00:00:00.000Z', slaCorrectivos: 2.5, slaInstalaciones: 3.8, cumplimientoPreventivos: 92, calidadServicio: 'B', mantenimientosVencidos: 2, incidenciasAbiertas: 5, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'TRANSPORTS CIUTAT COMTAL, SA', id: 'op-30', estado: 'Actiu', ubicacionPrincipal: 'Barcelona', vehiculosOperativos: 24, vehiculosTotal: 25, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 75, proximoMantenimiento: '2026-01-22T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.2, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'TRANSPORTS PUJOL I PUJOL', id: 'op-31', estado: 'Actiu', ubicacionPrincipal: 'Malgrat de Mar', vehiculosOperativos: 5, vehiculosTotal: 5, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 15, proximoMantenimiento: '2026-02-01T00:00:00.000Z', slaCorrectivos: 1.5, slaInstalaciones: 2.5, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    
+    // Grupo Sagalés
+    { nombre: 'OSONA BUS, SA', id: 'op-32', estado: 'Actiu', ubicacionPrincipal: 'Vic', vehiculosOperativos: 69, vehiculosTotal: 72, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 216, proximoMantenimiento: '2026-01-18T00:00:00.000Z', slaCorrectivos: 2.2, slaInstalaciones: 3.5, cumplimientoPreventivos: 95, calidadServicio: 'A', mantenimientosVencidos: 1, incidenciasAbiertas: 3, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'BARCELONA BUS, SL', id: 'op-33', estado: 'Actiu', ubicacionPrincipal: 'Barcelona', vehiculosOperativos: 83, vehiculosTotal: 86, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 258, proximoMantenimiento: '2026-01-16T00:00:00.000Z', slaCorrectivos: 2.4, slaInstalaciones: 3.7, cumplimientoPreventivos: 93, calidadServicio: 'B', mantenimientosVencidos: 2, incidenciasAbiertas: 4, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'CINGLES BUS, SA', id: 'op-34', estado: 'Actiu', ubicacionPrincipal: 'Tavertet', vehiculosOperativos: 33, vehiculosTotal: 34, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 102, proximoMantenimiento: '2026-01-24T00:00:00.000Z', slaCorrectivos: 2.1, slaInstalaciones: 3.4, cumplimientoPreventivos: 96, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'EMPRESA SAGALÉS, SA', id: 'op-35', estado: 'Actiu', ubicacionPrincipal: 'Caldes de Montbui', vehiculosOperativos: 92, vehiculosTotal: 95, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 285, proximoMantenimiento: '2026-01-15T00:00:00.000Z', slaCorrectivos: 2.5, slaInstalaciones: 3.8, cumplimientoPreventivos: 92, calidadServicio: 'B', mantenimientosVencidos: 2, incidenciasAbiertas: 5, incidenciasEscaladas: 1, stockCritico: false },
+    { nombre: 'FERROCARRILES Y TRANSPORTES, SA', id: 'op-36', estado: 'Actiu', ubicacionPrincipal: 'Barcelona', vehiculosOperativos: 71, vehiculosTotal: 74, vehiculosMantenimiento: 2, vehiculosBaja: 1, equiposTMobilitat: 222, proximoMantenimiento: '2026-01-20T00:00:00.000Z', slaCorrectivos: 2.3, slaInstalaciones: 3.6, cumplimientoPreventivos: 94, calidadServicio: 'B', mantenimientosVencidos: 1, incidenciasAbiertas: 4, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'MANRESA BUS, SA', id: 'op-37', estado: 'Actiu', ubicacionPrincipal: 'Manresa', vehiculosOperativos: 20, vehiculosTotal: 21, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 63, proximoMantenimiento: '2026-01-26T00:00:00.000Z', slaCorrectivos: 1.9, slaInstalaciones: 3.1, cumplimientoPreventivos: 98, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'BAGES BUS, SA', id: 'op-38', estado: 'Actiu', ubicacionPrincipal: 'Manresa', vehiculosOperativos: 53, vehiculosTotal: 55, vehiculosMantenimiento: 2, vehiculosBaja: 0, equiposTMobilitat: 165, proximoMantenimiento: '2026-01-22T00:00:00.000Z', slaCorrectivos: 2.2, slaInstalaciones: 3.5, cumplimientoPreventivos: 95, calidadServicio: 'A', mantenimientosVencidos: 1, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    
+    // Grupo Soler i Sauret
+    { nombre: 'UTE VALLDOREIX', id: 'op-39', estado: 'Actiu', ubicacionPrincipal: 'Sant Cugat del Vallès', vehiculosOperativos: 5, vehiculosTotal: 5, vehiculosMantenimiento: 0, vehiculosBaja: 0, equiposTMobilitat: 15, proximoMantenimiento: '2026-02-02T00:00:00.000Z', slaCorrectivos: 1.5, slaInstalaciones: 2.5, cumplimientoPreventivos: 100, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 0, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'SOLER Y SAURET, SA', id: 'op-40', estado: 'Actiu', ubicacionPrincipal: 'Sant Feliu de Llobregat', vehiculosOperativos: 105, vehiculosTotal: 109, vehiculosMantenimiento: 3, vehiculosBaja: 1, equiposTMobilitat: 327, proximoMantenimiento: '2026-01-14T00:00:00.000Z', slaCorrectivos: 2.6, slaInstalaciones: 3.9, cumplimientoPreventivos: 91, calidadServicio: 'B', mantenimientosVencidos: 3, incidenciasAbiertas: 5, incidenciasEscaladas: 1, stockCritico: false },
+    
+    // Grupo TEISA
+    { nombre: 'TEISA', id: 'op-41', estado: 'Actiu', ubicacionPrincipal: 'Girona', vehiculosOperativos: 35, vehiculosTotal: 36, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 108, proximoMantenimiento: '2026-01-25T00:00:00.000Z', slaCorrectivos: 2.0, slaInstalaciones: 3.3, cumplimientoPreventivos: 97, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 2, incidenciasEscaladas: 0, stockCritico: false },
+    { nombre: 'HISPANO HILARIENCA, SAU', id: 'op-42', estado: 'Actiu', ubicacionPrincipal: 'Santa Coloma de Farners', vehiculosOperativos: 21, vehiculosTotal: 22, vehiculosMantenimiento: 1, vehiculosBaja: 0, equiposTMobilitat: 66, proximoMantenimiento: '2026-01-28T00:00:00.000Z', slaCorrectivos: 1.9, slaInstalaciones: 3.1, cumplimientoPreventivos: 98, calidadServicio: 'A', mantenimientosVencidos: 0, incidenciasAbiertas: 1, incidenciasEscaladas: 0, stockCritico: false },
 ];

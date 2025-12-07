@@ -12,6 +12,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -292,14 +298,14 @@ export default function ContratoC4WorkPage() {
     });
   }, [filterStatus, filterOperador, filterCotxera]);
 
-  // Agrupar por operador
-  const groupedByOperador = useMemo(() => {
+  // Agrupar por cotxera
+  const groupedByCotxera = useMemo(() => {
     const grouped: Record<string, WorkChecklist[]> = {};
     filteredWorkOrders.forEach((wo) => {
-      if (!grouped[wo.operador]) {
-        grouped[wo.operador] = [];
+      if (!grouped[wo.cotxera]) {
+        grouped[wo.cotxera] = [];
       }
-      grouped[wo.operador].push(wo);
+      grouped[wo.cotxera].push(wo);
     });
     return grouped;
   }, [filteredWorkOrders]);
@@ -430,65 +436,83 @@ export default function ContratoC4WorkPage() {
         </CardContent>
       </Card>
 
-      {/* Listado agrupado por operador */}
-      {Object.keys(groupedByOperador).length === 0 ? (
+      {/* Listado agrupado por cotxera */}
+      {Object.keys(groupedByCotxera).length === 0 ? (
         <Card>
           <CardContent className="flex h-[200px] items-center justify-center text-muted-foreground">
             No s'han trobat ordres de treball amb els filtres aplicats
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-6">
-          {Object.entries(groupedByOperador).map(([operador, orders]) => (
-            <Card key={operador}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
-                  {operador}
-                  <Badge variant="outline" className="ml-2">
-                    {orders.length} OT{orders.length !== 1 ? 's' : ''}
-                  </Badge>
-                </CardTitle>
-                <CardDescription>
-                  {Array.from(new Set(orders.map(o => o.cotxera))).join(', ')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {orders.map((order) => (
-                    <div
-                      key={order.otId}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="font-medium">{order.otId}</p>
-                          <StatusBadge status={order.status} />
-                        </div>
+        <Accordion type="multiple" className="space-y-4">
+          {Object.entries(groupedByCotxera).map(([cotxera, orders]) => {
+            // Calcular estado principal
+            const pendents = orders.filter(o => o.status === 'pendent').length;
+            const enCurs = orders.filter(o => o.status === 'en_curs').length;
+            const completades = orders.filter(o => o.status === 'completada').length;
+            const incidencies = orders.filter(o => o.status === 'incidencia').length;
+            
+            let statusText = '';
+            if (pendents > 0) statusText = `${pendents} pendent${pendents > 1 ? 's' : ''}`;
+            else if (enCurs > 0) statusText = `${enCurs} en curs`;
+            else if (completades > 0) statusText = `${completades} completada${completades > 1 ? 'des' : ''}`;
+            else if (incidencies > 0) statusText = `${incidencies} incidència${incidencies > 1 ? 'es' : ''}`;
+            
+            return (
+              <AccordionItem key={cotxera} value={cotxera} className="border rounded-lg px-4">
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex items-center justify-between w-full pr-4">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="h-5 w-5 text-muted-foreground" />
+                      <div className="text-left">
+                        <p className="font-semibold">{orders[0].operador}</p>
                         <p className="text-sm text-muted-foreground">
-                          <span className="font-medium">{order.tipus}</span> - {order.vehicle}
+                          {cotxera}
                         </p>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          Tècnic: {order.tecnic}
-                          {order.iniciISO && (
-                            <>
-                              <Calendar className="h-3 w-3 ml-2" />
-                              {new Date(order.iniciISO).toLocaleDateString('ca-ES')}
-                            </>
-                          )}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <WorkOrderDetailsModal workOrder={order} />
                       </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    <Badge variant="outline">
+                      {orders.length} OT{orders.length !== 1 ? 's' : ''} {statusText && `- ${statusText}`}
+                    </Badge>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2 pt-4">
+                    {orders.map((order) => (
+                      <div
+                        key={order.otId}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex-1 space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="font-medium">{order.otId}</p>
+                            <StatusBadge status={order.status} />
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium">{order.tipus}</span> - {order.vehicle}
+                          </p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                            <User className="h-3 w-3" />
+                            Tècnic: {order.tecnic}
+                            {order.iniciISO && (
+                              <>
+                                <Calendar className="h-3 w-3 ml-2" />
+                                {new Date(order.iniciISO).toLocaleDateString('ca-ES')}
+                              </>
+                            )}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <WorkOrderDetailsModal workOrder={order} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
       )}
     </main>
   );
