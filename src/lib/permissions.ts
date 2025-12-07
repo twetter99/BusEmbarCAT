@@ -29,6 +29,7 @@ import {
   BarChart3,
   Calendar as CalendarIcon,
   FileSpreadsheet,
+  Barcode,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -91,7 +92,10 @@ export const navItems: NavConfig = {
             { id: 'c5-dashboard', href: '/contrato-c5-2025', label: 'Dashboard C-5', icon: LayoutDashboard },
             { id: 'c5-pedidos', href: '/contrato-c5-2025/pedidos', label: 'Comandes i Fabricació', icon: FileSpreadsheet },
             { id: 'c5-inventario', href: '/contrato-c5-2025/inventario', label: 'Inventari i Traçabilitat', icon: Boxes },
+            { id: 'c5-series', href: '/contrato-c5-2025/series', label: 'Sèries i Lots', icon: Barcode },
+            { id: 'c5-movimientos', href: '/contrato-c5-2025/movimientos', label: 'Moviments', icon: History },
             { id: 'c5-logistica', href: '/contrato-c5-2025/logistica', label: 'Logística i Pick&Pack', icon: Truck },
+            { id: 'c5-recambios', href: '/contrato-c5-2025/recambios', label: 'Recambi i Mínims', icon: Wrench },
             { id: 'c5-garantias', href: '/contrato-c5-2025/garantias', label: 'Garanties i RMA', icon: ShieldCheck },
             { id: 'c5-reporting', href: '/contrato-c5-2025/reporting', label: 'Informes i KPIs', icon: BarChart3 },
         ]
@@ -121,7 +125,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
             'fleet', 'reports', 'access', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-planning', 'c4-work', 'c4-tracking',
-            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-garantias', 'c5-reporting',
+            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-recambios', 'c5-garantias', 'c5-reporting',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
@@ -133,7 +137,7 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
             'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-planning', 'c4-work', 'c4-tracking',
-            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-garantias', 'c5-reporting',
+            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-recambios', 'c5-garantias', 'c5-reporting',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],

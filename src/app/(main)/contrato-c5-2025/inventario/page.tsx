@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { 
   Search, 
-  Download, 
   ArrowRightLeft, 
   AlertTriangle,
   Package,
@@ -18,6 +17,8 @@ import {
   Wrench,
   Info
 } from 'lucide-react';
+import { ExportButtons } from '@/components/export-buttons';
+import type { ExportColumn } from '@/lib/export-utils';
 import { 
   equiposPrincipalesC5, 
   componentesKitC5,
@@ -47,6 +48,17 @@ const tipoMovimientoBadge = (tipo: string) => {
   const c = config[tipo] || { variant: 'outline', label: tipo };
   return <Badge variant={c.variant}>{c.label}</Badge>;
 };
+
+// Columnas para exportación
+const columnasInventario: ExportColumn[] = [
+  { key: 'sku', header: 'SKU' },
+  { key: 'nombre', header: 'Producte' },
+  { key: 'categoria', header: 'Categoria' },
+  { key: 'stockActual', header: 'Stock Actual' },
+  { key: 'stockReservado', header: 'Reservat' },
+  { key: 'stockMinimo', header: 'Stock Mínim' },
+  { key: 'disponible', header: 'Disponible' },
+];
 
 export default function InventarioC5Page() {
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -78,6 +90,12 @@ export default function InventarioC5Page() {
   const productosStockBajo = catalogoProductosC5.filter(stockBajo).length;
   const totalReservado = catalogoProductosC5.reduce((acc, p) => acc + (p.stockReservado || 0), 0);
 
+  // Datos para exportación con columna calculada
+  const datosExportacion = catalogoProductosC5.map(p => ({
+    ...p,
+    disponible: stockDisponible(p),
+  }));
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:p-6">
       <div className="flex items-center justify-between">
@@ -87,10 +105,12 @@ export default function InventarioC5Page() {
             Equipament de comunicacions per a autobusos - Màx. {CONTRATO_C5_CONFIG.stockMaximoEquiposPrincipales} ud/equip
           </p>
         </div>
-        <Button variant="outline">
-          <Download className="mr-2 h-4 w-4" />
-          Exportar
-        </Button>
+        <ExportButtons
+          filename="inventari-c5"
+          title="Inventari C-5/2025"
+          columns={columnasInventario}
+          data={datosExportacion}
+        />
       </div>
 
       {/* KPIs */}

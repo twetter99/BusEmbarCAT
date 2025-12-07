@@ -59,6 +59,10 @@ export interface ProductoC5 {
   requiereNumeroSerie: boolean;
   unidadMedida: 'ud' | 'm' | 'pack';
   activo: boolean;
+  /** Stock disponible para recambios/reparaciones */
+  stockRecambio?: number;
+  /** Mínimo recomendado de stock de recambio */
+  stockMinimoRecambio?: number;
 }
 
 // ============================================
@@ -123,6 +127,33 @@ export type EstadoPedidoC5 =
   | 'entregado'
   | 'entregado_parcial';
 
+/**
+ * Asignación de material a un vehículo específico
+ * Vincula los equipos del pedido con vehículos del módulo de Control de Flota
+ */
+export interface AsignacionVehiculo {
+  /** ID único de la asignación */
+  id: string;
+  /** Referencia al vehículo (Vehicle.uniqueId de data.ts) */
+  vehiculoId: string;
+  /** Número de calca del autobús (codBus) */
+  calca: string;
+  /** Matrícula del vehículo */
+  matricula: string;
+  /** ID del operador (para validación cruzada) */
+  operadorId: string;
+  /** Nombre del operador */
+  operadorNombre: string;
+  /** Cantidad de unidades asignadas a este vehículo */
+  cantidad: number;
+  /** Números de serie asignados (se completa en la entrega) */
+  numerosSerie?: string[];
+  /** Estado de la asignación */
+  estadoAsignacion: 'pendiente' | 'en_transito' | 'instalado';
+  /** Fecha de instalación real */
+  fechaInstalacion?: Date;
+}
+
 export interface LineaPedidoC5 {
   id: string;
   productoId: string;
@@ -132,7 +163,12 @@ export interface LineaPedidoC5 {
   cantidadEntregada: number;
   /** Si es Kit Integral, aquí se desglosan los componentes necesarios */
   componentesDesglosados?: { productoId: string; cantidad: number }[];
+  /** Asignaciones a vehículos específicos (opcional - si no hay, va a stock operador) */
+  asignaciones?: AsignacionVehiculo[];
 }
+
+/** Tipo de destino de entrega */
+export type TipoDestinoEntrega = 'almacen_sermetra' | 'operador_directo';
 
 export interface PedidoC5 {
   id: string;
@@ -146,6 +182,8 @@ export interface PedidoC5 {
   fechaEntregaLimite?: Date;
   fechaEntregaReal?: Date;
   lineas: LineaPedidoC5[];
+  /** Tipo de destino: almacén Sermetra o directo a operador */
+  tipoDestino?: TipoDestinoEntrega;
   direccionEntrega?: string;
   notas?: string;
   creadoPor: string;
@@ -323,4 +361,236 @@ export interface ResumenStockKit {
     stockDisponible: number;
     kitsFabricables: number;
   }[];
+}
+
+// ============================================
+// NÚMEROS DE SERIE Y TRAZABILIDAD
+// ============================================
+
+/**
+ * Estado de un número de serie
+ */
+export type EstadoNumeroSerieC5 = 
+  | 'disponible'      // En almacén, listo para asignar
+  | 'reservado'       // Reservado para un pedido en preparación
+  | 'instalado'       // Instalado en un vehículo
+  | 'en_garantia'     // Enviado al proveedor por garantía
+  | 'en_reparacion'   // En reparación
+  | 'baja';           // Dado de baja (destruido, obsoleto, etc.)
+
+/**
+ * Ubicación física de un número de serie
+ */
+export type UbicacionSerieC5 = 
+  | 'almacen_sermetra'   // Almacén central de Sermetra
+  | 'operador'           // En instalaciones del operador (stock operador)
+  | 'vehiculo'           // Instalado en un vehículo específico
+  | 'proveedor'          // En proveedor (garantía o reparación)
+  | 'baja';              // Dado de baja
+
+/**
+ * Número de serie individual de un equipo del contrato C5
+ * Permite trazabilidad completa de cada unidad
+ */
+export interface NumeroSerieC5 {
+  id: string;
+  numeroSerie: string;              // 'ANT-2025-00042'
+  lote?: string;                    // 'LOT-2025-Q1-001' (para kits)
+  
+  // Producto
+  productoId: string;               // 'EP-001'
+  sku: string;                      // 'CA01-1524035M-X'
+  productoNombre: string;           // 'Antena Tribanda'
+  
+  /** Indica si esta unidad está designada como recambio */
+  esRecambio?: boolean;
+  
+  // Estado actual
+  estado: EstadoNumeroSerieC5;
+  ubicacion: UbicacionSerieC5;
+  
+  // Ubicación específica (según el campo ubicacion)
+  operadorId?: string;
+  operadorNombre?: string;
+  vehiculoId?: string;
+  vehiculoCalca?: string;
+  vehiculoMatricula?: string;
+  
+  // Fechas clave
+  fechaEntrada: Date;               // Cuando llegó al almacén
+  fechaReserva?: Date;              // Cuando se reservó para un pedido
+  fechaInstalacion?: Date;          // Cuando se instaló en el vehículo
+  fechaBaja?: Date;                 // Cuando se dio de baja
+  
+  // Referencias a otros documentos
+  pedidoOrigenId?: string;          // Pedido por el que entró al sistema
+  pedidoOrigenCodigo?: string;
+  pedidoDestinoId?: string;         // Pedido para el que está reservado
+  pedidoDestinoCodigo?: string;
+  garantiaId?: string;              // Si está en garantía
+  garantiaCodigo?: string;
+  reparacionId?: string;            // Si está en reparación
+  reparacionCodigo?: string;
+  
+  // Metadatos
+  notas?: string;
+  creadoPor: string;
+  actualizadoPor?: string;
+  fechaActualizacion?: Date;
+}
+
+/**
+ * Tipo de movimiento de un número de serie
+ */
+export type TipoMovimientoSerieC5 = 
+  | 'entrada'              // Entrada inicial al almacén
+  | 'reserva'              // Reservado para un pedido
+  | 'liberacion_reserva'   // Liberación de reserva
+  | 'instalacion'          // Instalación en vehículo
+  | 'desinstalacion'       // Desinstalación del vehículo
+  | 'garantia_salida'      // Envío a proveedor por garantía
+  | 'garantia_entrada'     // Retorno de proveedor (garantía)
+  | 'reparacion_salida'    // Envío a reparación
+  | 'reparacion_entrada'   // Retorno de reparación
+  | 'baja';                // Baja del sistema
+
+/**
+ * Movimiento histórico de un número de serie
+ * Permite ver el historial completo de cada unidad
+ */
+export interface MovimientoSerieC5 {
+  id: string;
+  numeroSerieId: string;
+  numeroSerie: string;              // Duplicado para facilitar consultas
+  tipo: TipoMovimientoSerieC5;
+  fecha: Date;
+  
+  // Estado antes y después del movimiento
+  estadoAnterior?: EstadoNumeroSerieC5;
+  estadoNuevo: EstadoNumeroSerieC5;
+  ubicacionAnterior?: UbicacionSerieC5;
+  ubicacionNueva: UbicacionSerieC5;
+  
+  // Contexto del movimiento (referencias)
+  pedidoRef?: string;               // ID del pedido relacionado
+  pedidoCodigo?: string;
+  garantiaRef?: string;             // ID de la garantía relacionada
+  garantiaCodigo?: string;
+  reparacionRef?: string;           // ID de la reparación relacionada
+  reparacionCodigo?: string;
+  vehiculoRef?: string;             // ID del vehículo
+  vehiculoCalca?: string;
+  operadorRef?: string;             // ID del operador
+  operadorNombre?: string;
+  
+  // Metadatos
+  realizadoPor: string;
+  notas?: string;
+}
+
+// ============================================
+// ESTADOS LOGÍSTICOS Y ENVÍOS
+// ============================================
+
+/**
+ * Estados del proceso de envío
+ */
+export type EstadoEnvioC5 = 
+  | 'pendiente_preparacion'  // Esperando picking
+  | 'en_preparacion'         // Picking en curso
+  | 'preparado'              // Listo para enviar
+  | 'en_transito'            // En camino
+  | 'entregado'              // Entregado al destino
+  | 'entregado_parcial'      // Entrega parcial (faltan unidades)
+  | 'incidencia';            // Con incidencia reportada
+
+/**
+ * Tipos de incidencia en envío
+ */
+export type TipoIncidenciaEnvio = 
+  | 'falta_unidades'         // Faltan unidades respecto al albarán
+  | 'dano_transporte'        // Daños durante el transporte
+  | 'producto_incorrecto'    // Producto diferente al solicitado
+  | 'direccion_incorrecta'   // Problema con la dirección
+  | 'rechazo_cliente'        // Cliente rechaza la entrega
+  | 'otro';                  // Otro tipo de incidencia
+
+/**
+ * Incidencia en un envío
+ */
+export interface IncidenciaEnvioC5 {
+  id: string;
+  envioId: string;
+  tipo: TipoIncidenciaEnvio;
+  descripcion: string;
+  unidadesAfectadas?: number;
+  /** URLs de fotos mock (simuladas) */
+  fotos?: string[];
+  fechaReporte: Date;
+  reportadoPor: string;
+  estado: 'abierta' | 'en_gestion' | 'resuelta';
+  resolucion?: string;
+  fechaResolucion?: Date;
+}
+
+/**
+ * Registro de un envío logístico
+ */
+export interface EnvioC5 {
+  id: string;
+  codigo: string;
+  pedidoId: string;
+  pedidoCodigo: string;
+  operadorId: string;
+  operadorNombre: string;
+  estado: EstadoEnvioC5;
+  /** Series incluidas en este envío */
+  seriesEnviadas: string[];
+  /** Fecha de preparación del envío */
+  fechaPreparacion?: Date;
+  /** Fecha de salida del almacén */
+  fechaSalida?: Date;
+  /** Fecha estimada de llegada */
+  fechaEstimadaLlegada?: Date;
+  /** Fecha real de entrega */
+  fechaEntrega?: Date;
+  /** Dirección de destino */
+  direccionDestino: string;
+  /** Datos del transportista */
+  transportista?: string;
+  numeroSeguimiento?: string;
+  /** Albarán de entrega */
+  albaranNumero?: string;
+  /** Firma de recepción (URL mock) */
+  firmaRecepcion?: string;
+  /** Incidencias asociadas */
+  incidencias?: IncidenciaEnvioC5[];
+  /** Notas adicionales */
+  notas?: string;
+  creadoPor: string;
+}
+
+/**
+ * Filtros para búsqueda de números de serie
+ */
+export interface FiltrosNumeroSerieC5 {
+  busqueda?: string;                // Búsqueda por número de serie o lote
+  productoId?: string;
+  estado?: EstadoNumeroSerieC5;
+  ubicacion?: UbicacionSerieC5;
+  operadorId?: string;
+  fechaDesde?: Date;
+  fechaHasta?: Date;
+}
+
+/**
+ * KPIs de números de serie
+ */
+export interface KPIsNumeroSerieC5 {
+  totalSeries: number;
+  porEstado: Record<EstadoNumeroSerieC5, number>;
+  porProducto: Record<string, number>;
+  instaladasEsteMes: number;
+  enGarantiaReparacion: number;
+  bajasEsteMes: number;
 }
