@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/select';
 import { ExportButtons } from '@/components/export-buttons';
 import type { ExportColumn } from '@/lib/export-utils';
+import { Separator } from '@/components/ui/separator';
 import { 
   PlusCircle, 
   FileText, 
@@ -47,7 +48,11 @@ import {
   PackageCheck,
   ClipboardList,
   Check,
-  X
+  X,
+  ShieldCheck,
+  Signature,
+  ClipboardCheck,
+  Lock,
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
@@ -60,7 +65,15 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { mockPedidosC5, equiposPrincipalesC5, mockNumeroSeriesC5 } from '@/lib/contrato-c5-data';
-import { CONTRATO_C5_CONFIG } from '@/lib/contrato-c5-types';
+import { CONTRATO_C5_CONFIG, type ChecklistItemQC, type FirmaDigitalQC, type QualityGateC5 } from '@/lib/contrato-c5-types';
+import { 
+  CHECKLIST_OUTBOUND_QC, 
+  checklistCompleto, 
+  progresoObligatorios,
+  USUARIO_QA_DEFAULT,
+  LABELS_ESTADO_QG,
+  COLORES_ESTADO_QG,
+} from '@/lib/quality-gates';
 import { calcularComponentesKit, verificarStockParaKits } from '@/lib/contrato-c5-utils';
 import { mockOperators } from '@/lib/data';
 import type { GrupoEmpresarial } from '@/lib/types';
@@ -124,6 +137,14 @@ export default function PedidosPage() {
   const [isPickingOpen, setIsPickingOpen] = React.useState(false);
   const [pickingPedidoId, setPickingPedidoId] = React.useState<string | null>(null);
   const [seriesSeleccionadas, setSeriesSeleccionadas] = React.useState<Record<string, string[]>>({});
+  
+  // === QUALITY GATE - VALIDACIÓN DE SALIDA ===
+  const [isValidacionOpen, setIsValidacionOpen] = React.useState(false);
+  const [validacionPedidoId, setValidacionPedidoId] = React.useState<string | null>(null);
+  const [checklistOutbound, setChecklistOutbound] = React.useState<ChecklistItemQC[]>([]);
+  const [firmasQualityGate, setFirmasQualityGate] = React.useState<Record<string, FirmaDigitalQC>>({});
+  const [observacionesFirma, setObservacionesFirma] = React.useState('');
+  
   const { toast } = useToast();
   
   // Pedidos activos (no entregados completamente)
@@ -282,6 +303,104 @@ export default function PedidosPage() {
     });
     setIsPickingOpen(false);
     setPickingPedidoId(null);
+  };
+
+  // === FUNCIONES QUALITY GATE ===
+  
+  // Abrir validación de salida
+  const handleAbrirValidacion = (pedidoId: string) => {
+    // Inicializar checklist con items de la plantilla
+    const checklistInicial: ChecklistItemQC[] = CHECKLIST_OUTBOUND_QC.items.map(item => ({
+      ...item,
+      verificado: false,
+      fechaVerificacion: undefined,
+      verificadoPor: undefined,
+    }));
+    setChecklistOutbound(checklistInicial);
+    setValidacionPedidoId(pedidoId);
+    setObservacionesFirma('');
+    setIsValidacionOpen(true);
+  };
+
+  // Toggle check de un item
+  const handleToggleCheck = (itemId: string) => {
+    setChecklistOutbound(prev => prev.map(item => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          verificado: !item.verificado,
+          fechaVerificacion: !item.verificado ? new Date() : undefined,
+          verificadoPor: !item.verificado ? USUARIO_QA_DEFAULT.id : undefined,
+        };
+      }
+      return item;
+    }));
+  };
+
+  // Verificar si se puede firmar
+  const puedeFirearValidacion = checklistCompleto(checklistOutbound);
+
+  // Verificar si un pedido ya tiene firma
+  const pedidoTieneFirma = (pedidoId: string) => !!firmasQualityGate[pedidoId];
+
+  // Firmar y aprobar Quality Gate
+  const handleFirmarValidacion = () => {
+    if (!validacionPedidoId || !puedeFirearValidacion) return;
+
+    const firma: FirmaDigitalQC = {
+      id: `FIRMA-${Date.now()}`,
+      usuarioId: USUARIO_QA_DEFAULT.id,
+      usuarioNombre: USUARIO_QA_DEFAULT.nombre,
+      usuarioRol: USUARIO_QA_DEFAULT.rol,
+      fechaFirma: new Date(),
+      tipoFirma: 'aprobacion',
+      observaciones: observacionesFirma || undefined,
+    };
+
+    setFirmasQualityGate(prev => ({ ...prev, [validacionPedidoId]: firma }));
+    
+    toast({
+      title: "✅ Validació de Sortida Aprovada",
+      description: `Signat digitalment per ${USUARIO_QA_DEFAULT.nombre}`,
+    });
+
+    setIsValidacionOpen(false);
+    setValidacionPedidoId(null);
+  };
+
+  // Generar albarán (solo si hay firma)
+  const handleGenerarAlbaran = (pedidoId: string) => {
+    if (!pedidoTieneFirma(pedidoId)) {
+      toast({
+        title: "⚠️ Validació requerida",
+        description: "Cal completar la Validació de Sortida abans de generar l'albarà",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    toast({
+      title: "Albarà generat",
+      description: `Albarà per a la comanda ${pedidoId} generat correctament`,
+    });
+  };
+
+  // Cambiar a estado PREPARADO (solo si hay firma)
+  const handleMarcarPreparado = (pedidoId: string) => {
+    if (!pedidoTieneFirma(pedidoId)) {
+      toast({
+        title: "⚠️ Validació requerida",
+        description: "Cal completar la Validació de Sortida abans de marcar com a preparat",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // En producción esto actualizaría el estado en Firestore
+    toast({
+      title: "Comanda preparada",
+      description: `La comanda ${pedidoId} està llesta per a l'enviament`,
+    });
   };
 
   // Operador seleccionado
@@ -725,14 +844,49 @@ export default function PedidosPage() {
                               Picking / Assignar Sèries
                             </Button>
                           )}
+
+                          {/* BOTÓN VALIDACIÓN DE SALIDA (QC) */}
+                          {reservasPedidos[pedido.id] === 'reservado' && !pedidoTieneFirma(pedido.id) && (
+                            <Button 
+                              size="sm" 
+                              variant="default"
+                              onClick={() => handleAbrirValidacion(pedido.id)}
+                              className="bg-orange-600 hover:bg-orange-700"
+                            >
+                              <ShieldCheck className="mr-2 h-4 w-4" />
+                              Validació de Sortida
+                            </Button>
+                          )}
+
+                          {/* Badge si ya está validado */}
+                          {pedidoTieneFirma(pedido.id) && (
+                            <Badge className="bg-green-100 text-green-700 border-green-300">
+                              <ShieldCheck className="mr-1 h-3 w-3" />
+                              QC Aprovat
+                            </Badge>
+                          )}
                           
-                          <Button size="sm" variant="outline">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            disabled={!pedidoTieneFirma(pedido.id)}
+                            onClick={() => handleMarcarPreparado(pedido.id)}
+                            title={!pedidoTieneFirma(pedido.id) ? "Requereix Validació de Sortida" : ""}
+                          >
                             <Truck className="mr-2 h-4 w-4" />
-                            Registrar Entrega
+                            Marcar Preparat
+                            {!pedidoTieneFirma(pedido.id) && <Lock className="ml-1 h-3 w-3" />}
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            disabled={!pedidoTieneFirma(pedido.id)}
+                            onClick={() => handleGenerarAlbaran(pedido.id)}
+                            title={!pedidoTieneFirma(pedido.id) ? "Requereix Validació de Sortida" : ""}
+                          >
                             <FileText className="mr-2 h-4 w-4" />
-                            Albarà
+                            Generar Albarà
+                            {!pedidoTieneFirma(pedido.id) && <Lock className="ml-1 h-3 w-3" />}
                           </Button>
                         </div>
                       </CollapsibleContent>
@@ -914,6 +1068,153 @@ export default function PedidosPage() {
               </div>
             );
           })()}
+        </SheetContent>
+      </Sheet>
+
+      {/* ============================================ */}
+      {/* SHEET: VALIDACIÓN DE SALIDA (QUALITY GATE) */}
+      {/* ============================================ */}
+      <Sheet open={isValidacionOpen} onOpenChange={setIsValidacionOpen}>
+        <SheetContent className="w-full sm:max-w-xl">
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              Validació de Sortida (QC)
+            </SheetTitle>
+            <SheetDescription>
+              Control de qualitat obligatori abans de l'enviament. 
+              <span className="font-semibold text-orange-600"> Tots els punts són bloquejants.</span>
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="mt-6 space-y-6">
+            {/* Info del pedido */}
+            {validacionPedidoId && (
+              <div className="bg-muted/50 rounded-lg p-4">
+                <div className="text-sm text-muted-foreground">Comanda</div>
+                <div className="font-mono font-bold">{validacionPedidoId}</div>
+              </div>
+            )}
+
+            {/* Progreso */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Progrés dels punts obligatoris</span>
+                <span className="font-bold">{progresoObligatorios(checklistOutbound)}%</span>
+              </div>
+              <Progress value={progresoObligatorios(checklistOutbound)} className="h-2" />
+            </div>
+
+            {/* Checklist */}
+            <div className="space-y-3">
+              <h4 className="font-semibold flex items-center gap-2">
+                <ClipboardCheck className="h-4 w-4" />
+                Checklist de Sortida
+              </h4>
+              
+              {checklistOutbound.map((item) => (
+                <div
+                  key={item.id}
+                  className={`flex items-start gap-3 p-3 rounded-lg border transition-colors cursor-pointer ${
+                    item.verificado 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-white hover:bg-gray-50'
+                  }`}
+                  onClick={() => handleToggleCheck(item.id)}
+                >
+                  <Checkbox 
+                    checked={item.verificado}
+                    onCheckedChange={() => handleToggleCheck(item.id)}
+                    className="mt-0.5"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded">
+                        {item.codigo}
+                      </span>
+                      {item.obligatorio && (
+                        <span className="text-xs text-red-600 font-medium">OBLIGATORI</span>
+                      )}
+                    </div>
+                    <p className="text-sm mt-1">{item.descripcion}</p>
+                    {item.verificado && item.fechaVerificacion && (
+                      <p className="text-xs text-green-600 mt-1">
+                        ✓ Verificat {format(item.fechaVerificacion, "dd/MM/yyyy HH:mm", { locale: ca })}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Separator />
+
+            {/* Sección de Firma Digital */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Signature className="h-4 w-4" />
+                Signatura Digital del Responsable
+              </h4>
+
+              {!puedeFirearValidacion ? (
+                <Alert variant="destructive">
+                  <Lock className="h-4 w-4" />
+                  <AlertTitle>Signatura bloquejada</AlertTitle>
+                  <AlertDescription>
+                    Completa tots els punts obligatoris del checklist per poder signar.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <div className="space-y-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <ShieldCheck className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium">{USUARIO_QA_DEFAULT.nombre}</div>
+                      <div className="text-sm text-muted-foreground">{USUARIO_QA_DEFAULT.rol}</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="observaciones">Observacions (opcional)</Label>
+                    <Textarea
+                      id="observaciones"
+                      placeholder="Afegeix observacions si cal..."
+                      value={observacionesFirma}
+                      onChange={(e) => setObservacionesFirma(e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+
+                  <Button 
+                    className="w-full" 
+                    size="lg"
+                    onClick={handleFirmarValidacion}
+                  >
+                    <Signature className="mr-2 h-5 w-5" />
+                    Signar i Validar
+                  </Button>
+                  
+                  <p className="text-xs text-center text-muted-foreground">
+                    En signar, confirmo que he verificat tots els punts de control 
+                    i la comanda està llesta per a l'enviament.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Botón cancelar */}
+            <div className="flex gap-2 pt-4 border-t">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => setIsValidacionOpen(false)}
+              >
+                Cancel·lar
+              </Button>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
     </main>

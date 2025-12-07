@@ -594,3 +594,150 @@ export interface KPIsNumeroSerieC5 {
   enGarantiaReparacion: number;
   bajasEsteMes: number;
 }
+
+// ============================================
+// QUALITY ASSURANCE (QA) - CONTROL DE CALIDAD
+// ============================================
+
+/**
+ * Tipos de control de calidad
+ * - inbound: Recepción de mercancía (Switch/Antena)
+ * - manufacturing: Ensamblaje de Kits
+ * - outbound: Cierre de picking antes de envío
+ */
+export type TipoQualityGate = 'inbound' | 'manufacturing' | 'outbound';
+
+/**
+ * Estados del control de calidad
+ */
+export type EstadoQualityGate = 
+  | 'pendiente'      // Aún no iniciado
+  | 'en_progreso'    // Checklist parcialmente completado
+  | 'aprobado'       // Todos los checks OK y firmado
+  | 'rechazado'      // Algún check NOK - requiere acción correctiva
+  | 'bloqueado';     // No se puede avanzar hasta resolver
+
+/**
+ * Item individual de un checklist de calidad
+ */
+export interface ChecklistItemQC {
+  id: string;
+  codigo: string;          // Código único del check (ej: "MFG-001")
+  descripcion: string;     // Descripción del check
+  obligatorio: boolean;    // Si es bloqueante
+  verificado: boolean;     // Si se ha marcado como OK
+  fechaVerificacion?: Date;
+  verificadoPor?: string;  // userId
+  observaciones?: string;
+  evidencias?: string[];   // URLs de fotos/documentos
+}
+
+/**
+ * Firma digital de validación de calidad
+ */
+export interface FirmaDigitalQC {
+  id: string;
+  usuarioId: string;
+  usuarioNombre: string;
+  usuarioRol: string;
+  fechaFirma: Date;
+  tipoFirma: 'aprobacion' | 'rechazo';
+  observaciones?: string;
+  ipAddress?: string;
+  userAgent?: string;
+}
+
+/**
+ * Quality Gate completo
+ */
+export interface QualityGateC5 {
+  id: string;
+  tipo: TipoQualityGate;
+  estado: EstadoQualityGate;
+  
+  // Referencia a la entidad que se está controlando
+  referenciaId: string;          // ID del pedido, lote, etc.
+  referenciaTipo: 'pedido' | 'lote_recepcion' | 'orden_fabricacion';
+  referenciaCodigo: string;      // Código legible (ej: "PED-C5-2025-001")
+  
+  // Checklist
+  checklist: ChecklistItemQC[];
+  
+  // Firma digital (requerida para aprobar)
+  firma?: FirmaDigitalQC;
+  
+  // Metadatos
+  fechaCreacion: Date;
+  fechaInicio?: Date;
+  fechaCierre?: Date;
+  creadoPor: string;
+  
+  // Si hay rechazo, motivo y acción correctiva
+  motivoRechazo?: string;
+  accionCorrectiva?: string;
+}
+
+/**
+ * Definición de checklist predefinido por tipo
+ */
+export interface PlantillaChecklistQC {
+  tipo: TipoQualityGate;
+  nombre: string;
+  descripcion: string;
+  items: Omit<ChecklistItemQC, 'verificado' | 'fechaVerificacion' | 'verificadoPor'>[];
+}
+
+/**
+ * Log de actividad de QA
+ */
+export interface LogActividadQA {
+  id: string;
+  qualityGateId: string;
+  accion: 'creado' | 'iniciado' | 'check_verificado' | 'firmado' | 'aprobado' | 'rechazado';
+  usuarioId: string;
+  usuarioNombre: string;
+  fecha: Date;
+  detalles?: string;
+  checklistItemId?: string;
+}
+
+/**
+ * KPIs de SLA para licitación
+ */
+export interface KPIsSLAC5 {
+  // DOA (Dead On Arrival) - % de equipos defectuosos en entrega
+  calidadEntregaDOA: {
+    objetivo: number;     // < 0.5%
+    actual: number;
+    tendencia: 'mejora' | 'estable' | 'empeora';
+    totalEntregas: number;
+    entregasDefectuosas: number;
+  };
+  
+  // Conformidad de pedidos - % pedidos sin incidencias
+  conformidadPedidos: {
+    objetivo: number;     // 100%
+    actual: number;
+    tendencia: 'mejora' | 'estable' | 'empeora';
+    totalPedidos: number;
+    pedidosConformes: number;
+  };
+  
+  // Cumplimiento de plazo - % entregas en fecha
+  cumplimientoPlazo: {
+    objetivo: number;     // 100%
+    actual: number;
+    tendencia: 'mejora' | 'estable' | 'empeora';
+    entregasEnPlazo: number;
+    entregasFueraPlazo: number;
+  };
+  
+  // Tiempo respuesta RMA
+  tiempoRespuestaRMA: {
+    objetivoHoras: number;  // < 48h
+    actualHoras: number;
+    tendencia: 'mejora' | 'estable' | 'empeora';
+    rmasCerrados: number;
+    tiempoMedioHoras: number;
+  };
+}

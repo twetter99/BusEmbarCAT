@@ -26,6 +26,11 @@ import {
   RotateCcw,
   Activity,
   Calendar,
+  Target,
+  Award,
+  Clock,
+  FileCheck,
+  Minus,
 } from 'lucide-react';
 import { 
   ChartContainer,
@@ -60,6 +65,7 @@ import {
   calcularEstadisticasReparaciones,
   calcularEstadisticasGarantias
 } from '@/lib/contrato-c5-utils';
+import { mockKPIsSLA } from '@/lib/quality-gates';
 import { CONTRATO_C5_CONFIG } from '@/lib/contrato-c5-types';
 import { format, sub, startOfMonth, endOfMonth, isWithinInterval, differenceInDays } from 'date-fns';
 import { ca } from 'date-fns/locale';
@@ -355,6 +361,162 @@ export default function ReportingPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* ============================================ */}
+      {/* SECCIÓN SLA - NIVELLS DE SERVEI (LICITACIÓN) */}
+      {/* ============================================ */}
+      <Card className="border-2 border-primary/20 bg-primary/5">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-primary" />
+            <CardTitle>Nivells de Servei (SLA) - Contracte C-5/2025</CardTitle>
+          </div>
+          <CardDescription>
+            Indicadors de compliment segons requisits de licitació
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {/* KPI 1: Qualitat en Entrega (DOA) */}
+            <div className="space-y-3 rounded-lg border bg-white p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileCheck className="h-4 w-4 text-green-600" />
+                  <span className="font-medium text-sm">Qualitat en Entrega (DOA)</span>
+                </div>
+                {mockKPIsSLA.calidadEntregaDOA.tendencia === 'mejora' ? (
+                  <TrendingUp className="h-4 w-4 text-green-600" />
+                ) : mockKPIsSLA.calidadEntregaDOA.tendencia === 'empeora' ? (
+                  <TrendingDown className="h-4 w-4 text-red-600" />
+                ) : (
+                  <Minus className="h-4 w-4 text-gray-400" />
+                )}
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-green-600">
+                  {mockKPIsSLA.calidadEntregaDOA.actual}%
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Objectiu: &lt; {mockKPIsSLA.calidadEntregaDOA.objetivo}%
+                </span>
+              </div>
+              <Progress 
+                value={100 - (mockKPIsSLA.calidadEntregaDOA.actual / mockKPIsSLA.calidadEntregaDOA.objetivo) * 100} 
+                className="h-2" 
+              />
+              <p className="text-xs text-muted-foreground">
+                {mockKPIsSLA.calidadEntregaDOA.entregasDefectuosas} defectuoses de {mockKPIsSLA.calidadEntregaDOA.totalEntregas.toLocaleString()} entregues
+              </p>
+              <Badge className="bg-green-100 text-green-700 border-green-300">
+                <Award className="mr-1 h-3 w-3" />
+                COMPLEIX
+              </Badge>
+            </div>
+
+            {/* KPI 2: Conformitat de Comandes */}
+            <div className="space-y-3 rounded-lg border bg-white p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="font-medium text-sm">Conformitat de Comandes</span>
+                </div>
+                {mockKPIsSLA.conformidadPedidos.tendencia === 'mejora' ? (
+                  <TrendingUp className="h-4 w-4 text-green-600" />
+                ) : mockKPIsSLA.conformidadPedidos.tendencia === 'empeora' ? (
+                  <TrendingDown className="h-4 w-4 text-red-600" />
+                ) : (
+                  <Minus className="h-4 w-4 text-gray-400" />
+                )}
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-green-600">
+                  {mockKPIsSLA.conformidadPedidos.actual}%
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Objectiu: {mockKPIsSLA.conformidadPedidos.objetivo}%
+                </span>
+              </div>
+              <Progress value={mockKPIsSLA.conformidadPedidos.actual} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {mockKPIsSLA.conformidadPedidos.pedidosConformes} conformes de {mockKPIsSLA.conformidadPedidos.totalPedidos} comandes
+              </p>
+              <Badge className="bg-green-100 text-green-700 border-green-300">
+                <Award className="mr-1 h-3 w-3" />
+                COMPLEIX
+              </Badge>
+            </div>
+
+            {/* KPI 3: Compliment de Termini */}
+            <div className="space-y-3 rounded-lg border bg-white p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Truck className="h-4 w-4 text-green-600" />
+                  <span className="font-medium text-sm">Compliment de Termini</span>
+                </div>
+                {mockKPIsSLA.cumplimientoPlazo.tendencia === 'mejora' ? (
+                  <TrendingUp className="h-4 w-4 text-green-600" />
+                ) : mockKPIsSLA.cumplimientoPlazo.tendencia === 'empeora' ? (
+                  <TrendingDown className="h-4 w-4 text-red-600" />
+                ) : (
+                  <Minus className="h-4 w-4 text-gray-400" />
+                )}
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-green-600">
+                  {mockKPIsSLA.cumplimientoPlazo.actual}%
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Objectiu: {mockKPIsSLA.cumplimientoPlazo.objetivo}%
+                </span>
+              </div>
+              <Progress value={mockKPIsSLA.cumplimientoPlazo.actual} className="h-2" />
+              <p className="text-xs text-muted-foreground">
+                {mockKPIsSLA.cumplimientoPlazo.entregasEnPlazo} en termini, {mockKPIsSLA.cumplimientoPlazo.entregasFueraPlazo} fora
+              </p>
+              <Badge className="bg-green-100 text-green-700 border-green-300">
+                <Award className="mr-1 h-3 w-3" />
+                COMPLEIX
+              </Badge>
+            </div>
+
+            {/* KPI 4: Temps Resposta RMA */}
+            <div className="space-y-3 rounded-lg border bg-white p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-green-600" />
+                  <span className="font-medium text-sm">Temps Resposta RMA</span>
+                </div>
+                {mockKPIsSLA.tiempoRespuestaRMA.tendencia === 'mejora' ? (
+                  <TrendingUp className="h-4 w-4 text-green-600" />
+                ) : mockKPIsSLA.tiempoRespuestaRMA.tendencia === 'empeora' ? (
+                  <TrendingDown className="h-4 w-4 text-red-600" />
+                ) : (
+                  <Minus className="h-4 w-4 text-gray-400" />
+                )}
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-green-600">
+                  {mockKPIsSLA.tiempoRespuestaRMA.actualHoras}h
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Objectiu: &lt; {mockKPIsSLA.tiempoRespuestaRMA.objetivoHoras}h
+                </span>
+              </div>
+              <Progress 
+                value={100 - (mockKPIsSLA.tiempoRespuestaRMA.actualHoras / mockKPIsSLA.tiempoRespuestaRMA.objetivoHoras) * 100} 
+                className="h-2" 
+              />
+              <p className="text-xs text-muted-foreground">
+                {mockKPIsSLA.tiempoRespuestaRMA.rmasCerrados} RMAs tancats, mitjana {mockKPIsSLA.tiempoRespuestaRMA.tiempoMedioHoras}h
+              </p>
+              <Badge className="bg-green-100 text-green-700 border-green-300">
+                <Award className="mr-1 h-3 w-3" />
+                COMPLEIX
+              </Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Tabs con gráficas */}
       <Tabs defaultValue="pedidos" className="space-y-4">
