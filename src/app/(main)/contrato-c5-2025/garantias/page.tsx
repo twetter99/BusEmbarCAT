@@ -16,13 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -575,150 +569,170 @@ export default function GarantiasPage() {
 
       {/* Dialog: Nuevo RMA */}
       <Dialog open={isNuevoRMAOpen} onOpenChange={setIsNuevoRMAOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Nou RMA</DialogTitle>
-            <DialogDescription>
-              Crea una nova sol·licitud de reparació o substitució
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            {/* Producto */}
-            <div className="space-y-2">
-              <Label>Producte *</Label>
-              <Select value={productoSeleccionado} onValueChange={(v) => {
-                setProductoSeleccionado(v);
-                setSerieSeleccionada('');
-                setFalloSeleccionado('');
-              }}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecciona un producte" />
-                </SelectTrigger>
-                <SelectContent>
-                  {equiposPrincipalesC5.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      {p.nombre} ({p.sku})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Serie */}
-            {productoSeleccionado && (
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <ShieldCheck className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <DialogTitle className="text-xl font-semibold">Nou RMA</DialogTitle>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Crea una nova sol·licitud de reparació o substitució
+                  </p>
+                </div>
+              </div>
+            </DialogHeader>
+          </div>
+          
+          {/* Contenido scrolleable */}
+          <ScrollArea className="max-h-[calc(85vh-180px)]">
+            <div className="px-6 py-5 space-y-5">
+              {/* Producto */}
               <div className="space-y-2">
-                <Label>Número de Sèrie *</Label>
-                <Select value={serieSeleccionada} onValueChange={setSerieSeleccionada}>
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Producte *</label>
+                <Select value={productoSeleccionado} onValueChange={(v) => {
+                  setProductoSeleccionado(v);
+                  setSerieSeleccionada('');
+                  setFalloSeleccionado('');
+                }}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecciona la sèrie afectada" />
+                    <SelectValue placeholder="Selecciona un producte" />
                   </SelectTrigger>
                   <SelectContent>
-                    {seriesDisponibles.map((s) => (
-                      <SelectItem key={s.id} value={s.numeroSerie}>
-                        {s.numeroSerie} - {s.estado === 'instalado' ? `Instal·lat (${s.operadorNombre?.split(',')[0]})` : 'Disponible'}
+                    {equiposPrincipalesC5.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.nombre} ({p.sku})
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-            )}
 
-            {/* Info de la serie seleccionada */}
-            {serieInfo && (
-              <Alert>
-                <Package className="h-4 w-4" />
-                <AlertTitle>Informació de la Sèrie</AlertTitle>
-                <AlertDescription>
-                  <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-                    <div><strong>Estat:</strong> {serieInfo.estado}</div>
-                    <div><strong>Ubicació:</strong> {serieInfo.ubicacion}</div>
+              {/* Serie */}
+              {productoSeleccionado && (
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-wide text-muted-foreground">Número de Sèrie *</label>
+                  <Select value={serieSeleccionada} onValueChange={setSerieSeleccionada}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona la sèrie afectada" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {seriesDisponibles.map((s) => (
+                        <SelectItem key={s.id} value={s.numeroSerie}>
+                          {s.numeroSerie} - {s.estado === 'instalado' ? `Instal·lat (${s.operadorNombre?.split(',')[0]})` : 'Disponible'}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Info de la serie seleccionada */}
+              {serieInfo && (
+                <div className="p-4 bg-slate-50 rounded-xl border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Package className="h-4 w-4 text-primary" />
+                    <span className="font-medium text-sm">Informació de la Sèrie</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div><span className="text-muted-foreground">Estat:</span> <span className="font-medium">{serieInfo.estado}</span></div>
+                    <div><span className="text-muted-foreground">Ubicació:</span> <span className="font-medium">{serieInfo.ubicacion}</span></div>
                     {serieInfo.operadorNombre && (
-                      <div><strong>Operador:</strong> {serieInfo.operadorNombre.split(',')[0]}</div>
+                      <div><span className="text-muted-foreground">Operador:</span> <span className="font-medium">{serieInfo.operadorNombre.split(',')[0]}</span></div>
                     )}
                     {serieInfo.vehiculoCalca && (
-                      <div><strong>Vehicle:</strong> {serieInfo.vehiculoCalca}</div>
+                      <div><span className="text-muted-foreground">Vehicle:</span> <span className="font-medium">{serieInfo.vehiculoCalca}</span></div>
                     )}
                     {pedidoRelacionado && (
                       <div className="col-span-2">
-                        <strong>Comanda origen:</strong> {pedidoRelacionado.codigo}
+                        <span className="text-muted-foreground">Comanda origen:</span> <span className="font-medium">{pedidoRelacionado.codigo}</span>
                       </div>
                     )}
                   </div>
-                </AlertDescription>
-              </Alert>
-            )}
+                </div>
+              )}
 
-            {/* Fallo del catálogo */}
-            <div className="space-y-2">
-              <Label>Tipus de Fallo *</Label>
-              <Select value={falloSeleccionado} onValueChange={setFalloSeleccionado}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecciona el tipus de fallo" />
-                </SelectTrigger>
-                <SelectContent>
-                  {fallosDisponibles.map((f) => (
-                    <SelectItem key={f.id} value={f.id}>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs">{f.codigo}</span>
-                        <span>{f.nombre}</span>
-                        <Badge variant={f.tipoIncidencia === 'vandalismo' ? 'destructive' : 'outline'} className="text-xs">
-                          {f.tipoIncidencia === 'vandalismo' ? 'Vand.' : 'Avaria'}
-                        </Badge>
+              {/* Fallo del catálogo */}
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Tipus de Fallo *</label>
+                <Select value={falloSeleccionado} onValueChange={setFalloSeleccionado}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona el tipus de fallo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {fallosDisponibles.map((f) => (
+                      <SelectItem key={f.id} value={f.id}>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs">{f.codigo}</span>
+                          <span>{f.nombre}</span>
+                          <Badge variant={f.tipoIncidencia === 'vandalismo' ? 'destructive' : 'outline'} className="text-xs">
+                            {f.tipoIncidencia === 'vandalismo' ? 'Vand.' : 'Avaria'}
+                          </Badge>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {falloSeleccionado && (
+                  <p className="text-xs text-muted-foreground">
+                    {catalogoFallos.find(f => f.id === falloSeleccionado)?.descripcion}
+                  </p>
+                )}
+              </div>
+
+              {/* Notas */}
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Notes addicionals</label>
+                <Textarea
+                  value={notasRMA}
+                  onChange={(e) => setNotasRMA(e.target.value)}
+                  placeholder="Descriu el problema amb més detall..."
+                  rows={3}
+                />
+              </div>
+
+              {/* Evidencias */}
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Evidències (fotos)</label>
+                <div className="p-4 bg-slate-50 rounded-xl border">
+                  <div className="flex flex-wrap gap-2">
+                    {evidenciasRMA.map((ev, i) => (
+                      <div key={i} className="flex items-center gap-1 rounded-lg bg-white border px-2 py-1 text-xs">
+                        <Camera className="h-3 w-3" />
+                        Foto {i + 1}
                       </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    ))}
+                    <Button type="button" variant="outline" size="sm" onClick={simularSubirEvidencia}>
+                      <Camera className="h-4 w-4 mr-1" />
+                      Afegir Foto (mock)
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* SLA Info */}
               {falloSeleccionado && (
-                <p className="text-xs text-muted-foreground">
-                  {catalogoFallos.find(f => f.id === falloSeleccionado)?.descripcion}
-                </p>
+                <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                  <div className="flex items-center gap-2">
+                    <Timer className="h-4 w-4 text-amber-600" />
+                    <span className="font-medium text-sm text-amber-800">Termini SLA</span>
+                  </div>
+                  <p className="text-sm text-amber-700 mt-1">
+                    {catalogoFallos.find(f => f.id === falloSeleccionado)?.tipoIncidencia === 'vandalismo' 
+                      ? `Vandalisme: ${CONTRATO_C5_CONFIG.slaReparacionVandalismoDias} dies màxim`
+                      : `Avaria: ${CONTRATO_C5_CONFIG.slaReparacionAveriaDias} dies màxim`
+                    }
+                  </p>
+                </div>
               )}
             </div>
+          </ScrollArea>
 
-            {/* Notas */}
-            <div className="space-y-2">
-              <Label>Notes addicionals</Label>
-              <Textarea
-                value={notasRMA}
-                onChange={(e) => setNotasRMA(e.target.value)}
-                placeholder="Descriu el problema amb més detall..."
-                rows={3}
-              />
-            </div>
-
-            {/* Evidencias */}
-            <div className="space-y-2">
-              <Label>Evidències (fotos)</Label>
-              <div className="flex flex-wrap gap-2">
-                {evidenciasRMA.map((ev, i) => (
-                  <div key={i} className="flex items-center gap-1 rounded bg-muted px-2 py-1 text-xs">
-                    <Camera className="h-3 w-3" />
-                    Foto {i + 1}
-                  </div>
-                ))}
-                <Button type="button" variant="outline" size="sm" onClick={simularSubirEvidencia}>
-                  <Camera className="h-4 w-4 mr-1" />
-                  Afegir Foto (mock)
-                </Button>
-              </div>
-            </div>
-
-            {/* SLA Info */}
-            {falloSeleccionado && (
-              <Alert>
-                <Timer className="h-4 w-4" />
-                <AlertTitle>Termini SLA</AlertTitle>
-                <AlertDescription>
-                  {catalogoFallos.find(f => f.id === falloSeleccionado)?.tipoIncidencia === 'vandalismo' 
-                    ? `Vandalisme: ${CONTRATO_C5_CONFIG.slaReparacionVandalismoDias} dies màxim`
-                    : `Avaria: ${CONTRATO_C5_CONFIG.slaReparacionAveriaDias} dies màxim`
-                  }
-                </AlertDescription>
-              </Alert>
-            )}
-          </div>
-          <DialogFooter>
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-slate-50 flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setIsNuevoRMAOpen(false)}>
               Cancel·lar
             </Button>
@@ -729,210 +743,241 @@ export default function GarantiasPage() {
               <PlusCircle className="mr-2 h-4 w-4" />
               Crear RMA
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
-      {/* Sheet: Detalle RMA */}
-      <Sheet open={rmaDetalleOpen} onOpenChange={setRmaDetalleOpen}>
-        <SheetContent className="w-[500px] sm:max-w-lg overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>{rmaSeleccionado?.codigo}</SheetTitle>
-            <SheetDescription>
-              Detall i gestió del RMA
-            </SheetDescription>
-          </SheetHeader>
+      {/* Dialog: Detalle RMA */}
+      <Dialog open={rmaDetalleOpen} onOpenChange={setRmaDetalleOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
           {rmaSeleccionado && (
-            <div className="mt-6 space-y-6">
-              {/* Flujo de estados */}
-              <div className="space-y-2">
-                <Label>Flux d'Estats</Label>
-                <div className="flex items-center justify-between">
-                  {flujoEstadosRMA.map((e, idx) => {
-                    const estadoActualIdx = getEstadoIndex(rmaSeleccionado.estado);
-                    const isActive = idx <= estadoActualIdx;
-                    const isCurrent = e.estado === rmaSeleccionado.estado;
-                    
-                    return (
-                      <React.Fragment key={e.estado}>
-                        <div 
-                          className={`flex flex-col items-center gap-1 ${
-                            isCurrent ? 'text-primary' : isActive ? 'text-green-600' : 'text-muted-foreground'
-                          }`}
-                        >
-                          <div className={`rounded-full p-2 ${
-                            isCurrent ? 'bg-primary text-primary-foreground' : 
-                            isActive ? 'bg-green-100 dark:bg-green-900' : 'bg-muted'
-                          }`}>
-                            {e.icon}
-                          </div>
-                          <span className="text-xs font-medium">{e.label}</span>
-                        </div>
-                        {idx < flujoEstadosRMA.length - 1 && (
-                          <ArrowRight className={`h-4 w-4 ${isActive ? 'text-green-600' : 'text-muted-foreground'}`} />
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
+            <>
+              {/* Header */}
+              <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Wrench className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-xl font-semibold">{rmaSeleccionado.codigo}</DialogTitle>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        Detall i gestió del RMA
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {tipoIncidenciaBadge(rmaSeleccionado.tipoIncidencia)}
+                    <Badge variant={diasRestantesSLA(rmaSeleccionado) < 2 ? 'destructive' : 'outline'}>
+                      {diasRestantesSLA(rmaSeleccionado)}d restants
+                    </Badge>
+                  </div>
+                </DialogHeader>
               </div>
 
-              <Separator />
-
-              {/* Info básica */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-muted-foreground">Producte</Label>
-                  <p className="font-medium">{rmaSeleccionado.productoNombre}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Nº Sèrie</Label>
-                  <p className="font-mono">{rmaSeleccionado.numeroSerie}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Tipus</Label>
-                  <div className="mt-1">{tipoIncidenciaBadge(rmaSeleccionado.tipoIncidencia)}</div>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">SLA</Label>
-                  <p className="font-medium">{rmaSeleccionado.slaDias} dies</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Operador</Label>
-                  <p className="text-sm">{rmaSeleccionado.operadorNombre.split(',')[0]}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Vehicle</Label>
-                  <p>{rmaSeleccionado.vehiculoOrigen || '-'}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Data Límit</Label>
-                  <p>{format(rmaSeleccionado.fechaLimiteSLA, 'dd/MM/yyyy', { locale: ca })}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Dies Restants</Label>
-                  <p className={`font-medium ${diasRestantesSLA(rmaSeleccionado) < 2 ? 'text-destructive' : ''}`}>
-                    {diasRestantesSLA(rmaSeleccionado)}d
-                  </p>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Descripción */}
-              <div>
-                <Label className="text-muted-foreground">Descripció del Fallo</Label>
-                <p className="mt-1">{rmaSeleccionado.descripcion}</p>
-              </div>
-
-              {/* Diagnóstico */}
-              {rmaSeleccionado.diagnostico && (
-                <div>
-                  <Label className="text-muted-foreground">Diagnòstic</Label>
-                  <p className="mt-1">{rmaSeleccionado.diagnostico}</p>
-                </div>
-              )}
-
-              {/* Acción Correctiva */}
-              {rmaSeleccionado.accionCorrectiva && (
-                <div>
-                  <Label className="text-muted-foreground">Acció Correctiva</Label>
-                  <p className="mt-1">{rmaSeleccionado.accionCorrectiva}</p>
-                </div>
-              )}
-
-              {/* Serie de sustitución */}
-              {rmaSeleccionado.numeroSerieSustitucion && (
-                <Alert>
-                  <RefreshCw className="h-4 w-4" />
-                  <AlertTitle>Substituït</AlertTitle>
-                  <AlertDescription>
-                    Sèrie de substitució: <span className="font-mono">{rmaSeleccionado.numeroSerieSustitucion}</span>
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              {/* Evidencias */}
-              {rmaSeleccionado.evidencias && rmaSeleccionado.evidencias.length > 0 && (
-                <div>
-                  <Label className="text-muted-foreground">Evidències</Label>
-                  <div className="mt-2 grid grid-cols-2 gap-2">
-                    {rmaSeleccionado.evidencias.map((ev) => (
-                      <div key={ev.id} className="rounded border p-2">
-                        <div className="flex items-center gap-2 text-sm">
-                          <Camera className="h-4 w-4" />
-                          {ev.descripcion}
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {format(ev.fecha, 'dd/MM/yyyy', { locale: ca })}
-                        </p>
+              {/* Contenido scrolleable */}
+              <ScrollArea className="max-h-[calc(85vh-180px)]">
+                <div className="px-6 py-5 space-y-5">
+                  {/* Flujo de estados */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Flux d'Estats</label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="flex items-center justify-between">
+                        {flujoEstadosRMA.map((e, idx) => {
+                          const estadoActualIdx = getEstadoIndex(rmaSeleccionado.estado);
+                          const isActive = idx <= estadoActualIdx;
+                          const isCurrent = e.estado === rmaSeleccionado.estado;
+                          
+                          return (
+                            <React.Fragment key={e.estado}>
+                              <div 
+                                className={`flex flex-col items-center gap-1 ${
+                                  isCurrent ? 'text-primary' : isActive ? 'text-green-600' : 'text-muted-foreground'
+                                }`}
+                              >
+                                <div className={`rounded-full p-2 ${
+                                  isCurrent ? 'bg-primary text-primary-foreground' : 
+                                  isActive ? 'bg-green-100 dark:bg-green-900' : 'bg-white border'
+                                }`}>
+                                  {e.icon}
+                                </div>
+                                <span className="text-xs font-medium">{e.label}</span>
+                              </div>
+                              {idx < flujoEstadosRMA.length - 1 && (
+                                <ArrowRight className={`h-4 w-4 ${isActive ? 'text-green-600' : 'text-muted-foreground'}`} />
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
                       </div>
-                    ))}
+                    </div>
                   </div>
+
+                  {/* Info básica */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Informació</label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">Producte:</span>
+                          <p className="font-medium">{rmaSeleccionado.productoNombre}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Nº Sèrie:</span>
+                          <p className="font-mono font-medium">{rmaSeleccionado.numeroSerie}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">SLA:</span>
+                          <p className="font-medium">{rmaSeleccionado.slaDias} dies</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Data Límit:</span>
+                          <p className="font-medium">{format(rmaSeleccionado.fechaLimiteSLA, 'dd/MM/yyyy', { locale: ca })}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Operador:</span>
+                          <p className="font-medium">{rmaSeleccionado.operadorNombre.split(',')[0]}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Vehicle:</span>
+                          <p className="font-medium">{rmaSeleccionado.vehiculoOrigen || '-'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Descripción */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Descripció del Fallo</label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <p className="text-sm">{rmaSeleccionado.descripcion}</p>
+                    </div>
+                  </div>
+
+                  {/* Diagnóstico */}
+                  {rmaSeleccionado.diagnostico && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Diagnòstic</label>
+                      <div className="p-4 bg-slate-50 rounded-xl border">
+                        <p className="text-sm">{rmaSeleccionado.diagnostico}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Acción Correctiva */}
+                  {rmaSeleccionado.accionCorrectiva && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Acció Correctiva</label>
+                      <div className="p-4 bg-slate-50 rounded-xl border">
+                        <p className="text-sm">{rmaSeleccionado.accionCorrectiva}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Serie de sustitución */}
+                  {rmaSeleccionado.numeroSerieSustitucion && (
+                    <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+                      <div className="flex items-center gap-2">
+                        <RefreshCw className="h-4 w-4 text-green-600" />
+                        <span className="font-medium text-sm text-green-800">Substituït</span>
+                      </div>
+                      <p className="text-sm text-green-700 mt-1">
+                        Sèrie de substitució: <span className="font-mono font-medium">{rmaSeleccionado.numeroSerieSustitucion}</span>
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Evidencias */}
+                  {rmaSeleccionado.evidencias && rmaSeleccionado.evidencias.length > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Evidències</label>
+                      <div className="p-4 bg-slate-50 rounded-xl border">
+                        <div className="grid grid-cols-2 gap-2">
+                          {rmaSeleccionado.evidencias.map((ev) => (
+                            <div key={ev.id} className="rounded-lg bg-white border p-2">
+                              <div className="flex items-center gap-2 text-sm">
+                                <Camera className="h-4 w-4 text-muted-foreground" />
+                                {ev.descripcion}
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {format(ev.fecha, 'dd/MM/yyyy', { locale: ca })}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </ScrollArea>
 
-              <Separator />
-
-              {/* Acciones */}
+              {/* Footer con acciones */}
               {rmaSeleccionado.estado !== 'cerrada' && (
-                <div className="space-y-3">
-                  <Label>Accions</Label>
+                <div className="px-6 py-4 border-t bg-slate-50 flex flex-wrap gap-2 justify-end">
+                  {rmaSeleccionado.estado === 'abierta' && (
+                    <Button size="sm" variant="outline" onClick={() => handleCambiarEstado('en_diagnostico')}>
+                      <Eye className="h-4 w-4 mr-1" />
+                      Iniciar Diagnòstic
+                    </Button>
+                  )}
                   
-                  <div className="flex flex-wrap gap-2">
-                    {rmaSeleccionado.estado === 'abierta' && (
-                      <Button size="sm" variant="outline" onClick={() => handleCambiarEstado('en_diagnostico')}>
-                        <Eye className="h-4 w-4 mr-1" />
-                        Iniciar Diagnòstic
-                      </Button>
-                    )}
-                    
-                    {rmaSeleccionado.estado === 'en_diagnostico' && (
-                      <Button size="sm" variant="outline" onClick={() => handleCambiarEstado('en_reparacion')}>
-                        <Wrench className="h-4 w-4 mr-1" />
-                        Iniciar Reparació
-                      </Button>
-                    )}
-                    
-                    {(rmaSeleccionado.estado === 'en_diagnostico' || rmaSeleccionado.estado === 'en_reparacion') && (
-                      <Button 
-                        size="sm" 
-                        variant="default"
-                        onClick={() => setUsarRecambioOpen(true)}
-                      >
-                        <Zap className="h-4 w-4 mr-1" />
-                        Usar Recambi
-                      </Button>
-                    )}
-                    
-                    {(rmaSeleccionado.estado === 'en_reparacion' || rmaSeleccionado.estado === 'sustituido') && (
-                      <Button size="sm" variant="default" onClick={() => handleCambiarEstado('cerrada')}>
-                        <CheckCircle className="h-4 w-4 mr-1" />
-                        Tancar RMA
-                      </Button>
-                    )}
-                  </div>
+                  {rmaSeleccionado.estado === 'en_diagnostico' && (
+                    <Button size="sm" variant="outline" onClick={() => handleCambiarEstado('en_reparacion')}>
+                      <Wrench className="h-4 w-4 mr-1" />
+                      Iniciar Reparació
+                    </Button>
+                  )}
+                  
+                  {(rmaSeleccionado.estado === 'en_diagnostico' || rmaSeleccionado.estado === 'en_reparacion') && (
+                    <Button 
+                      size="sm" 
+                      variant="default"
+                      onClick={() => setUsarRecambioOpen(true)}
+                    >
+                      <Zap className="h-4 w-4 mr-1" />
+                      Usar Recambi
+                    </Button>
+                  )}
+                  
+                  {(rmaSeleccionado.estado === 'en_reparacion' || rmaSeleccionado.estado === 'sustituido') && (
+                    <Button size="sm" variant="default" onClick={() => handleCambiarEstado('cerrada')}>
+                      <CheckCircle className="h-4 w-4 mr-1" />
+                      Tancar RMA
+                    </Button>
+                  )}
                 </div>
               )}
-            </div>
+            </>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog: Usar Recambio */}
       <Dialog open={usarRecambioOpen} onOpenChange={setUsarRecambioOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Usar Recambi</DialogTitle>
-            <DialogDescription>
-              Selecciona una sèrie de recambi per substituir l'equip danyat
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
+        <DialogContent className="sm:max-w-lg max-h-[85vh] p-0 gap-0 overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <RefreshCw className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <DialogTitle className="text-xl font-semibold">Usar Recambi</DialogTitle>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Selecciona una sèrie de recambi per substituir l'equip danyat
+                  </p>
+                </div>
+              </div>
+            </DialogHeader>
+          </div>
+          
+          {/* Contenido */}
+          <div className="px-6 py-5 space-y-5">
             {seriesRecambioDisponibles.length > 0 ? (
               <>
                 <div className="space-y-2">
-                  <Label>Sèries de Recambi Disponibles</Label>
+                  <label className="text-xs uppercase tracking-wide text-muted-foreground">Sèries de Recambi Disponibles</label>
                   <Select value={serieRecambioSeleccionada} onValueChange={setSerieRecambioSeleccionada}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona la sèrie de recambi" />
@@ -947,28 +992,34 @@ export default function GarantiasPage() {
                   </Select>
                 </div>
                 
-                <Alert>
-                  <Package className="h-4 w-4" />
-                  <AlertTitle>Estoc de Recambi</AlertTitle>
-                  <AlertDescription>
+                <div className="p-4 bg-slate-50 rounded-xl border">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4 text-primary" />
+                    <span className="font-medium text-sm">Estoc de Recambi</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">
                     {(() => {
                       const prod = equiposPrincipalesC5.find(p => p.id === rmaSeleccionado?.productoId);
                       return `${prod?.nombre}: ${prod?.stockRecambio ?? 0} unitats disponibles`;
                     })()}
-                  </AlertDescription>
-                </Alert>
+                  </p>
+                </div>
               </>
             ) : (
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Sense Recambis</AlertTitle>
-                <AlertDescription>
+              <div className="p-4 bg-red-50 rounded-xl border border-red-200">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-600" />
+                  <span className="font-medium text-sm text-red-800">Sense Recambis</span>
+                </div>
+                <p className="text-sm text-red-700 mt-1">
                   No hi ha sèries marcades com a recambi disponibles per a aquest producte.
-                </AlertDescription>
-              </Alert>
+                </p>
+              </div>
             )}
           </div>
-          <DialogFooter>
+
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-slate-50 flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setUsarRecambioOpen(false)}>
               Cancel·lar
             </Button>
@@ -979,7 +1030,7 @@ export default function GarantiasPage() {
               <RefreshCw className="mr-2 h-4 w-4" />
               Assignar Recambi
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </main>

@@ -482,272 +482,304 @@ export default function LogisticaPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Sheet Detalle Envío */}
-      <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <SheetContent className="w-full sm:max-w-xl">
-          <SheetHeader>
-            <SheetTitle>Detall de l'Enviament</SheetTitle>
-            <SheetDescription>
-              Informació completa i seguiment
-            </SheetDescription>
-          </SheetHeader>
-          
+      {/* Dialog Detalle Envío */}
+      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
           {selectedEnvio && (
-            <ScrollArea className="h-[calc(100vh-120px)] mt-6">
-              <div className="space-y-6 pr-4">
-                {/* Cabecera */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold">{selectedEnvio.codigo}</span>
+            <>
+              {/* Header */}
+              <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Truck className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-xl font-semibold">
+                        {selectedEnvio.codigo}
+                      </DialogTitle>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        {selectedEnvio.operadorNombre}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-4">
                     <Badge className={estadoEnvioConfig[selectedEnvio.estado].color}>
                       {estadoEnvioConfig[selectedEnvio.estado].label}
                     </Badge>
                   </div>
-                  <div className="text-muted-foreground">{selectedEnvio.operadorNombre}</div>
-                </div>
-
-                <Separator />
-
-                {/* Timeline visual */}
-                <div className="space-y-3">
-                  <h4 className="font-medium">Estat de l'enviament</h4>
-                  <div className="flex items-center justify-between">
-                    {estadoTimeline.map((estado, i) => {
-                      const isActive = estadoTimeline.indexOf(selectedEnvio.estado) >= i;
-                      const isCurrent = selectedEnvio.estado === estado;
-                      return (
-                        <div key={estado} className="flex flex-col items-center gap-1">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            isCurrent ? 'bg-primary text-primary-foreground' : 
-                            isActive ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
-                          }`}>
-                            {React.createElement(estadoEnvioConfig[estado].icon, { className: 'h-4 w-4' })}
-                          </div>
-                          <span className={`text-xs ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}>
-                            {estadoEnvioConfig[estado].label.split(' ')[0]}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Info del envío */}
-                <div className="space-y-3">
-                  <h4 className="font-medium">Informació</h4>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Comanda:</span>
-                      <div className="font-medium">{selectedEnvio.pedidoCodigo}</div>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Unitats:</span>
-                      <div className="font-medium">{selectedEnvio.seriesEnviadas.length}</div>
-                    </div>
-                    {selectedEnvio.transportista && (
-                      <div>
-                        <span className="text-muted-foreground">Transportista:</span>
-                        <div className="font-medium">{selectedEnvio.transportista}</div>
-                      </div>
-                    )}
-                    {selectedEnvio.numeroSeguimiento && (
-                      <div>
-                        <span className="text-muted-foreground">Seguiment:</span>
-                        <div className="font-mono text-xs">{selectedEnvio.numeroSeguimiento}</div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Destino */}
-                <div className="space-y-2">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    Destí
-                  </h4>
-                  <p className="text-sm text-muted-foreground">{selectedEnvio.direccionDestino}</p>
-                </div>
-
-                {/* Fechas */}
-                <div className="space-y-2">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Dates
-                  </h4>
-                  <div className="space-y-1 text-sm">
-                    {selectedEnvio.fechaPreparacion && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Preparat:</span>
-                        <span>{format(selectedEnvio.fechaPreparacion, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {selectedEnvio.fechaSalida && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Sortida:</span>
-                        <span>{format(selectedEnvio.fechaSalida, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {selectedEnvio.fechaEstimadaLlegada && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Arribada estimada:</span>
-                        <span>{format(selectedEnvio.fechaEstimadaLlegada, 'dd/MM/yyyy', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {selectedEnvio.fechaEntrega && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Lliurat:</span>
-                        <span className="text-green-600 font-medium">
-                          {format(selectedEnvio.fechaEntrega, 'dd/MM/yyyy HH:mm', { locale: ca })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Series enviadas */}
-                {selectedEnvio.seriesEnviadas.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Sèries Enviades</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {selectedEnvio.seriesEnviadas.slice(0, 10).map((serie) => (
-                        <Badge key={serie} variant="outline" className="font-mono text-xs">
-                          {serie}
-                        </Badge>
-                      ))}
-                      {selectedEnvio.seriesEnviadas.length > 10 && (
-                        <Badge variant="secondary">+{selectedEnvio.seriesEnviadas.length - 10} més</Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Incidencias */}
-                {selectedEnvio.incidencias && selectedEnvio.incidencias.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="font-medium flex items-center gap-2 text-destructive">
-                      <AlertTriangle className="h-4 w-4" />
-                      Incidències
-                    </h4>
-                    {selectedEnvio.incidencias.map((inc) => (
-                      <Alert key={inc.id} variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>{tipoIncidenciaConfig[inc.tipo].label}</AlertTitle>
-                        <AlertDescription>{inc.descripcion}</AlertDescription>
-                      </Alert>
-                    ))}
-                  </div>
-                )}
-
-                {/* Albarán y firma */}
-                {(selectedEnvio.albaranNumero || selectedEnvio.firmaRecepcion) && (
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Documents</h4>
-                    <div className="flex gap-2">
-                      {selectedEnvio.albaranNumero && (
-                        <Button variant="outline" size="sm">
-                          <FileText className="mr-2 h-4 w-4" />
-                          Albarà {selectedEnvio.albaranNumero}
-                        </Button>
-                      )}
-                      {selectedEnvio.firmaRecepcion && (
-                        <Button variant="outline" size="sm">
-                          <FileText className="mr-2 h-4 w-4" />
-                          Signatura
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                )}
+                </DialogHeader>
               </div>
-            </ScrollArea>
+
+              {/* Contenido scrolleable */}
+              <ScrollArea className="max-h-[calc(85vh-180px)]">
+                <div className="px-6 py-5 space-y-5">
+
+                  {/* Timeline visual */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Estat de l'enviament</label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="flex items-center justify-between">
+                        {estadoTimeline.map((estado, i) => {
+                          const isActive = estadoTimeline.indexOf(selectedEnvio.estado) >= i;
+                          const isCurrent = selectedEnvio.estado === estado;
+                          return (
+                            <div key={estado} className="flex flex-col items-center gap-1">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                isCurrent ? 'bg-primary text-primary-foreground' : 
+                                isActive ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
+                              }`}>
+                                {React.createElement(estadoEnvioConfig[estado].icon, { className: 'h-4 w-4' })}
+                              </div>
+                              <span className={`text-xs ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}>
+                                {estadoEnvioConfig[estado].label.split(' ')[0]}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Info del envío */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Informació</label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">Comanda:</span>
+                          <div className="font-medium">{selectedEnvio.pedidoCodigo}</div>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Unitats:</span>
+                          <div className="font-medium">{selectedEnvio.seriesEnviadas.length}</div>
+                        </div>
+                        {selectedEnvio.transportista && (
+                          <div>
+                            <span className="text-muted-foreground">Transportista:</span>
+                            <div className="font-medium">{selectedEnvio.transportista}</div>
+                          </div>
+                        )}
+                        {selectedEnvio.numeroSeguimiento && (
+                          <div>
+                            <span className="text-muted-foreground">Seguiment:</span>
+                            <div className="font-mono text-xs">{selectedEnvio.numeroSeguimiento}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Destino */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                      <MapPin className="h-3.5 w-3.5" />
+                      Destí
+                    </label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <p className="text-sm">{selectedEnvio.direccionDestino}</p>
+                    </div>
+                  </div>
+
+                  {/* Fechas */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                      <Calendar className="h-3.5 w-3.5" />
+                      Dates
+                    </label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="space-y-2 text-sm">
+                        {selectedEnvio.fechaPreparacion && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Preparat:</span>
+                            <span className="font-medium">{format(selectedEnvio.fechaPreparacion, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
+                          </div>
+                        )}
+                        {selectedEnvio.fechaSalida && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Sortida:</span>
+                            <span className="font-medium">{format(selectedEnvio.fechaSalida, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
+                          </div>
+                        )}
+                        {selectedEnvio.fechaEstimadaLlegada && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Arribada estimada:</span>
+                            <span className="font-medium">{format(selectedEnvio.fechaEstimadaLlegada, 'dd/MM/yyyy', { locale: ca })}</span>
+                          </div>
+                        )}
+                        {selectedEnvio.fechaEntrega && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Lliurat:</span>
+                            <span className="font-medium text-green-600">
+                              {format(selectedEnvio.fechaEntrega, 'dd/MM/yyyy HH:mm', { locale: ca })}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Series enviadas */}
+                  {selectedEnvio.seriesEnviadas.length > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Sèries Enviades</label>
+                      <div className="p-4 bg-slate-50 rounded-xl border">
+                        <div className="flex flex-wrap gap-1">
+                          {selectedEnvio.seriesEnviadas.slice(0, 10).map((serie) => (
+                            <Badge key={serie} variant="outline" className="font-mono text-xs bg-white">
+                              {serie}
+                            </Badge>
+                          ))}
+                          {selectedEnvio.seriesEnviadas.length > 10 && (
+                            <Badge variant="secondary">+{selectedEnvio.seriesEnviadas.length - 10} més</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Incidencias */}
+                  {selectedEnvio.incidencias && selectedEnvio.incidencias.length > 0 && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-destructive flex items-center gap-2">
+                        <AlertTriangle className="h-3.5 w-3.5" />
+                        Incidències
+                      </label>
+                      {selectedEnvio.incidencias.map((inc) => (
+                        <Alert key={inc.id} variant="destructive">
+                          <AlertTriangle className="h-4 w-4" />
+                          <AlertTitle>{tipoIncidenciaConfig[inc.tipo].label}</AlertTitle>
+                          <AlertDescription>{inc.descripcion}</AlertDescription>
+                        </Alert>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Albarán y firma */}
+                  {(selectedEnvio.albaranNumero || selectedEnvio.firmaRecepcion) && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Documents</label>
+                      <div className="flex gap-2">
+                        {selectedEnvio.albaranNumero && (
+                          <Button variant="outline" size="sm">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Albarà {selectedEnvio.albaranNumero}
+                          </Button>
+                        )}
+                        {selectedEnvio.firmaRecepcion && (
+                          <Button variant="outline" size="sm">
+                            <FileText className="mr-2 h-4 w-4" />
+                            Signatura
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
 
       {/* Diálogo Nueva Incidencia */}
       <Dialog open={isIncidenciaOpen} onOpenChange={setIsIncidenciaOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Registrar Incidència</DialogTitle>
-            <DialogDescription>
-              Reporta una incidència en aquest enviament
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-lg max-h-[85vh] p-0 gap-0 overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-destructive/10 rounded-lg">
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
+                </div>
+                <div>
+                  <DialogTitle className="text-xl font-semibold">Registrar Incidència</DialogTitle>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Reporta una incidència en aquest enviament
+                  </p>
+                </div>
+              </div>
+            </DialogHeader>
+          </div>
           
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Tipus d'incidència *</Label>
-              <Select 
-                value={incidenciaForm.tipo} 
-                onValueChange={(v) => setIncidenciaForm(prev => ({ ...prev, tipo: v as TipoIncidenciaEnvio }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecciona el tipus..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(tipoIncidenciaConfig).map(([key, value]) => (
-                    <SelectItem key={key} value={key}>{value.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Contenido scrolleable */}
+          <ScrollArea className="max-h-[calc(85vh-200px)]">
+            <div className="px-6 py-5 space-y-5">
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Tipus d'incidència *</label>
+                <Select 
+                  value={incidenciaForm.tipo} 
+                  onValueChange={(v) => setIncidenciaForm(prev => ({ ...prev, tipo: v as TipoIncidenciaEnvio }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona el tipus..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(tipoIncidenciaConfig).map(([key, value]) => (
+                      <SelectItem key={key} value={key}>{value.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="space-y-2">
-              <Label>Descripció *</Label>
-              <Textarea
-                value={incidenciaForm.descripcion}
-                onChange={(e) => setIncidenciaForm(prev => ({ ...prev, descripcion: e.target.value }))}
-                placeholder="Descriu la incidència en detall..."
-                rows={3}
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Descripció *</label>
+                <Textarea
+                  value={incidenciaForm.descripcion}
+                  onChange={(e) => setIncidenciaForm(prev => ({ ...prev, descripcion: e.target.value }))}
+                  placeholder="Descriu la incidència en detall..."
+                  rows={3}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label>Unitats afectades</Label>
-              <Input
-                type="number"
-                min={0}
-                value={incidenciaForm.unidadesAfectadas}
-                onChange={(e) => setIncidenciaForm(prev => ({ ...prev, unidadesAfectadas: e.target.value }))}
-                placeholder="Nombre d'unitats"
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Unitats afectades</label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={incidenciaForm.unidadesAfectadas}
+                  onChange={(e) => setIncidenciaForm(prev => ({ ...prev, unidadesAfectadas: e.target.value }))}
+                  placeholder="Nombre d'unitats"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label>Fotos</Label>
-              <div className="flex flex-wrap gap-2">
-                {incidenciaForm.fotos.map((foto, i) => (
-                  <div key={i} className="relative">
-                    <div className="w-16 h-16 bg-muted rounded flex items-center justify-center">
-                      <Camera className="h-6 w-6 text-muted-foreground" />
-                    </div>
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-wide text-muted-foreground">Fotos</label>
+                <div className="p-4 bg-slate-50 rounded-xl border">
+                  <div className="flex flex-wrap gap-2">
+                    {incidenciaForm.fotos.map((foto, i) => (
+                      <div key={i} className="relative">
+                        <div className="w-16 h-16 bg-white border rounded-lg flex items-center justify-center">
+                          <Camera className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          className="absolute -top-2 -right-2 h-5 w-5"
+                          onClick={() => handleRemoveFoto(i)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
                     <Button
-                      variant="destructive"
-                      size="icon"
-                      className="absolute -top-2 -right-2 h-5 w-5"
-                      onClick={() => handleRemoveFoto(i)}
+                      variant="outline"
+                      className="w-16 h-16"
+                      onClick={handleAddFoto}
                     >
-                      <X className="h-3 w-3" />
+                      <Upload className="h-6 w-6" />
                     </Button>
                   </div>
-                ))}
-                <Button
-                  variant="outline"
-                  className="w-16 h-16"
-                  onClick={handleAddFoto}
-                >
-                  <Upload className="h-6 w-6" />
-                </Button>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Afegeix fotos per documentar la incidència
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Afegeix fotos per documentar la incidència
-              </p>
             </div>
-          </div>
+          </ScrollArea>
 
-          <DialogFooter>
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-slate-50 flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setIsIncidenciaOpen(false)}>
               Cancel·lar
             </Button>
@@ -755,7 +787,7 @@ export default function LogisticaPage() {
               <Send className="mr-2 h-4 w-4" />
               Registrar Incidència
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </main>

@@ -19,12 +19,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { 
   Search, 
   Package, 
@@ -419,227 +418,228 @@ export default function SeriesPage() {
         </CardContent>
       </Card>
 
-      {/* Sheet de detalle */}
-      <Sheet open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <SheetContent className="w-[500px] sm:w-[600px] sm:max-w-lg">
+      {/* Dialog de detalle */}
+      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
           {selectedSerie && (
             <>
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
-                  {selectedSerie.numeroSerie}
-                </SheetTitle>
-                <SheetDescription>
-                  {selectedSerie.productoNombre} · {selectedSerie.sku}
-                </SheetDescription>
-              </SheetHeader>
-              
-              <div className="mt-6 space-y-6">
-                {/* Estado actual */}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Estat actual</span>
-                  {(() => {
-                    const config = estadoBadgeConfig[selectedSerie.estado];
-                    const Icon = config.icon;
-                    return (
-                      <Badge variant={config.variant} className="gap-1">
-                        <Icon className="h-3 w-3" />
-                        {config.label}
-                      </Badge>
-                    );
-                  })()}
-                </div>
-
-                <Separator />
-
-                {/* Información de ubicación */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    Ubicació
-                  </h4>
-                  <div className="grid gap-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Ubicació</span>
-                      <span>{ubicacionLabels[selectedSerie.ubicacion]}</span>
+              {/* Header */}
+              <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Package className="h-5 w-5 text-primary" />
                     </div>
-                    {selectedSerie.operadorNombre && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Operador</span>
-                        <span>{selectedSerie.operadorNombre.split(',')[0]}</span>
-                      </div>
-                    )}
-                    {selectedSerie.vehiculoCalca && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Vehicle</span>
-                        <span>Calca {selectedSerie.vehiculoCalca} ({selectedSerie.vehiculoMatricula})</span>
-                      </div>
-                    )}
-                    {selectedSerie.lote && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Lot</span>
-                        <span className="font-mono">{selectedSerie.lote}</span>
-                      </div>
-                    )}
+                    <div>
+                      <DialogTitle className="text-xl font-semibold">
+                        {selectedSerie.numeroSerie}
+                      </DialogTitle>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        {selectedSerie.productoNombre} · {selectedSerie.sku}
+                      </p>
+                    </div>
                   </div>
-                </div>
-
-                <Separator />
-
-                {/* Fechas */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Dates
-                  </h4>
-                  <div className="grid gap-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Entrada</span>
-                      <span>{format(selectedSerie.fechaEntrada, 'dd/MM/yyyy', { locale: ca })}</span>
-                    </div>
-                    {selectedSerie.fechaReserva && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Reserva</span>
-                        <span>{format(selectedSerie.fechaReserva, 'dd/MM/yyyy', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {selectedSerie.fechaInstalacion && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Instal·lació</span>
-                        <span>{format(selectedSerie.fechaInstalacion, 'dd/MM/yyyy', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {selectedSerie.fechaBaja && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Baixa</span>
-                        <span className="text-red-600">{format(selectedSerie.fechaBaja, 'dd/MM/yyyy', { locale: ca })}</span>
-                      </div>
-                    )}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {(() => {
+                      const config = estadoBadgeConfig[selectedSerie.estado];
+                      const Icon = config.icon;
+                      return (
+                        <Badge variant={config.variant} className="gap-1">
+                          <Icon className="h-3 w-3" />
+                          {config.label}
+                        </Badge>
+                      );
+                    })()}
                   </div>
-                </div>
-
-                {/* Referencias */}
-                {(selectedSerie.pedidoOrigenCodigo || selectedSerie.pedidoDestinoCodigo || selectedSerie.garantiaCodigo || selectedSerie.reparacionCodigo) && (
-                  <>
-                    <Separator />
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-medium flex items-center gap-2">
-                        <FileText className="h-4 w-4" />
-                        Referències
-                      </h4>
-                      <div className="grid gap-2 text-sm">
-                        {selectedSerie.pedidoOrigenCodigo && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Comanda origen</span>
-                            <span className="font-mono text-blue-600">{selectedSerie.pedidoOrigenCodigo}</span>
-                          </div>
-                        )}
-                        {selectedSerie.pedidoDestinoCodigo && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Comanda destí</span>
-                            <span className="font-mono text-blue-600">{selectedSerie.pedidoDestinoCodigo}</span>
-                          </div>
-                        )}
-                        {selectedSerie.garantiaCodigo && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Garantia</span>
-                            <span className="font-mono text-yellow-600">{selectedSerie.garantiaCodigo}</span>
-                          </div>
-                        )}
-                        {selectedSerie.reparacionCodigo && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Reparació</span>
-                            <span className="font-mono text-orange-600">{selectedSerie.reparacionCodigo}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {/* Notas */}
-                {selectedSerie.notas && (
-                  <>
-                    <Separator />
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Notes</h4>
-                      <p className="text-sm text-muted-foreground">{selectedSerie.notas}</p>
-                    </div>
-                  </>
-                )}
-
-                <Separator />
-
-                {/* Historial de movimientos */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium flex items-center gap-2">
-                    <History className="h-4 w-4" />
-                    Historial de Moviments
-                  </h4>
-                  <ScrollArea className="h-[250px]">
-                    <div className="space-y-3 pr-4">
-                      {getMovimientosSerie(selectedSerie.id).map((mov, index) => {
-                        const tipoConfig = tipoMovimientoLabels[mov.tipo] || { label: mov.tipo, icon: Package, color: 'text-gray-600' };
-                        const IconTipo = tipoConfig.icon;
-                        
-                        return (
-                          <div key={mov.id} className="flex gap-3">
-                            <div className="flex flex-col items-center">
-                              <div className={`rounded-full p-1.5 bg-muted ${tipoConfig.color}`}>
-                                <IconTipo className="h-3 w-3" />
-                              </div>
-                              {index < getMovimientosSerie(selectedSerie.id).length - 1 && (
-                                <div className="w-px h-full bg-border flex-1 my-1" />
-                              )}
-                            </div>
-                            <div className="flex-1 pb-3">
-                              <div className="flex items-center justify-between">
-                                <span className={`text-sm font-medium ${tipoConfig.color}`}>
-                                  {tipoConfig.label}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                  {format(mov.fecha, 'dd/MM/yyyy HH:mm', { locale: ca })}
-                                </span>
-                              </div>
-                              {mov.estadoAnterior && mov.estadoNuevo && mov.estadoAnterior !== mov.estadoNuevo && (
-                                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                  <span>{estadoBadgeConfig[mov.estadoAnterior]?.label}</span>
-                                  <ArrowRight className="h-3 w-3" />
-                                  <span>{estadoBadgeConfig[mov.estadoNuevo]?.label}</span>
-                                </div>
-                              )}
-                              {mov.operadorNombre && (
-                                <div className="text-xs text-muted-foreground mt-1">
-                                  <Building2 className="h-3 w-3 inline mr-1" />
-                                  {mov.operadorNombre.split(',')[0]}
-                                </div>
-                              )}
-                              {mov.vehiculoCalca && (
-                                <div className="text-xs text-muted-foreground mt-1">
-                                  <Bus className="h-3 w-3 inline mr-1" />
-                                  Calca {mov.vehiculoCalca}
-                                </div>
-                              )}
-                              {mov.notas && (
-                                <p className="text-xs text-muted-foreground mt-1 italic">
-                                  {mov.notas}
-                                </p>
-                              )}
-                              <div className="text-xs text-muted-foreground mt-1">
-                                Per: {mov.realizadoPor}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </ScrollArea>
-                </div>
+                </DialogHeader>
               </div>
+
+              {/* Contenido scrolleable */}
+              <ScrollArea className="max-h-[calc(85vh-140px)]">
+                <div className="px-6 py-5 space-y-5">
+                  {/* Información de ubicación */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                      <MapPin className="h-3.5 w-3.5" />
+                      Ubicació
+                    </label>
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="grid gap-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Ubicació</span>
+                          <span className="font-medium">{ubicacionLabels[selectedSerie.ubicacion]}</span>
+                        </div>
+                        {selectedSerie.operadorNombre && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Operador</span>
+                            <span className="font-medium">{selectedSerie.operadorNombre.split(',')[0]}</span>
+                          </div>
+                        )}
+                        {selectedSerie.vehiculoCalca && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Vehicle</span>
+                            <span className="font-medium">Calca {selectedSerie.vehiculoCalca} ({selectedSerie.vehiculoMatricula})</span>
+                          </div>
+                        )}
+                        {selectedSerie.lote && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Lot</span>
+                            <span className="font-mono font-medium">{selectedSerie.lote}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fechas */}
+                  <div className="space-y-2">
+                    <div className="p-4 bg-slate-50 rounded-xl border">
+                      <div className="grid gap-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Entrada</span>
+                          <span className="font-medium">{format(selectedSerie.fechaEntrada, 'dd/MM/yyyy', { locale: ca })}</span>
+                        </div>
+                        {selectedSerie.fechaReserva && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Reserva</span>
+                            <span className="font-medium">{format(selectedSerie.fechaReserva, 'dd/MM/yyyy', { locale: ca })}</span>
+                          </div>
+                        )}
+                        {selectedSerie.fechaInstalacion && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Instal·lació</span>
+                            <span className="font-medium">{format(selectedSerie.fechaInstalacion, 'dd/MM/yyyy', { locale: ca })}</span>
+                          </div>
+                        )}
+                        {selectedSerie.fechaBaja && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Baixa</span>
+                            <span className="font-medium text-red-600">{format(selectedSerie.fechaBaja, 'dd/MM/yyyy', { locale: ca })}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Referencias */}
+                  {(selectedSerie.pedidoOrigenCodigo || selectedSerie.pedidoDestinoCodigo || selectedSerie.garantiaCodigo || selectedSerie.reparacionCodigo) && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                        <FileText className="h-3.5 w-3.5" />
+                        Referències
+                      </label>
+                      <div className="p-4 bg-slate-50 rounded-xl border">
+                        <div className="grid gap-2 text-sm">
+                          {selectedSerie.pedidoOrigenCodigo && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Comanda origen</span>
+                              <span className="font-mono font-medium text-blue-600">{selectedSerie.pedidoOrigenCodigo}</span>
+                            </div>
+                          )}
+                          {selectedSerie.pedidoDestinoCodigo && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Comanda destí</span>
+                              <span className="font-mono font-medium text-blue-600">{selectedSerie.pedidoDestinoCodigo}</span>
+                            </div>
+                          )}
+                          {selectedSerie.garantiaCodigo && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Garantia</span>
+                              <span className="font-mono font-medium text-yellow-600">{selectedSerie.garantiaCodigo}</span>
+                            </div>
+                          )}
+                          {selectedSerie.reparacionCodigo && (
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Reparació</span>
+                              <span className="font-mono font-medium text-orange-600">{selectedSerie.reparacionCodigo}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Notas */}
+                  {selectedSerie.notas && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Notes</label>
+                      <div className="p-4 bg-slate-50 rounded-xl border">
+                        <p className="text-sm">{selectedSerie.notas}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Historial de movimientos */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                      <History className="h-3.5 w-3.5" />
+                      Historial de Moviments
+                    </label>
+                    <div className="p-4 bg-slate-50 rounded-xl border max-h-[200px] overflow-y-auto">
+                      <div className="space-y-3">
+                        {getMovimientosSerie(selectedSerie.id).map((mov, index) => {
+                          const tipoConfig = tipoMovimientoLabels[mov.tipo] || { label: mov.tipo, icon: Package, color: 'text-gray-600' };
+                          const IconTipo = tipoConfig.icon;
+                          
+                          return (
+                            <div key={mov.id} className="flex gap-3">
+                              <div className="flex flex-col items-center">
+                                <div className={`rounded-full p-1.5 bg-white border ${tipoConfig.color}`}>
+                                  <IconTipo className="h-3 w-3" />
+                                </div>
+                                {index < getMovimientosSerie(selectedSerie.id).length - 1 && (
+                                  <div className="w-px h-full bg-border flex-1 my-1" />
+                                )}
+                              </div>
+                              <div className="flex-1 pb-3">
+                                <div className="flex items-center justify-between">
+                                  <span className={`text-sm font-medium ${tipoConfig.color}`}>
+                                    {tipoConfig.label}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {format(mov.fecha, 'dd/MM/yyyy HH:mm', { locale: ca })}
+                                  </span>
+                                </div>
+                                {mov.estadoAnterior && mov.estadoNuevo && mov.estadoAnterior !== mov.estadoNuevo && (
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                    <span>{estadoBadgeConfig[mov.estadoAnterior]?.label}</span>
+                                    <ArrowRight className="h-3 w-3" />
+                                    <span>{estadoBadgeConfig[mov.estadoNuevo]?.label}</span>
+                                  </div>
+                                )}
+                                {mov.operadorNombre && (
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    <Building2 className="h-3 w-3 inline mr-1" />
+                                    {mov.operadorNombre.split(',')[0]}
+                                  </div>
+                                )}
+                                {mov.vehiculoCalca && (
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    <Bus className="h-3 w-3 inline mr-1" />
+                                    Calca {mov.vehiculoCalca}
+                                  </div>
+                                )}
+                                {mov.notas && (
+                                  <p className="text-xs text-muted-foreground mt-1 italic">
+                                    {mov.notas}
+                                  </p>
+                                )}
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  Per: {mov.realizadoPor}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ScrollArea>
             </>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

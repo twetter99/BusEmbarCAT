@@ -22,12 +22,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 import { 
   Package, 
@@ -331,141 +331,145 @@ export default function LliuramentsPage() {
         </CardContent>
       </Card>
 
-      {/* Sheet de detalle */}
-      <Sheet open={!!lliuramentSeleccionat} onOpenChange={() => setLliuramentSeleccionat(null)}>
-        <SheetContent className="sm:max-w-xl overflow-y-auto">
+      {/* Dialog de detalle */}
+      <Dialog open={!!lliuramentSeleccionat} onOpenChange={() => setLliuramentSeleccionat(null)}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
           {lliuramentSeleccionat && (
             <>
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
-                  {lliuramentSeleccionat.codigo}
-                </SheetTitle>
-                <SheetDescription>
-                  Detall del lliurament a {lliuramentSeleccionat.operadorNombre}
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="mt-6 space-y-6">
-                {/* Estado y tipo */}
-                <div className="flex items-center gap-3">
-                  <Badge variant={estadoConfig[lliuramentSeleccionat.estado].variant} className="gap-1">
-                    {(() => { const Icon = estadoConfig[lliuramentSeleccionat.estado].icon; return <Icon className="h-3 w-3" />; })()}
-                    {estadoConfig[lliuramentSeleccionat.estado].label}
-                  </Badge>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${tipusConfig[lliuramentSeleccionat.tipo].color}`}>
-                    {tipusConfig[lliuramentSeleccionat.tipo].label}
-                  </span>
-                </div>
-
-                {/* Timeline de fechas */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Cronologia</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Creat:</span>
-                      <span>{format(lliuramentSeleccionat.fechaCreacion, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
+              {/* Header */}
+              <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Package className="h-5 w-5 text-primary" />
                     </div>
-                    {lliuramentSeleccionat.fechaPreparacion && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Preparat:</span>
-                        <span>{format(lliuramentSeleccionat.fechaPreparacion, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {lliuramentSeleccionat.fechaEnvio && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Enviat:</span>
-                        <span>{format(lliuramentSeleccionat.fechaEnvio, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
-                      </div>
-                    )}
-                    {lliuramentSeleccionat.fechaEntrega ? (
-                      <div className="flex justify-between text-green-600">
-                        <span>Lliurat:</span>
-                        <span className="font-medium">{format(lliuramentSeleccionat.fechaEntrega, 'dd/MM/yyyy HH:mm', { locale: ca })}</span>
-                      </div>
-                    ) : lliuramentSeleccionat.fechaEstimadaEntrega && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Previst:</span>
-                        <span className="text-blue-600">{format(lliuramentSeleccionat.fechaEstimadaEntrega, 'dd/MM/yyyy', { locale: ca })}</span>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Información de entrega */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      Dades d'Entrega
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-sm">
                     <div>
-                      <span className="text-muted-foreground">Adreça:</span>
-                      <p className="font-medium">{lliuramentSeleccionat.direccionEntrega}</p>
+                      <DialogTitle className="text-xl font-semibold">
+                        {lliuramentSeleccionat.codigo}
+                      </DialogTitle>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        Lliurament a {lliuramentSeleccionat.operadorNombre}
+                      </p>
                     </div>
-                    {lliuramentSeleccionat.contactoEntrega && (
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <span>{lliuramentSeleccionat.contactoEntrega}</span>
-                      </div>
-                    )}
-                    {lliuramentSeleccionat.telefonoContacto && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <span>{lliuramentSeleccionat.telefonoContacto}</span>
-                      </div>
-                    )}
-                    {lliuramentSeleccionat.albaranEntrega && (
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span>Albarà: <span className="font-mono">{lliuramentSeleccionat.albaranEntrega}</span></span>
-                      </div>
-                    )}
-                    {lliuramentSeleccionat.firmaRecepcion && (
-                      <Badge variant="outline" className="text-green-600 gap-1">
-                        <CheckCircle2 className="h-3 w-3" />
-                        Signat
-                      </Badge>
-                    )}
-                  </CardContent>
-                </Card>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <Badge variant={estadoConfig[lliuramentSeleccionat.estado].variant} className="gap-1">
+                      {(() => { const Icon = estadoConfig[lliuramentSeleccionat.estado].icon; return <Icon className="h-3 w-3" />; })()}
+                      {estadoConfig[lliuramentSeleccionat.estado].label}
+                    </Badge>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${tipusConfig[lliuramentSeleccionat.tipo].color}`}>
+                      {tipusConfig[lliuramentSeleccionat.tipo].label}
+                    </span>
+                  </div>
+                </DialogHeader>
+              </div>
 
-                {/* Pedido proveedor relacionado */}
-                {lliuramentSeleccionat.pedidoProveedorCodigo && (
-                  <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
-                    <CardContent className="py-3">
+              {/* Contenido scrolleable */}
+              <ScrollArea className="max-h-[calc(85vh-180px)]">
+                <div className="px-6 py-5 space-y-5">
+                  {/* Cronologia */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Cronologia</label>
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-xl border">
+                      <div>
+                        <span className="text-xs text-muted-foreground">Creat</span>
+                        <p className="font-medium text-sm">{format(lliuramentSeleccionat.fechaCreacion, 'dd/MM/yyyy HH:mm', { locale: ca })}</p>
+                      </div>
+                      {lliuramentSeleccionat.fechaPreparacion && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Preparat</span>
+                          <p className="font-medium text-sm">{format(lliuramentSeleccionat.fechaPreparacion, 'dd/MM/yyyy HH:mm', { locale: ca })}</p>
+                        </div>
+                      )}
+                      {lliuramentSeleccionat.fechaEnvio && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Enviat</span>
+                          <p className="font-medium text-sm">{format(lliuramentSeleccionat.fechaEnvio, 'dd/MM/yyyy HH:mm', { locale: ca })}</p>
+                        </div>
+                      )}
+                      {lliuramentSeleccionat.fechaEntrega ? (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Lliurat</span>
+                          <p className="font-medium text-sm text-green-600">{format(lliuramentSeleccionat.fechaEntrega, 'dd/MM/yyyy HH:mm', { locale: ca })}</p>
+                        </div>
+                      ) : lliuramentSeleccionat.fechaEstimadaEntrega && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Previst</span>
+                          <p className="font-medium text-sm text-blue-600">{format(lliuramentSeleccionat.fechaEstimadaEntrega, 'dd/MM/yyyy', { locale: ca })}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Datos de entrega */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                      <MapPin className="h-3 w-3" />
+                      Dades d'Entrega
+                    </label>
+                    <div className="p-4 bg-white border rounded-xl shadow-sm space-y-3">
+                      <div>
+                        <span className="text-xs text-muted-foreground">Adreça</span>
+                        <p className="font-medium">{lliuramentSeleccionat.direccionEntrega}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-4 text-sm">
+                        {lliuramentSeleccionat.contactoEntrega && (
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-muted-foreground" />
+                            <span>{lliuramentSeleccionat.contactoEntrega}</span>
+                          </div>
+                        )}
+                        {lliuramentSeleccionat.telefonoContacto && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-4 w-4 text-muted-foreground" />
+                            <span>{lliuramentSeleccionat.telefonoContacto}</span>
+                          </div>
+                        )}
+                      </div>
+                      {lliuramentSeleccionat.albaranEntrega && (
+                        <div className="flex items-center gap-2 pt-2 border-t">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">Albarà: <span className="font-mono font-medium">{lliuramentSeleccionat.albaranEntrega}</span></span>
+                        </div>
+                      )}
+                      {lliuramentSeleccionat.firmaRecepcion && (
+                        <Badge variant="outline" className="text-green-600 gap-1">
+                          <CheckCircle2 className="h-3 w-3" />
+                          Signat
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Pedido proveedor relacionado */}
+                  {lliuramentSeleccionat.pedidoProveedorCodigo && (
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm">
                           <Truck className="h-4 w-4 text-blue-600" />
-                          <span className="text-muted-foreground">Comanda WINFIN:</span>
+                          <span className="text-blue-700">Comanda WINFIN:</span>
                         </div>
                         <span className="font-mono font-medium text-blue-700">
                           {lliuramentSeleccionat.pedidoProveedorCodigo}
                         </span>
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
+                    </div>
+                  )}
 
-                {/* Líneas del lliurament */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Línies ({lliuramentSeleccionat.lineas.length})</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  {/* Líneas del lliurament */}
+                  <div className="space-y-3">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Línies ({lliuramentSeleccionat.lineas.length})
+                    </label>
+                    <div className="space-y-2">
                       {lliuramentSeleccionat.lineas.map((linea) => {
                         const progresoLinea = linea.cantidadSolicitada > 0 
                           ? (linea.cantidadEntregada / linea.cantidadSolicitada) * 100 
                           : 0;
                         
                         return (
-                          <div key={linea.id} className="rounded-lg border p-3">
-                            <div className="flex items-start justify-between mb-2">
+                          <div key={linea.id} className="p-4 bg-white border rounded-xl shadow-sm">
+                            <div className="flex items-start justify-between mb-3">
                               <div>
                                 <span className="font-mono text-xs text-muted-foreground">{linea.productoSku}</span>
                                 <p className="font-medium">{linea.productoNombre}</p>
@@ -473,21 +477,21 @@ export default function LliuramentsPage() {
                             </div>
                             <div className="grid grid-cols-3 gap-2 text-sm mb-2">
                               <div>
-                                <span className="text-muted-foreground">Sol·licitat:</span>
-                                <span className="ml-1 font-medium">{linea.cantidadSolicitada}</span>
+                                <span className="text-xs text-muted-foreground">Sol·licitat</span>
+                                <p className="font-medium">{linea.cantidadSolicitada}</p>
                               </div>
                               <div>
-                                <span className="text-muted-foreground">Preparat:</span>
-                                <span className="ml-1 font-medium">{linea.cantidadPreparada}</span>
+                                <span className="text-xs text-muted-foreground">Preparat</span>
+                                <p className="font-medium">{linea.cantidadPreparada}</p>
                               </div>
                               <div>
-                                <span className="text-muted-foreground">Lliurat:</span>
-                                <span className="ml-1 font-medium text-green-600">{linea.cantidadEntregada}</span>
+                                <span className="text-xs text-muted-foreground">Lliurat</span>
+                                <p className="font-medium text-green-600">{linea.cantidadEntregada}</p>
                               </div>
                             </div>
                             <Progress value={progresoLinea} className="h-1.5" />
                             {linea.numerosSerieEntregados && linea.numerosSerieEntregados.length > 0 && (
-                              <div className="mt-2">
+                              <div className="mt-2 pt-2 border-t">
                                 <span className="text-xs text-muted-foreground">Núm. Sèrie: </span>
                                 <span className="text-xs font-mono">
                                   {linea.numerosSerieEntregados.slice(0, 3).join(', ')}
@@ -499,56 +503,54 @@ export default function LliuramentsPage() {
                         );
                       })}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
 
-                {/* Observaciones */}
-                {lliuramentSeleccionat.observaciones && (
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Observacions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">{lliuramentSeleccionat.observaciones}</p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Acciones */}
-                <div className="flex gap-2 pt-4 border-t">
-                  {lliuramentSeleccionat.estado === 'pendent' && (
-                    <Button className="flex-1">
-                      <Package className="mr-2 h-4 w-4" />
-                      Iniciar Preparació
-                    </Button>
+                  {/* Observaciones */}
+                  {lliuramentSeleccionat.observaciones && (
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Observacions</label>
+                      <p className="text-sm text-muted-foreground italic p-3 bg-slate-50 rounded-lg border">
+                        {lliuramentSeleccionat.observaciones}
+                      </p>
+                    </div>
                   )}
-                  {lliuramentSeleccionat.estado === 'en_preparacio' && (
-                    <Button className="flex-1">
-                      <PackageCheck className="mr-2 h-4 w-4" />
-                      Marcar Preparat
-                    </Button>
-                  )}
-                  {lliuramentSeleccionat.estado === 'preparat' && (
-                    <Button className="flex-1">
-                      <Truck className="mr-2 h-4 w-4" />
-                      Registrar Enviament
-                    </Button>
-                  )}
-                  {lliuramentSeleccionat.estado === 'en_transit' && (
-                    <Button className="flex-1 bg-green-600 hover:bg-green-700">
-                      <CheckCircle2 className="mr-2 h-4 w-4" />
-                      Confirmar Lliurament
-                    </Button>
-                  )}
-                  <Button variant="outline" onClick={() => setLliuramentSeleccionat(null)}>
-                    Tancar
-                  </Button>
                 </div>
+              </ScrollArea>
+
+              {/* Footer con acciones */}
+              <div className="px-6 py-4 border-t bg-slate-50 flex gap-3">
+                {lliuramentSeleccionat.estado === 'pendent' && (
+                  <Button className="flex-1">
+                    <Package className="mr-2 h-4 w-4" />
+                    Iniciar Preparació
+                  </Button>
+                )}
+                {lliuramentSeleccionat.estado === 'en_preparacio' && (
+                  <Button className="flex-1">
+                    <PackageCheck className="mr-2 h-4 w-4" />
+                    Marcar Preparat
+                  </Button>
+                )}
+                {lliuramentSeleccionat.estado === 'preparat' && (
+                  <Button className="flex-1">
+                    <Truck className="mr-2 h-4 w-4" />
+                    Registrar Enviament
+                  </Button>
+                )}
+                {lliuramentSeleccionat.estado === 'en_transit' && (
+                  <Button className="flex-1 bg-green-600 hover:bg-green-700">
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Confirmar Lliurament
+                  </Button>
+                )}
+                <Button variant="outline" onClick={() => setLliuramentSeleccionat(null)}>
+                  Tancar
+                </Button>
               </div>
             </>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

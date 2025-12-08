@@ -391,25 +391,43 @@ export default function RecambiosPage() {
 
       {/* Dialog Ajustar Mínimo */}
       <Dialog open={isAjusteOpen} onOpenChange={setIsAjusteOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Ajustar Mínim de Recambi</DialogTitle>
-            <DialogDescription>
-              Modifica el mínim d'estoc de recambi per a {productoAjuste?.nombre}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Producte</Label>
-              <div className="text-sm font-medium">{productoAjuste?.nombre}</div>
-              <div className="text-xs text-muted-foreground">{productoAjuste?.sku}</div>
+        <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+            <DialogHeader>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Package className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <DialogTitle className="text-lg font-semibold">Ajustar Mínim de Recambi</DialogTitle>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {productoAjuste?.nombre}
+                  </p>
+                </div>
+              </div>
+            </DialogHeader>
+          </div>
+
+          {/* Contenido */}
+          <div className="px-6 py-5 space-y-4">
+            <div className="p-4 bg-slate-50 rounded-xl border space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">SKU</span>
+                <span className="font-mono text-sm">{productoAjuste?.sku}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Estoc actual</span>
+                <span className="font-bold text-lg">{productoAjuste?.stockRecambio ?? 0} ud.</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">Mínim anterior</span>
+                <span className="text-sm">{productoAjuste?.stockMinimoRecambio ?? 0} ud.</span>
+              </div>
             </div>
+
             <div className="space-y-2">
-              <Label>Estoc de recambi actual</Label>
-              <div className="text-lg font-bold">{productoAjuste?.stockRecambio ?? 0} unitats</div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nuevoMinimo">Nou mínim de recambi</Label>
+              <label className="text-xs uppercase tracking-wide text-muted-foreground">Nou mínim de recambi</label>
               <Input
                 id="nuevoMinimo"
                 type="number"
@@ -417,23 +435,24 @@ export default function RecambiosPage() {
                 value={nuevoMinimo}
                 onChange={(e) => setNuevoMinimo(e.target.value)}
                 placeholder="Introdueix el nou mínim"
+                className="h-11"
               />
-              <p className="text-xs text-muted-foreground">
-                Mínim anterior: {productoAjuste?.stockMinimoRecambio ?? 0} unitats
-              </p>
             </div>
+
             {nuevoMinimo && Number(nuevoMinimo) > (productoAjuste?.stockRecambio ?? 0) && (
-              <Alert>
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Atenció</AlertTitle>
-                <AlertDescription>
+              <Alert className="border-amber-200 bg-amber-50">
+                <AlertTriangle className="h-4 w-4 text-amber-600" />
+                <AlertTitle className="text-amber-800">Atenció</AlertTitle>
+                <AlertDescription className="text-amber-700">
                   El nou mínim ({nuevoMinimo}) és superior a l'estoc actual (
                   {productoAjuste?.stockRecambio ?? 0}). Caldrà reposar estoc.
                 </AlertDescription>
               </Alert>
             )}
           </div>
-          <DialogFooter>
+
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-slate-50 flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setIsAjusteOpen(false)}>
               Cancel·lar
             </Button>
@@ -441,7 +460,7 @@ export default function RecambiosPage() {
               <Save className="mr-2 h-4 w-4" />
               Desar Canvis
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -54,6 +54,7 @@ import {
 } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Plus,
   Send,
@@ -522,153 +523,175 @@ export default function SolicitudesPage() {
         </CardContent>
       </Card>
 
-      {/* Sheet Detalle */}
-      <Sheet open={isDetalleOpen} onOpenChange={setIsDetalleOpen}>
-        <SheetContent className="sm:max-w-xl flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto">
+      {/* Dialog Detalle - Centrado */}
+      <Dialog open={isDetalleOpen} onOpenChange={setIsDetalleOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
           {selectedSolicitud && (
             <>
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  {selectedSolicitud.codigo}
-                </SheetTitle>
-                <SheetDescription>
-                  Detall de la sol·licitud
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="mt-6 space-y-6 pb-6">
-                {/* Estado y badges */}
-                <div className="flex flex-wrap gap-2">
-                  <Badge className={estadoConfig[selectedSolicitud.estado].color} variant="secondary">
-                    {estadoConfig[selectedSolicitud.estado].icon}
-                    <span className="ml-1">{estadoConfig[selectedSolicitud.estado].label}</span>
-                  </Badge>
-                  <Badge className={tipoConfig[selectedSolicitud.tipo].color} variant="secondary">
-                    {tipoConfig[selectedSolicitud.tipo].label}
-                  </Badge>
-                  <Badge variant="outline" className={prioridadConfig[selectedSolicitud.prioridad].color}>
-                    Prioritat: {prioridadConfig[selectedSolicitud.prioridad].label}
-                  </Badge>
-                </div>
-
-                <Separator />
-
-                {/* Info operador */}
-                <div className="grid gap-3">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Building2 className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">Operador:</span>
-                    <span>{selectedSolicitud.operadorNombre}</span>
+              {/* Header */}
+              <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <FileText className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-xl font-semibold">
+                        {selectedSolicitud.codigo}
+                      </DialogTitle>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        Sol·licitud de material
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">Creada:</span>
-                    <span>{format(selectedSolicitud.fechaCreacion, "dd/MM/yyyy HH:mm", { locale: ca })}</span>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <Badge className={estadoConfig[selectedSolicitud.estado].color} variant="secondary">
+                      {estadoConfig[selectedSolicitud.estado].icon}
+                      <span className="ml-1">{estadoConfig[selectedSolicitud.estado].label}</span>
+                    </Badge>
+                    <Badge className={tipoConfig[selectedSolicitud.tipo].color} variant="secondary">
+                      {tipoConfig[selectedSolicitud.tipo].label}
+                    </Badge>
+                    <Badge variant="outline" className={prioridadConfig[selectedSolicitud.prioridad].color}>
+                      {prioridadConfig[selectedSolicitud.prioridad].label}
+                    </Badge>
                   </div>
-                  {selectedSolicitud.fechaAprobacion && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
-                      <span className="font-medium">Aprovada:</span>
-                      <span>{format(selectedSolicitud.fechaAprobacion, "dd/MM/yyyy", { locale: ca })}</span>
-                      {selectedSolicitud.aprobadoPor && (
-                        <span className="text-muted-foreground">per {selectedSolicitud.aprobadoPor}</span>
-                      )}
+                </DialogHeader>
+              </div>
+
+              {/* Contenido scrolleable */}
+              <ScrollArea className="max-h-[calc(85vh-180px)]">
+                <div className="px-6 py-5 space-y-5">
+                  {/* Info operador - Card destacada */}
+                  <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border">
+                    <div className="p-2 bg-white rounded-lg border shadow-sm">
+                      <Building2 className="h-5 w-5 text-slate-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-500 uppercase tracking-wide">Operador</p>
+                      <p className="font-semibold text-lg mt-0.5">{selectedSolicitud.operadorNombre}</p>
+                      <div className="flex items-center gap-4 text-xs text-slate-500 mt-2">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {format(selectedSolicitud.fechaCreacion, "dd/MM/yyyy HH:mm", { locale: ca })}
+                        </span>
+                        {selectedSolicitud.fechaAprobacion && (
+                          <span className="flex items-center gap-1 text-green-600">
+                            <CheckCircle2 className="h-3 w-3" />
+                            Aprovada {format(selectedSolicitud.fechaAprobacion, "dd/MM/yyyy", { locale: ca })}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Justificación */}
+                  {selectedSolicitud.justificacion && (
+                    <div className="space-y-2">
+                      <Label className="text-xs uppercase tracking-wide text-muted-foreground">Justificació</Label>
+                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p className="text-sm text-amber-900 leading-relaxed">
+                          {selectedSolicitud.justificacion}
+                        </p>
+                      </div>
                     </div>
                   )}
-                </div>
 
-                {/* Justificación */}
-                {selectedSolicitud.justificacion && (
-                  <div className="space-y-2">
-                    <Label>Justificació</Label>
-                    <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                      {selectedSolicitud.justificacion}
-                    </p>
-                  </div>
-                )}
+                  {/* Vehículos afectados */}
+                  {selectedSolicitud.vehiculosAfectados && selectedSolicitud.vehiculosAfectados.length > 0 && (
+                    <div className="space-y-2">
+                      <Label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                        <Bus className="h-3 w-3" />
+                        Vehicles Afectats
+                      </Label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedSolicitud.vehiculosAfectados.map(v => (
+                          <Badge key={v} variant="secondary" className="text-xs">{v}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-                {/* Vehículos afectados */}
-                {selectedSolicitud.vehiculosAfectados && selectedSolicitud.vehiculosAfectados.length > 0 && (
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <Bus className="h-4 w-4" />
-                      Vehicles Afectats
+                  {/* Líneas del pedido */}
+                  <div className="space-y-3">
+                    <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Productes Sol·licitats ({selectedSolicitud.lineas.reduce((acc, l) => acc + l.cantidadSolicitada, 0)} unitats)
                     </Label>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSolicitud.vehiculosAfectados.map(v => (
-                        <Badge key={v} variant="outline">{v}</Badge>
+                    <div className="grid gap-2">
+                      {selectedSolicitud.lineas.map(linea => (
+                        <div
+                          key={linea.id}
+                          className="flex items-center justify-between p-4 bg-white border rounded-xl hover:shadow-sm transition-shadow"
+                        >
+                          <div className="space-y-0.5">
+                            <p className="font-medium">{linea.nombre}</p>
+                            <p className="text-xs text-muted-foreground font-mono">{linea.sku}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-xl text-primary">{linea.cantidadSolicitada}</p>
+                            <p className="text-xs text-muted-foreground">unitats</p>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>
-                )}
 
-                <Separator />
-
-                {/* Líneas del pedido */}
-                <div className="space-y-3">
-                  <Label>Productes Sol·licitats</Label>
-                  <div className="space-y-2">
-                    {selectedSolicitud.lineas.map(linea => (
-                      <div
-                        key={linea.id}
-                        className="flex items-center justify-between p-3 border rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium">{linea.nombre}</p>
-                          <p className="text-xs text-muted-foreground">{linea.sku}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">{linea.cantidadSolicitada} ud.</p>
-                          {linea.cantidadAprobada !== undefined && linea.cantidadAprobada !== linea.cantidadSolicitada && (
-                            <p className="text-xs text-amber-600">
-                              Aprovades: {linea.cantidadAprobada}
-                            </p>
-                          )}
-                          {linea.cantidadEntregada > 0 && (
-                            <p className="text-xs text-green-600">
-                              Entregades: {linea.cantidadEntregada}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Trazabilidad pedido proveedor */}
-                {selectedSolicitud.pedidoProveedorId && (
-                  <>
-                    <Separator />
+                  {/* Trazabilidad pedido proveedor */}
+                  {selectedSolicitud.pedidoProveedorId && (
                     <div className="space-y-2">
-                      <Label className="flex items-center gap-2">
-                        <Package className="h-4 w-4" />
+                      <Label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                        <Package className="h-3 w-3" />
                         Comanda a Proveïdor
                       </Label>
-                      <p className="text-sm font-mono bg-purple-50 text-purple-700 p-2 rounded">
-                        {selectedSolicitud.pedidoProveedorId === 'ped-prov-001' ? 'PED-WINFIN-2025-001' : selectedSolicitud.pedidoProveedorId}
-                      </p>
+                      <div className="flex items-center gap-3 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                        <Package className="h-5 w-5 text-purple-600" />
+                        <span className="font-mono text-purple-700 font-medium">
+                          {selectedSolicitud.pedidoProveedorId === 'ped-prov-001' ? 'PED-WINFIN-2025-001' : selectedSolicitud.pedidoProveedorId}
+                        </span>
+                      </div>
                     </div>
-                  </>
-                )}
+                  )}
 
-                {/* Notas */}
-                {selectedSolicitud.notas && (
-                  <>
-                    <Separator />
+                  {/* Notas */}
+                  {selectedSolicitud.notas && (
                     <div className="space-y-2">
-                      <Label>Notes</Label>
-                      <p className="text-sm text-muted-foreground">{selectedSolicitud.notas}</p>
+                      <Label className="text-xs uppercase tracking-wide text-muted-foreground">Notes</Label>
+                      <p className="text-sm text-muted-foreground italic">{selectedSolicitud.notas}</p>
                     </div>
-                  </>
-                )}
-              </div>
+                  )}
+                </div>
+              </ScrollArea>
+
+              {/* Footer con acciones */}
+              {selectedSolicitud.estado === 'enviada' && (
+                <div className="px-6 py-4 border-t bg-slate-50 flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1 h-11 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                    onClick={() => {
+                      setIsDetalleOpen(false);
+                      setIsRechazarOpen(true);
+                    }}
+                  >
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Rebutjar
+                  </Button>
+                  <Button
+                    className="flex-1 h-11 bg-green-600 hover:bg-green-700"
+                    onClick={() => {
+                      handleAprobar(selectedSolicitud);
+                      setIsDetalleOpen(false);
+                    }}
+                  >
+                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                    Aprovar Sol·licitud
+                  </Button>
+                </div>
+              )}
             </>
           )}
-          </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog Nueva Solicitud */}
       <Dialog open={isNuevaOpen} onOpenChange={setIsNuevaOpen}>

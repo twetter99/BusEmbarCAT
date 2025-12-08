@@ -24,12 +24,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -368,174 +368,179 @@ export default function PedidosProveedorPage() {
         )}
       </div>
 
-      {/* Sheet Detalle */}
-      <Sheet open={isDetalleOpen} onOpenChange={setIsDetalleOpen}>
-        <SheetContent className="sm:max-w-xl overflow-y-auto">
+      {/* Dialog Detalle */}
+      <Dialog open={isDetalleOpen} onOpenChange={setIsDetalleOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] p-0 gap-0 overflow-hidden">
           {selectedPedido && (
             <>
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
-                  {selectedPedido.codigo}
-                </SheetTitle>
-                <SheetDescription>
-                  Detall de la comanda a WINFIN
-                </SheetDescription>
-              </SheetHeader>
-
-              <div className="mt-6 space-y-6">
-                {/* Estado */}
-                <div className="flex items-center gap-2">
-                  <Badge className={estadoConfig[selectedPedido.estado].color} variant="secondary">
-                    {estadoConfig[selectedPedido.estado].icon}
-                    <span className="ml-1">{estadoConfig[selectedPedido.estado].label}</span>
-                  </Badge>
-                  {selectedPedido.cumpleMinimosFabricacion ? (
-                    <Badge variant="outline" className="text-green-600 border-green-300">
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      Compleix mínims
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="text-amber-600 border-amber-300">
-                      <AlertTriangle className="h-3 w-3 mr-1" />
-                      Sota mínims
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Progreso */}
-                <div>
-                  <Label className="text-sm">Progrés</Label>
-                  <Progress value={calcularProgreso(selectedPedido)} className="h-3 mt-2" />
-                </div>
-
-                <Separator />
-
-                {/* Fechas */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Creat:</span>
-                    <p className="font-medium">{format(selectedPedido.fechaCreacion, 'dd/MM/yyyy', { locale: ca })}</p>
+              {/* Header */}
+              <div className="px-6 py-5 border-b bg-gradient-to-r from-slate-50 to-white">
+                <DialogHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Package className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <DialogTitle className="text-xl font-semibold">
+                        {selectedPedido.codigo}
+                      </DialogTitle>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        Comanda a WINFIN
+                      </p>
+                    </div>
                   </div>
-                  {selectedPedido.fechaEnvioProveedor && (
-                    <div>
-                      <span className="text-muted-foreground">Enviat:</span>
-                      <p className="font-medium">{format(selectedPedido.fechaEnvioProveedor, 'dd/MM/yyyy', { locale: ca })}</p>
-                    </div>
-                  )}
-                  {selectedPedido.fechaConfirmacion && (
-                    <div>
-                      <span className="text-muted-foreground">Confirmat:</span>
-                      <p className="font-medium">{format(selectedPedido.fechaConfirmacion, 'dd/MM/yyyy', { locale: ca })}</p>
-                    </div>
-                  )}
-                  {selectedPedido.fechaEntregaEstimada && (
-                    <div>
-                      <span className="text-muted-foreground">Entrega estimada:</span>
-                      <p className="font-medium">{format(selectedPedido.fechaEntregaEstimada, 'dd/MM/yyyy', { locale: ca })}</p>
-                    </div>
-                  )}
-                  {selectedPedido.fechaRecepcion && (
-                    <div>
-                      <span className="text-muted-foreground">Rebut:</span>
-                      <p className="font-medium text-green-600">{format(selectedPedido.fechaRecepcion, 'dd/MM/yyyy', { locale: ca })}</p>
-                    </div>
-                  )}
-                </div>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <Badge className={estadoConfig[selectedPedido.estado].color} variant="secondary">
+                      {estadoConfig[selectedPedido.estado].icon}
+                      <span className="ml-1">{estadoConfig[selectedPedido.estado].label}</span>
+                    </Badge>
+                    {selectedPedido.cumpleMinimosFabricacion ? (
+                      <Badge variant="outline" className="text-green-600 border-green-300">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Compleix mínims
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-amber-600 border-amber-300">
+                        <AlertTriangle className="h-3 w-3 mr-1" />
+                        Sota mínims
+                      </Badge>
+                    )}
+                  </div>
+                </DialogHeader>
+              </div>
 
-                <Separator />
+              {/* Contenido scrolleable */}
+              <ScrollArea className="max-h-[calc(85vh-180px)]">
+                <div className="px-6 py-5 space-y-5">
+                  {/* Progreso */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Progrés</label>
+                    <Progress value={calcularProgreso(selectedPedido)} className="h-3" />
+                  </div>
 
-                {/* Líneas */}
-                <div className="space-y-3">
-                  <Label>Productes</Label>
-                  {selectedPedido.lineas.map(linea => (
-                    <Card key={linea.id} className="p-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium">{linea.nombre}</p>
-                          <p className="text-xs text-muted-foreground">{linea.sku}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">{linea.cantidadTotal} ud.</p>
-                          <div className="flex items-center gap-1 text-xs">
-                            {linea.cumpleMinimoFabricacion ? (
-                              <span className="text-green-600">✓ Mínim OK</span>
-                            ) : (
-                              <span className="text-amber-600">
-                                ⚠ Mínim: {linea.cantidadMinimaFabricacion}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                  {/* Fechas */}
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Dates</label>
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-xl border">
+                      <div>
+                        <span className="text-xs text-muted-foreground">Creat</span>
+                        <p className="font-medium">{format(selectedPedido.fechaCreacion, 'dd/MM/yyyy', { locale: ca })}</p>
                       </div>
-                      
-                      {/* Progreso de recepción */}
-                      {linea.cantidadRecibida > 0 && (
-                        <div className="mt-2">
-                          <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                            <span>Rebut</span>
-                            <span>{linea.cantidadRecibida}/{linea.cantidadTotal}</span>
-                          </div>
-                          <Progress 
-                            value={(linea.cantidadRecibida / linea.cantidadTotal) * 100} 
-                            className="h-1.5"
-                          />
+                      {selectedPedido.fechaEnvioProveedor && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Enviat</span>
+                          <p className="font-medium">{format(selectedPedido.fechaEnvioProveedor, 'dd/MM/yyyy', { locale: ca })}</p>
                         </div>
                       )}
+                      {selectedPedido.fechaConfirmacion && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Confirmat</span>
+                          <p className="font-medium">{format(selectedPedido.fechaConfirmacion, 'dd/MM/yyyy', { locale: ca })}</p>
+                        </div>
+                      )}
+                      {selectedPedido.fechaEntregaEstimada && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Entrega estimada</span>
+                          <p className="font-medium text-blue-600">{format(selectedPedido.fechaEntregaEstimada, 'dd/MM/yyyy', { locale: ca })}</p>
+                        </div>
+                      )}
+                      {selectedPedido.fechaRecepcion && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Rebut</span>
+                          <p className="font-medium text-green-600">{format(selectedPedido.fechaRecepcion, 'dd/MM/yyyy', { locale: ca })}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-                      {/* Desglose por operador */}
-                      <div className="mt-3 pt-2 border-t">
-                        <p className="text-xs text-muted-foreground mb-1">Desglosat per operador:</p>
-                        {linea.desgloseSolicitudes.map(d => (
-                          <div key={d.solicitudId} className="flex justify-between text-xs">
-                            <span className="truncate max-w-[200px]">{d.operadorNombre}</span>
-                            <span className="font-medium">{d.cantidad} ud.</span>
+                  {/* Líneas */}
+                  <div className="space-y-3">
+                    <label className="text-xs uppercase tracking-wide text-muted-foreground">Productes</label>
+                    {selectedPedido.lineas.map(linea => (
+                      <div key={linea.id} className="p-4 bg-white border rounded-xl shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{linea.nombre}</p>
+                            <p className="text-xs text-muted-foreground font-mono">{linea.sku}</p>
                           </div>
-                        ))}
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                          <div className="text-right">
+                            <p className="font-bold text-lg text-primary">{linea.cantidadTotal}</p>
+                            <div className="flex items-center gap-1 text-xs">
+                              {linea.cumpleMinimoFabricacion ? (
+                                <span className="text-green-600">✓ Mínim OK</span>
+                              ) : (
+                                <span className="text-amber-600">
+                                  ⚠ Mínim: {linea.cantidadMinimaFabricacion}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Progreso de recepción */}
+                        {linea.cantidadRecibida > 0 && (
+                          <div className="mt-3 pt-3 border-t">
+                            <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                              <span>Rebut</span>
+                              <span>{linea.cantidadRecibida}/{linea.cantidadTotal}</span>
+                            </div>
+                            <Progress 
+                              value={(linea.cantidadRecibida / linea.cantidadTotal) * 100} 
+                              className="h-1.5"
+                            />
+                          </div>
+                        )}
 
-                {/* Económico */}
-                {selectedPedido.importeTotal && (
-                  <>
-                    <Separator />
+                        {/* Desglose por operador */}
+                        <div className="mt-3 pt-3 border-t">
+                          <p className="text-xs text-muted-foreground mb-2">Desglosat per operador:</p>
+                          <div className="space-y-1">
+                            {linea.desgloseSolicitudes.map(d => (
+                              <div key={d.solicitudId} className="flex justify-between text-xs">
+                                <span className="truncate max-w-[250px]">{d.operadorNombre}</span>
+                                <span className="font-medium">{d.cantidad} ud.</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Económico */}
+                  {selectedPedido.importeTotal && (
                     <div className="space-y-2">
-                      <Label>Resum Econòmic</Label>
-                      <div className="p-3 bg-muted rounded-lg">
-                        <div className="flex justify-between">
-                          <span>Import total:</span>
-                          <span className="font-bold">{selectedPedido.importeTotal.toLocaleString('ca-ES')} €</span>
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Resum Econòmic</label>
+                      <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                        <div className="flex justify-between items-center">
+                          <span className="text-emerald-700">Import total:</span>
+                          <span className="font-bold text-lg text-emerald-700">{selectedPedido.importeTotal.toLocaleString('ca-ES')} €</span>
                         </div>
                         {selectedPedido.ahorroEstimadoEscala && (
-                          <div className="flex justify-between text-green-600">
+                          <div className="flex justify-between text-green-600 mt-1 text-sm">
                             <span>Estalvi per volum:</span>
                             <span className="font-medium">-{selectedPedido.ahorroEstimadoEscala}%</span>
                           </div>
                         )}
                       </div>
                     </div>
-                  </>
-                )}
+                  )}
 
-                {/* Notas */}
-                {selectedPedido.notas && (
-                  <>
-                    <Separator />
+                  {/* Notas */}
+                  {selectedPedido.notas && (
                     <div className="space-y-2">
-                      <Label>Notes</Label>
-                      <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                      <label className="text-xs uppercase tracking-wide text-muted-foreground">Notes</label>
+                      <p className="text-sm text-muted-foreground italic p-3 bg-slate-50 rounded-lg border">
                         {selectedPedido.notas}
                       </p>
                     </div>
-                  </>
-                )}
-              </div>
+                  )}
+                </div>
+              </ScrollArea>
             </>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
