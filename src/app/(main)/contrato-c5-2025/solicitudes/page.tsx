@@ -524,7 +524,8 @@ export default function SolicitudesPage() {
 
       {/* Sheet Detalle */}
       <Sheet open={isDetalleOpen} onOpenChange={setIsDetalleOpen}>
-        <SheetContent className="sm:max-w-xl overflow-y-auto">
+        <SheetContent className="sm:max-w-xl flex flex-col h-full">
+          <div className="flex-1 overflow-y-auto">
           {selectedSolicitud && (
             <>
               <SheetHeader>
@@ -537,7 +538,7 @@ export default function SolicitudesPage() {
                 </SheetDescription>
               </SheetHeader>
 
-              <div className="mt-6 space-y-6">
+              <div className="mt-6 space-y-6 pb-6">
                 {/* Estado y badges */}
                 <div className="flex flex-wrap gap-2">
                   <Badge className={estadoConfig[selectedSolicitud.estado].color} variant="secondary">
@@ -665,6 +666,7 @@ export default function SolicitudesPage() {
               </div>
             </>
           )}
+          </div>
         </SheetContent>
       </Sheet>
 
