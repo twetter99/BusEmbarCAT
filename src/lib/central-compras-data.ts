@@ -37,15 +37,19 @@ export const WINFIN_CONFIG = {
 // OPERADORES DEL CONTRATO C-5
 // ============================================
 
+// Subset de operadores de mockOperators (src/lib/data.ts) para las demos de C5
+// Los IDs deben coincidir exactamente con los definidos en mockOperators
 export const operadoresC5 = [
   { id: 'op-01', nombre: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', codigo: 'ALG' },
-  { id: 'op-02', nombre: 'AUTOCARES JULIA, SL', codigo: 'AJU' },
+  { id: 'op-02', nombre: 'AUTOCARES JULIÀ, SL', codigo: 'AJU' },
   { id: 'op-03', nombre: 'AUTOCARS DEL PENEDÈS, SA', codigo: 'ADP' },
   { id: 'op-04', nombre: 'AUTOCARS PRAT, SA', codigo: 'APR' },
-  { id: 'op-05', nombre: 'HISPANO LLACUNENSE, SL', codigo: 'HLL' },
-  { id: 'op-06', nombre: 'MONTFERRI HERMANOS, SL', codigo: 'MFH' },
-  { id: 'op-07', nombre: 'TUS, SCCL', codigo: 'TUS' },
-  { id: 'op-08', nombre: 'TEISA', codigo: 'TEI' },
+  { id: 'op-10', nombre: 'HISPANO LLACUNENSE, SL', codigo: 'HLL' },
+  { id: 'op-11', nombre: 'MONTFERRI HERMANOS, SL', codigo: 'MFH' },
+  { id: 'op-13', nombre: 'TUS, SCCL', codigo: 'TUS' },
+  { id: 'op-20', nombre: 'TUSGSAL', codigo: 'TUS' },
+  { id: 'op-24', nombre: 'LA HISPANO IGUALADINA, SL', codigo: 'HIFE' },
+  { id: 'op-41', nombre: 'TEISA', codigo: 'TEI' },
 ];
 
 // ============================================
@@ -179,7 +183,7 @@ export const mockSolicitudesOperador: SolicitudOperador[] = [
   {
     id: 'sol-004',
     codigo: 'SOL-2025-0004',
-    operadorId: 'op-05',
+    operadorId: 'op-10',
     operadorNombre: 'HISPANO LLACUNENSE, SL',
     tipo: 'normal',
     prioridad: 'baja',
@@ -219,7 +223,7 @@ export const mockSolicitudesOperador: SolicitudOperador[] = [
   {
     id: 'sol-005',
     codigo: 'SOL-2025-0005',
-    operadorId: 'op-07',
+    operadorId: 'op-13',
     operadorNombre: 'TUS, SCCL',
     tipo: 'normal',
     prioridad: 'alta',
@@ -268,7 +272,7 @@ export const mockSolicitudesOperador: SolicitudOperador[] = [
   {
     id: 'sol-006',
     codigo: 'SOL-2025-0006',
-    operadorId: 'op-06',
+    operadorId: 'op-11',
     operadorNombre: 'MONTFERRI HERMANOS, SL',
     tipo: 'urgente',
     prioridad: 'alta',
@@ -341,8 +345,8 @@ export const mockPedidosProveedor: PedidoProveedor[] = [
         cantidadMinimaFabricacion: 25,
         cumpleMinimoFabricacion: false, // 15 < 25
         desgloseSolicitudes: [
-          { solicitudId: 'sol-004', solicitudCodigo: 'SOL-2025-0004', operadorId: 'op-05', operadorNombre: 'HISPANO LLACUNENSE, SL', cantidad: 3 },
-          { solicitudId: 'sol-005', solicitudCodigo: 'SOL-2025-0005', operadorId: 'op-07', operadorNombre: 'TUS, SCCL', cantidad: 12 },
+          { solicitudId: 'sol-004', solicitudCodigo: 'SOL-2025-0004', operadorId: 'op-10', operadorNombre: 'HISPANO LLACUNENSE, SL', cantidad: 3 },
+          { solicitudId: 'sol-005', solicitudCodigo: 'SOL-2025-0005', operadorId: 'op-13', operadorNombre: 'TUS, SCCL', cantidad: 12 },
         ],
       },
       {
@@ -356,8 +360,8 @@ export const mockPedidosProveedor: PedidoProveedor[] = [
         cantidadMinimaFabricacion: 20,
         cumpleMinimoFabricacion: false, // 15 < 20
         desgloseSolicitudes: [
-          { solicitudId: 'sol-004', solicitudCodigo: 'SOL-2025-0004', operadorId: 'op-05', operadorNombre: 'HISPANO LLACUNENSE, SL', cantidad: 3 },
-          { solicitudId: 'sol-005', solicitudCodigo: 'SOL-2025-0005', operadorId: 'op-07', operadorNombre: 'TUS, SCCL', cantidad: 12 },
+          { solicitudId: 'sol-004', solicitudCodigo: 'SOL-2025-0004', operadorId: 'op-10', operadorNombre: 'HISPANO LLACUNENSE, SL', cantidad: 3 },
+          { solicitudId: 'sol-005', solicitudCodigo: 'SOL-2025-0005', operadorId: 'op-13', operadorNombre: 'TUS, SCCL', cantidad: 12 },
         ],
       },
       {
@@ -371,7 +375,7 @@ export const mockPedidosProveedor: PedidoProveedor[] = [
         cantidadMinimaFabricacion: 15,
         cumpleMinimoFabricacion: false, // 12 < 15
         desgloseSolicitudes: [
-          { solicitudId: 'sol-005', solicitudCodigo: 'SOL-2025-0005', operadorId: 'op-07', operadorNombre: 'TUS, SCCL', cantidad: 12 },
+          { solicitudId: 'sol-005', solicitudCodigo: 'SOL-2025-0005', operadorId: 'op-13', operadorNombre: 'TUS, SCCL', cantidad: 12 },
         ],
       },
     ],
@@ -402,9 +406,9 @@ export const mockPedidosProveedor: PedidoProveedor[] = [
         cumpleMinimoFabricacion: true,
         descuentoVolumen: 5, // 5% por superar 50 uds totales
         desgloseSolicitudes: [
-          { solicitudId: 'sol-hist-001', solicitudCodigo: 'SOL-2024-0045', operadorId: 'op-01', operadorNombre: 'ALSINA GRAELLS', cantidad: 10 },
-          { solicitudId: 'sol-hist-002', solicitudCodigo: 'SOL-2024-0046', operadorId: 'op-02', operadorNombre: 'AUTOCARES JULIA', cantidad: 8 },
-          { solicitudId: 'sol-hist-003', solicitudCodigo: 'SOL-2024-0047', operadorId: 'op-07', operadorNombre: 'TUS', cantidad: 12 },
+          { solicitudId: 'sol-hist-001', solicitudCodigo: 'SOL-2024-0045', operadorId: 'op-01', operadorNombre: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', cantidad: 10 },
+          { solicitudId: 'sol-hist-002', solicitudCodigo: 'SOL-2024-0046', operadorId: 'op-02', operadorNombre: 'AUTOCARES JULIÀ, SL', cantidad: 8 },
+          { solicitudId: 'sol-hist-003', solicitudCodigo: 'SOL-2024-0047', operadorId: 'op-13', operadorNombre: 'TUS, SCCL', cantidad: 12 },
         ],
       },
       {
@@ -419,9 +423,9 @@ export const mockPedidosProveedor: PedidoProveedor[] = [
         cumpleMinimoFabricacion: true,
         descuentoVolumen: 5,
         desgloseSolicitudes: [
-          { solicitudId: 'sol-hist-001', solicitudCodigo: 'SOL-2024-0045', operadorId: 'op-01', operadorNombre: 'ALSINA GRAELLS', cantidad: 10 },
-          { solicitudId: 'sol-hist-002', solicitudCodigo: 'SOL-2024-0046', operadorId: 'op-02', operadorNombre: 'AUTOCARES JULIA', cantidad: 8 },
-          { solicitudId: 'sol-hist-003', solicitudCodigo: 'SOL-2024-0047', operadorId: 'op-07', operadorNombre: 'TUS', cantidad: 12 },
+          { solicitudId: 'sol-hist-001', solicitudCodigo: 'SOL-2024-0045', operadorId: 'op-01', operadorNombre: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA', cantidad: 10 },
+          { solicitudId: 'sol-hist-002', solicitudCodigo: 'SOL-2024-0046', operadorId: 'op-02', operadorNombre: 'AUTOCARES JULIÀ, SL', cantidad: 8 },
+          { solicitudId: 'sol-hist-003', solicitudCodigo: 'SOL-2024-0047', operadorId: 'op-13', operadorNombre: 'TUS, SCCL', cantidad: 12 },
         ],
       },
     ],
@@ -598,9 +602,9 @@ export const mockLliuraments: Lliurament[] = [
   {
     id: 'lli-001',
     codigo: 'LLI-2025-0001',
-    operadorId: 'op-001',
-    operadorNombre: 'TMB - Transports Metropolitans de Barcelona',
-    operadorCodi: 'TMB',
+    operadorId: 'op-01',
+    operadorNombre: 'ALSINA GRAELLS DE AUTO TRANSPORTES, SA',
+    operadorCodi: 'ALG',
     tipo: 'normal',
     estado: 'lliurat',
     fechaCreacion: new Date('2025-10-15'),
@@ -630,7 +634,7 @@ export const mockLliuraments: Lliurament[] = [
         cantidadEntregada: 8,
       },
     ],
-    direccionEntrega: 'Cotxeres de Horta, Passeig de Maragall 389, 08032 Barcelona',
+    direccionEntrega: 'Base Operativa Alsina Graells, C/ Motors 42, 08040 Barcelona',
     contactoEntrega: 'Joan Martínez',
     telefonoContacto: '934 123 456',
     albaranEntrega: 'ALB-2025-0015',
@@ -639,9 +643,9 @@ export const mockLliuraments: Lliurament[] = [
   {
     id: 'lli-002',
     codigo: 'LLI-2025-0002',
-    operadorId: 'op-002',
-    operadorNombre: 'Moventis Sarbus',
-    operadorCodi: 'SARBUS',
+    operadorId: 'op-02',
+    operadorNombre: 'AUTOCARES JULIÀ, SL',
+    operadorCodi: 'AJU',
     tipo: 'urgencia',
     estado: 'lliurat',
     fechaCreacion: new Date('2025-11-05'),
@@ -661,7 +665,7 @@ export const mockLliuraments: Lliurament[] = [
         solicitudOrigenId: 'sol-004',
       },
     ],
-    direccionEntrega: 'Base Operativa Sarbus, C/ Indústria 45, 08740 Sant Andreu de la Barca',
+    direccionEntrega: 'Base Operativa Julià, C/ Indústria 45, 08740 Sant Andreu de la Barca',
     contactoEntrega: 'Pere Soler',
     telefonoContacto: '936 789 012',
     observaciones: 'Lliurament urgent des de buffer',
@@ -671,9 +675,9 @@ export const mockLliuraments: Lliurament[] = [
   {
     id: 'lli-003',
     codigo: 'LLI-2025-0003',
-    operadorId: 'op-003',
-    operadorNombre: 'Tusgsal',
-    operadorCodi: 'TUSGSAL',
+    operadorId: 'op-20',
+    operadorNombre: 'TUSGSAL',
+    operadorCodi: 'TUS',
     tipo: 'normal',
     estado: 'en_transit',
     fechaCreacion: new Date('2025-12-01'),
@@ -693,16 +697,16 @@ export const mockLliuraments: Lliurament[] = [
         cantidadEntregada: 0,
       },
     ],
-    direccionEntrega: 'Cotxeres Tusgsal, Av. Martí Pujol 123, 08913 Badalona',
+    direccionEntrega: 'Cotxeres TUSGSAL, Av. Martí Pujol 123, 08913 Badalona',
     contactoEntrega: 'Anna García',
     telefonoContacto: '933 456 789',
   },
   {
     id: 'lli-004',
     codigo: 'LLI-2025-0004',
-    operadorId: 'op-004',
-    operadorNombre: 'Baixbus',
-    operadorCodi: 'BAIXBUS',
+    operadorId: 'op-03',
+    operadorNombre: 'AUTOCARS DEL PENEDÈS, SA',
+    operadorCodi: 'ADP',
     tipo: 'normal',
     estado: 'preparat',
     fechaCreacion: new Date('2025-12-03'),
@@ -730,15 +734,15 @@ export const mockLliuraments: Lliurament[] = [
         cantidadEntregada: 0,
       },
     ],
-    direccionEntrega: 'Estació Baixbus, Pl. Catalunya s/n, 08880 Cubelles',
+    direccionEntrega: 'Base Autocars del Penedès, C/ Migdia 8, 08720 Vilafranca del Penedès',
     contactoEntrega: 'Marta Puig',
     telefonoContacto: '938 901 234',
   },
   {
     id: 'lli-005',
     codigo: 'LLI-2025-0005',
-    operadorId: 'op-005',
-    operadorNombre: 'Hispano Igualadina (HIFE)',
+    operadorId: 'op-24',
+    operadorNombre: 'LA HISPANO IGUALADINA, SL',
     operadorCodi: 'HIFE',
     tipo: 'normal',
     estado: 'en_preparacio',
@@ -765,9 +769,9 @@ export const mockLliuraments: Lliurament[] = [
   {
     id: 'lli-006',
     codigo: 'LLI-2025-0006',
-    operadorId: 'op-001',
-    operadorNombre: 'TMB - Transports Metropolitans de Barcelona',
-    operadorCodi: 'TMB',
+    operadorId: 'op-13',
+    operadorNombre: 'TUS, SCCL',
+    operadorCodi: 'TUS',
     tipo: 'normal',
     estado: 'pendent',
     fechaCreacion: new Date('2025-12-07'),
@@ -784,7 +788,7 @@ export const mockLliuraments: Lliurament[] = [
         solicitudOrigenId: 'sol-001',
       },
     ],
-    direccionEntrega: 'Cotxeres del Carmel, C/ Llobregós 125, 08032 Barcelona',
+    direccionEntrega: 'Base TUS, C/ Sant Antoni 15, 08202 Sabadell',
     contactoEntrega: 'Carles Vidal',
     telefonoContacto: '934 234 567',
     observaciones: 'Pendent de recepció de material de WINFIN',
