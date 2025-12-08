@@ -120,6 +120,12 @@ export default function SolicitudesPage() {
   const [selectedSolicitud, setSelectedSolicitud] = React.useState<SolicitudOperador | null>(null);
   const [isDetalleOpen, setIsDetalleOpen] = React.useState(false);
   
+  // Aprobar/Rechazar
+  const [isAprobarOpen, setIsAprobarOpen] = React.useState(false);
+  const [isRechazarOpen, setIsRechazarOpen] = React.useState(false);
+  const [solicitudAccion, setSolicitudAccion] = React.useState<SolicitudOperador | null>(null);
+  const [motivoRechazo, setMotivoRechazo] = React.useState('');
+  
   // Nueva solicitud
   const [isNuevaOpen, setIsNuevaOpen] = React.useState(false);
   const [nuevaSolicitud, setNuevaSolicitud] = React.useState({
@@ -174,6 +180,69 @@ export default function SolicitudesPage() {
       title: 'Sol·licitud enviada',
       description: `La sol·licitud ${sol.codigo} s'ha enviat a la Central de Compres.`,
     });
+  };
+
+  const handleAprobar = (sol: SolicitudOperador) => {
+    setSolicitudAccion(sol);
+    setIsAprobarOpen(true);
+  };
+
+  const handleRechazar = (sol: SolicitudOperador) => {
+    setSolicitudAccion(sol);
+    setMotivoRechazo('');
+    setIsRechazarOpen(true);
+  };
+
+  const confirmarAprobacion = () => {
+    if (!solicitudAccion) return;
+    
+    setSolicitudes(prev =>
+      prev.map(s =>
+        s.id === solicitudAccion.id
+          ? { 
+              ...s, 
+              estado: 'aprobada' as EstadoSolicitudOperador, 
+              fechaAprobacion: new Date(),
+              aprobadoPor: 'G.S.S. (Jefe de Proyecto)',
+              lineas: s.lineas.map(l => ({ ...l, cantidadAprobada: l.cantidadSolicitada }))
+            }
+          : s
+      )
+    );
+    
+    toast({
+      title: 'Sol·licitud aprovada',
+      description: `${solicitudAccion.codigo} ha estat aprovada i passarà a la Central de Compres.`,
+    });
+    
+    setIsAprobarOpen(false);
+    setSolicitudAccion(null);
+  };
+
+  const confirmarRechazo = () => {
+    if (!solicitudAccion) return;
+    
+    setSolicitudes(prev =>
+      prev.map(s =>
+        s.id === solicitudAccion.id
+          ? { 
+              ...s, 
+              estado: 'rechazada' as EstadoSolicitudOperador,
+              notas: motivoRechazo ? `Rebutjada: ${motivoRechazo}` : 'Rebutjada sense motiu especificat'
+            }
+          : s
+      )
+    );
+    
+    toast({
+      title: 'Sol·licitud rebutjada',
+      description: `${solicitudAccion.codigo} ha estat rebutjada.`,
+      variant: 'destructive',
+    });
+    
+    setIsRechazarOpen(false);
+    setSolicitudAccion(null);
+    setMotivoRechazo('');
   };
 
   const handleCrearSolicitud = () => {
@@ -430,6 +499,27 @@ export default function SolicitudesPage() {
                           <Send className="h-4 w-4 mr-1" />
                           Enviar
                         </Button>
+                      )}
+                      {sol.estado === 'enviada' && (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleRechazar(sol)}
+                          >
+                            <XCircle className="h-4 w-4 mr-1" />
+                            Rebutjar
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={() => handleAprobar(sol)}
+                          >
+                            <CheckCircle2 className="h-4 w-4 mr-1" />
+                            Aprovar
+                          </Button>
+                        </>
                       )}
                     </div>
                   </TableCell>
@@ -763,6 +853,88 @@ export default function SolicitudesPage() {
             </Button>
             <Button onClick={handleCrearSolicitud}>
               Crear Sol·licitud
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Aprobar Solicitud */}
+      <Dialog open={isAprobarOpen} onOpenChange={setIsAprobarOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              Aprovar Sol·licitud
+            </DialogTitle>
+            <DialogDescription>
+              Confirma l'aprovació de la sol·licitud {solicitudAccion?.codigo}
+            </DialogDescription>
+          </DialogHeader>
+          {solicitudAccion && (
+            <div className="space-y-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="font-medium">{solicitudAccion.operadorNombre}</p>
+                <p className="text-sm text-muted-foreground mt-1">{solicitudAccion.justificacion}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Productes sol·licitats:</p>
+                {solicitudAccion.lineas.map(l => (
+                  <div key={l.id} className="flex justify-between text-sm p-2 bg-slate-50 rounded">
+                    <span>{l.nombre}</span>
+                    <span className="font-medium">{l.cantidadSolicitada} ud.</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAprobarOpen(false)}>
+              Cancel·lar
+            </Button>
+            <Button className="bg-green-600 hover:bg-green-700" onClick={confirmarAprobacion}>
+              <CheckCircle2 className="h-4 w-4 mr-1" />
+              Aprovar Sol·licitud
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Rechazar Solicitud */}
+      <Dialog open={isRechazarOpen} onOpenChange={setIsRechazarOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <XCircle className="h-5 w-5 text-red-600" />
+              Rebutjar Sol·licitud
+            </DialogTitle>
+            <DialogDescription>
+              Indica el motiu del rebuig de la sol·licitud {solicitudAccion?.codigo}
+            </DialogDescription>
+          </DialogHeader>
+          {solicitudAccion && (
+            <div className="space-y-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="font-medium">{solicitudAccion.operadorNombre}</p>
+                <p className="text-sm text-muted-foreground mt-1">{solicitudAccion.justificacion}</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="motivo-rechazo">Motiu del rebuig</Label>
+                <Textarea
+                  id="motivo-rechazo"
+                  placeholder="Explica el motiu pel qual es rebutja la sol·licitud..."
+                  value={motivoRechazo}
+                  onChange={e => setMotivoRechazo(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsRechazarOpen(false)}>
+              Cancel·lar
+            </Button>
+            <Button variant="destructive" onClick={confirmarRechazo}>
+              <XCircle className="h-4 w-4 mr-1" />
+              Rebutjar Sol·licitud
             </Button>
           </DialogFooter>
         </DialogContent>

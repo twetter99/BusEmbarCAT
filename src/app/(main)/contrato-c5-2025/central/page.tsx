@@ -54,15 +54,11 @@ import {
   XCircle,
   AlertTriangle,
   TrendingUp,
-  Clock,
-  Building2,
   FileStack,
-  Send,
   Zap,
-  DollarSign,
   Factory,
-  ArrowRight,
   Info,
+  Send,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -82,12 +78,9 @@ import type {
 export default function CentralComprasPage() {
   const { toast } = useToast();
   
-  // Estados
+  // Estados - Solo solicitudes aprobadas (ya revisadas en el módulo Solicitudes)
   const [solicitudesAprobadas, setSolicitudesAprobadas] = React.useState<SolicitudOperador[]>(
     mockSolicitudesOperador.filter(s => s.estado === 'aprobada')
-  );
-  const [solicitudesEnviadas, setSolicitudesEnviadas] = React.useState<SolicitudOperador[]>(
-    mockSolicitudesOperador.filter(s => s.estado === 'enviada')
   );
   const [solicitudesSeleccionadas, setSolicitudesSeleccionadas] = React.useState<string[]>([]);
   const [pedidosBorrador, setPedidosBorrador] = React.useState<PedidoProveedor[]>(
@@ -95,13 +88,11 @@ export default function CentralComprasPage() {
   );
   
   // Dialogs
-  const [isAprobarOpen, setIsAprobarOpen] = React.useState(false);
-  const [solicitudAprobar, setSolicitudAprobar] = React.useState<SolicitudOperador | null>(null);
   const [isGenerarPedidoOpen, setIsGenerarPedidoOpen] = React.useState(false);
 
   // Calcular agregación de solicitudes seleccionadas
   const agregacionSeleccionadas = React.useMemo(() => {
-    const solicitudes = [...solicitudesAprobadas, ...solicitudesEnviadas]
+    const solicitudes = solicitudesAprobadas
       .filter(s => solicitudesSeleccionadas.includes(s.id));
     
     const lineasAgregadas: { productoId: string; cantidad: number }[] = [];
@@ -127,7 +118,7 @@ export default function CentralComprasPage() {
       totalUnidades,
       descuento,
     };
-  }, [solicitudesSeleccionadas, solicitudesAprobadas, solicitudesEnviadas]);
+  }, [solicitudesSeleccionadas, solicitudesAprobadas]);
 
   // KPIs
   const kpis = mockKPIsCentralCompras;
@@ -136,55 +127,6 @@ export default function CentralComprasPage() {
     setSolicitudesSeleccionadas(prev =>
       prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
-  };
-
-  const handleAprobarSolicitud = (sol: SolicitudOperador) => {
-    setSolicitudAprobar(sol);
-    setIsAprobarOpen(true);
-  };
-
-  const confirmarAprobacion = () => {
-    if (!solicitudAprobar) return;
-    
-    // Mover de enviadas a aprobadas
-    setSolicitudesEnviadas(prev => prev.filter(s => s.id !== solicitudAprobar.id));
-    setSolicitudesAprobadas(prev => [
-      ...prev,
-      { ...solicitudAprobar, estado: 'aprobada', fechaAprobacion: new Date(), aprobadoPor: 'G.S.S. (Jefe de Proyecto)' }
-    ]);
-    
-    toast({
-      title: 'Sol·licitud aprovada',
-      description: `${solicitudAprobar.codigo} ha estat aprovada i està llesta per agregar.`,
-    });
-    
-    setIsAprobarOpen(false);
-    setSolicitudAprobar(null);
-  };
-
-  const handleServirDesdeStock = (sol: SolicitudOperador) => {
-    // Verificar stock disponible
-    const stockOk = sol.lineas.every(linea => {
-      const stock = mockStockCentral.find(s => s.productoId === linea.productoId);
-      return stock && stock.stockReservadoUrgencias >= linea.cantidadSolicitada;
-    });
-    
-    if (!stockOk) {
-      toast({
-        variant: 'destructive',
-        title: 'Stock insuficient',
-        description: 'No hi ha prou stock d\'urgències per servir aquesta sol·licitud.',
-      });
-      return;
-    }
-    
-    // Simular servir desde stock
-    setSolicitudesEnviadas(prev => prev.filter(s => s.id !== sol.id));
-    
-    toast({
-      title: 'Sol·licitud servida',
-      description: `${sol.codigo} s'ha servit des de l'stock d'urgències.`,
-    });
   };
 
   const handleGenerarPedidoProveedor = () => {
@@ -229,22 +171,22 @@ export default function CentralComprasPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Pendent Aprovació</CardTitle>
-            <Clock className="h-4 w-4 text-amber-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-amber-600">{solicitudesEnviadas.length}</div>
-            <p className="text-xs text-muted-foreground">sol·licituds per revisar</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Llestes per Agregar</CardTitle>
             <Layers className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">{solicitudesAprobadas.length}</div>
-            <p className="text-xs text-muted-foreground">aprovades sense comanda</p>
+            <p className="text-xs text-muted-foreground">sol·licituds aprovades</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Comandes Borrador</CardTitle>
+            <FileStack className="h-4 w-4 text-amber-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-amber-600">{pedidosBorrador.length}</div>
+            <p className="text-xs text-muted-foreground">pendents d'enviar a WINFIN</p>
           </CardContent>
         </Card>
         <Card>
@@ -271,113 +213,18 @@ export default function CentralComprasPage() {
         </Card>
       </div>
 
-      <Tabs defaultValue="pendientes" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-md">
-          <TabsTrigger value="pendientes" className="relative">
-            Pendents
-            {solicitudesEnviadas.length > 0 && (
-              <Badge className="ml-2 h-5 w-5 p-0 flex items-center justify-center bg-amber-500">
-                {solicitudesEnviadas.length}
-              </Badge>
-            )}
-          </TabsTrigger>
+      <Tabs defaultValue="agregar" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
           <TabsTrigger value="agregar">
-            Agregar
+            Agregar Sol·licituds
             {solicitudesAprobadas.length > 0 && (
               <Badge className="ml-2 h-5 w-5 p-0 flex items-center justify-center bg-blue-500">
                 {solicitudesAprobadas.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="borrador">Esborranys</TabsTrigger>
+          <TabsTrigger value="borrador">Esborranys Comandes</TabsTrigger>
         </TabsList>
-
-        {/* Tab: Pendientes de Aprobación */}
-        <TabsContent value="pendientes" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-amber-500" />
-                Sol·licituds Pendents d'Aprovació
-              </CardTitle>
-              <CardDescription>
-                Revisa i aprova les sol·licituds enviades pels operadors
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {solicitudesEnviadas.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-green-500" />
-                  <p>No hi ha sol·licituds pendents d'aprovació</p>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Codi</TableHead>
-                      <TableHead>Operador</TableHead>
-                      <TableHead>Tipus</TableHead>
-                      <TableHead>Productes</TableHead>
-                      <TableHead>Data Enviament</TableHead>
-                      <TableHead className="text-right">Accions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {solicitudesEnviadas.map(sol => (
-                      <TableRow key={sol.id} className={sol.tipo === 'urgente' ? 'bg-red-50' : ''}>
-                        <TableCell className="font-mono font-medium">
-                          {sol.codigo}
-                          {sol.tipo === 'urgente' && (
-                            <Zap className="inline ml-2 h-4 w-4 text-red-500" />
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <span className="truncate max-w-[200px] block">{sol.operadorNombre}</span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={sol.tipo === 'urgente' ? 'destructive' : 'secondary'}>
-                            {sol.tipo === 'urgente' ? 'Urgent' : sol.tipo === 'incidencia' ? 'Incidència' : 'Normal'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {sol.lineas.map(l => (
-                            <div key={l.id} className="text-sm">
-                              {l.cantidadSolicitada}x {l.nombre}
-                            </div>
-                          ))}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {sol.fechaEnvio && format(sol.fechaEnvio, 'dd/MM/yy HH:mm', { locale: ca })}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            {sol.tipo === 'urgente' && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleServirDesdeStock(sol)}
-                              >
-                                <Zap className="h-4 w-4 mr-1" />
-                                Servir Stock
-                              </Button>
-                            )}
-                            <Button
-                              size="sm"
-                              onClick={() => handleAprobarSolicitud(sol)}
-                            >
-                              <CheckCircle2 className="h-4 w-4 mr-1" />
-                              Aprovar
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         {/* Tab: Agregar en Pedido */}
         <TabsContent value="agregar" className="space-y-4">
@@ -663,44 +510,6 @@ export default function CentralComprasPage() {
           </Card>
         </TabsContent>
       </Tabs>
-
-      {/* Dialog Aprobar */}
-      <Dialog open={isAprobarOpen} onOpenChange={setIsAprobarOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Aprovar Sol·licitud</DialogTitle>
-            <DialogDescription>
-              Confirma l'aprovació de la sol·licitud {solicitudAprobar?.codigo}
-            </DialogDescription>
-          </DialogHeader>
-          {solicitudAprobar && (
-            <div className="space-y-4">
-              <div className="p-4 bg-muted rounded-lg">
-                <p className="font-medium">{solicitudAprobar.operadorNombre}</p>
-                <p className="text-sm text-muted-foreground">{solicitudAprobar.justificacion}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Productes sol·licitats:</p>
-                {solicitudAprobar.lineas.map(l => (
-                  <div key={l.id} className="flex justify-between text-sm">
-                    <span>{l.nombre}</span>
-                    <span className="font-medium">{l.cantidadSolicitada} ud.</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAprobarOpen(false)}>
-              Cancel·lar
-            </Button>
-            <Button onClick={confirmarAprobacion}>
-              <CheckCircle2 className="h-4 w-4 mr-1" />
-              Aprovar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Dialog Generar Pedido */}
       <Dialog open={isGenerarPedidoOpen} onOpenChange={setIsGenerarPedidoOpen}>
