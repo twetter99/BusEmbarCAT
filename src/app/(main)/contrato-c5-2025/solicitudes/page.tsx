@@ -111,7 +111,10 @@ const prioridadConfig: Record<string, { label: string; color: string }> = {
 
 export default function SolicitudesPage() {
   const { toast } = useToast();
-  const [solicitudes, setSolicitudes] = React.useState<SolicitudOperador[]>(mockSolicitudesOperador);
+  // Solo mostramos solicitudes pendientes de aprobar (enviada) y rechazadas
+  const [solicitudes, setSolicitudes] = React.useState<SolicitudOperador[]>(
+    mockSolicitudesOperador.filter(s => s.estado === 'enviada' || s.estado === 'rechazada')
+  );
   const [filtroEstado, setFiltroEstado] = React.useState<string>('todas');
   const [filtroOperador, setFiltroOperador] = React.useState<string>('todos');
   const [busqueda, setBusqueda] = React.useState('');
@@ -153,13 +156,13 @@ export default function SolicitudesPage() {
     });
   }, [solicitudes, filtroEstado, filtroOperador, busqueda]);
 
-  // Stats
+  // Stats - Solo para solicitudes pendientes y rechazadas
   const stats = React.useMemo(() => {
     return {
       total: solicitudes.length,
-      pendientes: solicitudes.filter(s => ['enviada', 'aprobada'].includes(s.estado)).length,
-      urgentes: solicitudes.filter(s => s.tipo === 'urgente' && s.estado !== 'entregada' && s.estado !== 'servida_stock').length,
-      entregadas: solicitudes.filter(s => s.estado === 'entregada' || s.estado === 'servida_stock').length,
+      pendientes: solicitudes.filter(s => s.estado === 'enviada').length,
+      urgentes: solicitudes.filter(s => s.tipo === 'urgente' && s.estado === 'enviada').length,
+      rechazadas: solicitudes.filter(s => s.estado === 'rechazada').length,
     };
   }, [solicitudes]);
 
@@ -316,53 +319,43 @@ export default function SolicitudesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Sol·licituds d'Operadors</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Aprovació de Sol·licituds</h1>
           <p className="text-muted-foreground">
-            Gestió de peticions de material dels operadors de transport
+            Revisió i aprovació de peticions de material dels operadors
           </p>
         </div>
-        <Button onClick={() => setIsNuevaOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nova Sol·licitud
-        </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Sol·licituds</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Pendents Gestió</CardTitle>
+            <CardTitle className="text-sm font-medium">Pendents d'Aprovar</CardTitle>
             <Clock className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-amber-600">{stats.pendientes}</div>
+            <p className="text-xs text-muted-foreground">sol·licituds per revisar</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Urgents Actives</CardTitle>
+            <CardTitle className="text-sm font-medium">Urgents</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">{stats.urgentes}</div>
+            <p className="text-xs text-muted-foreground">requereixen atenció immediata</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Entregades</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-medium">Rebutjades</CardTitle>
+            <XCircle className="h-4 w-4 text-slate-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.entregadas}</div>
+            <div className="text-2xl font-bold text-slate-600">{stats.rechazadas}</div>
+            <p className="text-xs text-muted-foreground">històric de rebuigs</p>
           </CardContent>
         </Card>
       </div>
@@ -397,11 +390,8 @@ export default function SolicitudesPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todas">Tots els estats</SelectItem>
-                  <SelectItem value="borrador">Esborrany</SelectItem>
-                  <SelectItem value="enviada">Enviada</SelectItem>
-                  <SelectItem value="aprobada">Aprovada</SelectItem>
-                  <SelectItem value="asignada_pedido">En Comanda</SelectItem>
-                  <SelectItem value="entregada">Entregada</SelectItem>
+                  <SelectItem value="enviada">Pendent d'aprovar</SelectItem>
+                  <SelectItem value="rechazada">Rebutjada</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -449,8 +439,13 @@ export default function SolicitudesPage() {
             </TableHeader>
             <TableBody>
               {solicitudesFiltradas.map(sol => (
-                <TableRow key={sol.id}>
-                  <TableCell className="font-mono font-medium">{sol.codigo}</TableCell>
+                <TableRow key={sol.id} className={sol.estado === 'rechazada' ? 'bg-slate-50 opacity-75' : sol.tipo === 'urgente' ? 'bg-red-50' : ''}>
+                  <TableCell className="font-mono font-medium">
+                    {sol.codigo}
+                    {sol.tipo === 'urgente' && sol.estado === 'enviada' && (
+                      <Zap className="inline ml-2 h-4 w-4 text-red-500" />
+                    )}
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-muted-foreground" />
@@ -490,16 +485,6 @@ export default function SolicitudesPage() {
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      {sol.estado === 'borrador' && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEnviarSolicitud(sol)}
-                        >
-                          <Send className="h-4 w-4 mr-1" />
-                          Enviar
-                        </Button>
-                      )}
                       {sol.estado === 'enviada' && (
                         <>
                           <Button

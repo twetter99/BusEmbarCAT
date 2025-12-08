@@ -78,9 +78,16 @@ import type {
 export default function CentralComprasPage() {
   const { toast } = useToast();
   
-  // Estados - Solo solicitudes aprobadas (ya revisadas en el módulo Solicitudes)
+  // Estados - Solicitudes ya aprobadas (pueden estar en diferentes estados del flujo)
+  // aprobada: pendiente de agregar a pedido
+  // asignada_pedido: ya incluida en un pedido a WINFIN
+  // en_transito: material en camino
+  // entregada: ya entregada al operador
+  // servida_stock: servida desde stock de urgencias
   const [solicitudesAprobadas, setSolicitudesAprobadas] = React.useState<SolicitudOperador[]>(
-    mockSolicitudesOperador.filter(s => s.estado === 'aprobada')
+    mockSolicitudesOperador.filter(s => 
+      ['aprobada', 'asignada_pedido', 'en_transito', 'entregada', 'servida_stock'].includes(s.estado)
+    )
   );
   const [solicitudesSeleccionadas, setSolicitudesSeleccionadas] = React.useState<string[]>([]);
   const [pedidosBorrador, setPedidosBorrador] = React.useState<PedidoProveedor[]>(
@@ -90,9 +97,15 @@ export default function CentralComprasPage() {
   // Dialogs
   const [isGenerarPedidoOpen, setIsGenerarPedidoOpen] = React.useState(false);
 
+  // Solicitudes pendientes de agregar (solo estado 'aprobada')
+  const solicitudesPendientesAgregar = React.useMemo(() => 
+    solicitudesAprobadas.filter(s => s.estado === 'aprobada'),
+    [solicitudesAprobadas]
+  );
+
   // Calcular agregación de solicitudes seleccionadas
   const agregacionSeleccionadas = React.useMemo(() => {
-    const solicitudes = solicitudesAprobadas
+    const solicitudes = solicitudesPendientesAgregar
       .filter(s => solicitudesSeleccionadas.includes(s.id));
     
     const lineasAgregadas: { productoId: string; cantidad: number }[] = [];
@@ -118,7 +131,7 @@ export default function CentralComprasPage() {
       totalUnidades,
       descuento,
     };
-  }, [solicitudesSeleccionadas, solicitudesAprobadas]);
+  }, [solicitudesSeleccionadas, solicitudesPendientesAgregar]);
 
   // KPIs
   const kpis = mockKPIsCentralCompras;
@@ -151,11 +164,23 @@ export default function CentralComprasPage() {
     
     // Mover solicitudes a estado 'asignada_pedido'
     setSolicitudesAprobadas(prev =>
-      prev.filter(s => !solicitudesSeleccionadas.includes(s.id))
+      prev.map(s => 
+        solicitudesSeleccionadas.includes(s.id) 
+          ? { ...s, estado: 'asignada_pedido' as const }
+          : s
+      )
     );
     setSolicitudesSeleccionadas([]);
     setIsGenerarPedidoOpen(false);
   };
+
+  // Stats para KPIs
+  const statsAprobadas = React.useMemo(() => ({
+    pendientesAgregar: solicitudesPendientesAgregar.length,
+    enPedido: solicitudesAprobadas.filter(s => s.estado === 'asignada_pedido').length,
+    enTransito: solicitudesAprobadas.filter(s => s.estado === 'en_transito').length,
+    entregadas: solicitudesAprobadas.filter(s => s.estado === 'entregada' || s.estado === 'servida_stock').length,
+  }), [solicitudesAprobadas, solicitudesPendientesAgregar]);
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -163,7 +188,7 @@ export default function CentralComprasPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Central de Compres</h1>
         <p className="text-muted-foreground">
-          Agregació de sol·licituds i gestió de comandes a proveïdors
+          Gestió de sol·licituds aprovades i comandes a proveïdors
         </p>
       </div>
 
@@ -171,59 +196,58 @@ export default function CentralComprasPage() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Llestes per Agregar</CardTitle>
+            <CardTitle className="text-sm font-medium">Pendents d'Agregar</CardTitle>
             <Layers className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{solicitudesAprobadas.length}</div>
+            <div className="text-2xl font-bold text-blue-600">{statsAprobadas.pendientesAgregar}</div>
             <p className="text-xs text-muted-foreground">sol·licituds aprovades</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Comandes Borrador</CardTitle>
-            <FileStack className="h-4 w-4 text-amber-500" />
+            <CardTitle className="text-sm font-medium">En Comanda WINFIN</CardTitle>
+            <Package className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-600">{pedidosBorrador.length}</div>
-            <p className="text-xs text-muted-foreground">pendents d'enviar a WINFIN</p>
+            <div className="text-2xl font-bold text-purple-600">{statsAprobadas.enPedido}</div>
+            <p className="text-xs text-muted-foreground">pendents de recepció</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Urgents Actives</CardTitle>
-            <Zap className="h-4 w-4 text-red-500" />
+            <CardTitle className="text-sm font-medium">En Trànsit</CardTitle>
+            <Zap className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{kpis.solicitudesUrgentes}</div>
-            <p className="text-xs text-muted-foreground">prioritat alta/crítica</p>
+            <div className="text-2xl font-bold text-amber-600">{statsAprobadas.enTransito}</div>
+            <p className="text-xs text-muted-foreground">camí a operadors</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Estalvi Acumulat</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-medium">Entregades</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              {kpis.ahorroAcumuladoEscala.toLocaleString('ca-ES')} €
-            </div>
-            <p className="text-xs text-muted-foreground">per economies d'escala</p>
+            <div className="text-2xl font-bold text-green-600">{statsAprobadas.entregadas}</div>
+            <p className="text-xs text-muted-foreground">completades</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="agregar" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
+        <TabsList className="grid w-full grid-cols-3 max-w-lg">
           <TabsTrigger value="agregar">
-            Agregar Sol·licituds
-            {solicitudesAprobadas.length > 0 && (
+            Agregar
+            {solicitudesPendientesAgregar.length > 0 && (
               <Badge className="ml-2 h-5 w-5 p-0 flex items-center justify-center bg-blue-500">
-                {solicitudesAprobadas.length}
+                {solicitudesPendientesAgregar.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="borrador">Esborranys Comandes</TabsTrigger>
+          <TabsTrigger value="seguimiento">Seguiment</TabsTrigger>
+          <TabsTrigger value="borrador">Esborranys</TabsTrigger>
         </TabsList>
 
         {/* Tab: Agregar en Pedido */}
@@ -235,17 +259,17 @@ export default function CentralComprasPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Layers className="h-5 w-5 text-blue-500" />
-                    Sol·licituds Aprovades
+                    Sol·licituds Pendents d'Agregar
                   </CardTitle>
                   <CardDescription>
                     Selecciona les sol·licituds per agregar en una comanda a WINFIN
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {solicitudesAprobadas.length === 0 ? (
+                  {solicitudesPendientesAgregar.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      <FileStack className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No hi ha sol·licituds aprovades per agregar</p>
+                      <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-green-500" />
+                      <p>Totes les sol·licituds aprovades ja estan en comandes</p>
                     </div>
                   ) : (
                     <Table>
@@ -254,12 +278,12 @@ export default function CentralComprasPage() {
                           <TableHead className="w-12">
                             <Checkbox
                               checked={
-                                solicitudesAprobadas.length > 0 &&
-                                solicitudesAprobadas.every(s => solicitudesSeleccionadas.includes(s.id))
+                                solicitudesPendientesAgregar.length > 0 &&
+                                solicitudesPendientesAgregar.every(s => solicitudesSeleccionadas.includes(s.id))
                               }
                               onCheckedChange={(checked) => {
                                 if (checked) {
-                                  setSolicitudesSeleccionadas(solicitudesAprobadas.map(s => s.id));
+                                  setSolicitudesSeleccionadas(solicitudesPendientesAgregar.map(s => s.id));
                                 } else {
                                   setSolicitudesSeleccionadas([]);
                                 }
@@ -273,7 +297,7 @@ export default function CentralComprasPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {solicitudesAprobadas.map(sol => {
+                        {solicitudesPendientesAgregar.map(sol => {
                           const totalUds = sol.lineas.reduce((acc, l) => acc + l.cantidadSolicitada, 0);
                           return (
                             <TableRow key={sol.id}>
@@ -434,6 +458,81 @@ export default function CentralComprasPage() {
               </Card>
             </div>
           </div>
+        </TabsContent>
+
+        {/* Tab: Seguimiento de Solicitudes */}
+        <TabsContent value="seguimiento" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Package className="h-5 w-5 text-purple-500" />
+                Seguiment de Sol·licituds Aprovades
+              </CardTitle>
+              <CardDescription>
+                Estat de totes les sol·licituds en procés de compra i distribució
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {solicitudesAprobadas.filter(s => s.estado !== 'aprobada').length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No hi ha sol·licituds en seguiment</p>
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Codi</TableHead>
+                      <TableHead>Operador</TableHead>
+                      <TableHead>Productes</TableHead>
+                      <TableHead>Estat</TableHead>
+                      <TableHead>Data Aprovació</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {solicitudesAprobadas
+                      .filter(s => s.estado !== 'aprobada')
+                      .map(sol => {
+                        const estadoConfig: Record<string, { label: string; color: string }> = {
+                          asignada_pedido: { label: 'En Comanda WINFIN', color: 'bg-purple-100 text-purple-700' },
+                          en_transito: { label: 'En Trànsit', color: 'bg-amber-100 text-amber-700' },
+                          entregada: { label: 'Entregada', color: 'bg-green-100 text-green-700' },
+                          servida_stock: { label: 'Servida (Stock)', color: 'bg-teal-100 text-teal-700' },
+                        };
+                        const config = estadoConfig[sol.estado] || { label: sol.estado, color: 'bg-slate-100' };
+                        return (
+                          <TableRow key={sol.id}>
+                            <TableCell className="font-mono font-medium">{sol.codigo}</TableCell>
+                            <TableCell>
+                              <span className="truncate max-w-[200px] block text-sm">
+                                {sol.operadorNombre}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <div className="space-y-1">
+                                {sol.lineas.map(l => (
+                                  <div key={l.id} className="text-sm">
+                                    {l.cantidadSolicitada}x {l.nombre}
+                                  </div>
+                                ))}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={config.color} variant="secondary">
+                                {config.label}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-muted-foreground">
+                              {sol.fechaAprobacion && format(sol.fechaAprobacion, 'dd/MM/yy', { locale: ca })}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Tab: Borradores de Pedidos */}
