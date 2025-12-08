@@ -87,7 +87,7 @@ import type {
 // Helpers para estados
 const estadoConfig: Record<EstadoSolicitudOperador, { label: string; color: string; icon: React.ReactNode }> = {
   borrador: { label: 'Esborrany', color: 'bg-slate-100 text-slate-700', icon: <FileText className="h-3 w-3" /> },
-  enviada: { label: 'Enviada', color: 'bg-blue-100 text-blue-700', icon: <Send className="h-3 w-3" /> },
+  enviada: { label: 'Pendent Aprovació', color: 'bg-amber-100 text-amber-700', icon: <Clock className="h-3 w-3" /> },
   aprobada: { label: 'Aprovada', color: 'bg-green-100 text-green-700', icon: <CheckCircle2 className="h-3 w-3" /> },
   rechazada: { label: 'Rebutjada', color: 'bg-red-100 text-red-700', icon: <XCircle className="h-3 w-3" /> },
   asignada_pedido: { label: 'En Comanda', color: 'bg-purple-100 text-purple-700', icon: <Package className="h-3 w-3" /> },
