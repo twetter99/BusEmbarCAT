@@ -15,7 +15,10 @@ import {
   Boxes,
   Timer,
   Bell,
-  ArrowRight
+  ArrowRight,
+  Building,
+  FileSpreadsheet,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { 
@@ -26,6 +29,12 @@ import {
   mockAlertasC5,
   mockKPIsC5
 } from '@/lib/contrato-c5-data';
+import {
+  mockSolicitudesOperador,
+  mockPedidosProveedor,
+  mockStockCentral,
+  mockKPIsCentralCompras
+} from '@/lib/central-compras-data';
 import { 
   calcularKitsFabricables,
   stockBajo,
@@ -53,6 +62,12 @@ export default function ContratoC5DashboardPage() {
 
   // Total equipos en stock
   const totalEquiposStock = equiposPrincipalesC5.reduce((acc, p) => acc + p.stockActual, 0);
+
+  // Estadísticas Central de Compras
+  const solicitudesPendientes = mockSolicitudesOperador.filter(s => s.estado === 'enviada').length;
+  const solicitudesAprobadas = mockSolicitudesOperador.filter(s => s.estado === 'aprobada').length;
+  const pedidosProveedorActivos = mockPedidosProveedor.filter(p => p.estado !== 'recibido' && p.estado !== 'distribuido').length;
+  const stockConAlertas = mockStockCentral.filter(s => s.nivelAlerta !== 'ok').length;
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:p-6">
@@ -346,6 +361,120 @@ export default function ContratoC5DashboardPage() {
                 </div>
               );
             })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Central de Compras Section */}
+      <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-400">
+              <Building className="h-5 w-5" />
+              Central de Compres
+            </CardTitle>
+            <CardDescription>
+              Agregació de comandes d'operadors per a equipament T-mobilitat
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-4">
+            <Link href="/contrato-c5-2025/solicitudes" className="group">
+              <div className="rounded-lg border bg-white/80 dark:bg-black/20 p-4 transition-colors hover:border-blue-400">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileSpreadsheet className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium">Sol·licituds Operador</span>
+                </div>
+                <div className="text-2xl font-bold text-blue-700">{solicitudesPendientes}</div>
+                <p className="text-xs text-muted-foreground">pendents d'aprovar</p>
+                {solicitudesAprobadas > 0 && (
+                  <Badge variant="outline" className="mt-2 text-xs">
+                    {solicitudesAprobadas} aprovades per agregar
+                  </Badge>
+                )}
+              </div>
+            </Link>
+
+            <Link href="/contrato-c5-2025/central" className="group">
+              <div className="rounded-lg border bg-white/80 dark:bg-black/20 p-4 transition-colors hover:border-blue-400">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="h-4 w-4 text-indigo-600" />
+                  <span className="text-sm font-medium">Central Agregació</span>
+                </div>
+                <div className="text-2xl font-bold text-indigo-700">{solicitudesAprobadas}</div>
+                <p className="text-xs text-muted-foreground">sol·licituds per agregar</p>
+                <Badge variant="secondary" className="mt-2 text-xs">
+                  {mockKPIsCentralCompras.porcentajeCumplimientoMinimos}% compleix mínims
+                </Badge>
+              </div>
+            </Link>
+
+            <Link href="/contrato-c5-2025/pedidos-proveedor" className="group">
+              <div className="rounded-lg border bg-white/80 dark:bg-black/20 p-4 transition-colors hover:border-blue-400">
+                <div className="flex items-center gap-2 mb-2">
+                  <Truck className="h-4 w-4 text-green-600" />
+                  <span className="text-sm font-medium">Comandes WINFIN</span>
+                </div>
+                <div className="text-2xl font-bold text-green-700">{pedidosProveedorActivos}</div>
+                <p className="text-xs text-muted-foreground">en trànsit</p>
+                <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  Lead time: 45 dies
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/contrato-c5-2025/stock-central" className="group">
+              <div className={`rounded-lg border bg-white/80 dark:bg-black/20 p-4 transition-colors hover:border-blue-400 ${stockConAlertas > 0 ? 'border-orange-300' : ''}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <Boxes className="h-4 w-4 text-purple-600" />
+                  <span className="text-sm font-medium">Estoc Central</span>
+                </div>
+                <div className="text-2xl font-bold text-purple-700">{mockStockCentral.reduce((acc, s) => acc + s.stockTotal, 0)}</div>
+                <p className="text-xs text-muted-foreground">unitats totals</p>
+                {stockConAlertas > 0 ? (
+                  <Badge variant="destructive" className="mt-2 text-xs">
+                    {stockConAlertas} alertes d'estoc
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="mt-2 text-xs text-green-600">
+                    Estoc OK
+                  </Badge>
+                )}
+              </div>
+            </Link>
+          </div>
+
+          {/* KPIs row */}
+          <div className="mt-4 grid gap-4 md:grid-cols-3 border-t pt-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">{mockKPIsCentralCompras.ahorroAcumuladoEscala.toLocaleString('ca-ES')}€</p>
+                <p className="text-xs text-muted-foreground">Estalvi acumulat volum</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                <Timer className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">{mockKPIsCentralCompras.tiempoMedioEntregaDias} dies</p>
+                <p className="text-xs text-muted-foreground">Temps mitjà entrega</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
+                <Boxes className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">{mockKPIsCentralCompras.urgenciasServidasUltimos30Dias}</p>
+                <p className="text-xs text-muted-foreground">Urgències des de buffer</p>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

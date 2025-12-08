@@ -741,3 +741,306 @@ export interface KPIsSLAC5 {
     tiempoMedioHoras: number;
   };
 }
+
+// ============================================
+// CENTRAL DE COMPRAS - SOLICITUDES OPERADOR
+// ============================================
+
+/**
+ * Tipo de solicitud del operador
+ */
+export type TipoSolicitudOperador = 'normal' | 'urgente' | 'incidencia';
+
+/**
+ * Motivo de la solicitud
+ */
+export type MotivoSolicitud = 
+  | 'nueva_flota'      // Nuevos vehículos incorporados
+  | 'sustitucion'      // Reemplazo de equipo dañado/obsoleto
+  | 'ampliacion'       // Ampliación de equipamiento
+  | 'incidencia';      // Por avería/vandalismo
+
+/**
+ * Estado de la solicitud del operador
+ */
+export type EstadoSolicitudOperador = 
+  | 'borrador'           // Operador está preparando
+  | 'enviada'            // Enviada a Central de Compras
+  | 'aprobada'           // Central aprueba
+  | 'rechazada'          // Central rechaza (con motivo)
+  | 'asignada_pedido'    // Incluida en un pedido a proveedor
+  | 'en_transito'        // Pedido proveedor enviado
+  | 'entregada'          // Material recibido por operador
+  | 'servida_stock';     // Servida desde stock urgencias (solo urgentes)
+
+/**
+ * Línea de solicitud del operador
+ */
+export interface LineaSolicitudOperador {
+  id: string;
+  productoId: string;
+  sku: string;
+  nombre: string;
+  cantidadSolicitada: number;
+  cantidadAprobada?: number;      // Puede ser menor si no hay stock
+  cantidadEntregada: number;
+  /** Vehículos destino (opcional) */
+  vehiculosDestino?: {
+    vehiculoId: string;
+    calca: string;
+    matricula: string;
+    cantidad: number;
+  }[];
+}
+
+/**
+ * Solicitud de material de un operador
+ * Es la petición individual antes de ser agregada en un pedido a proveedor
+ */
+export interface SolicitudOperador {
+  id: string;
+  codigo: string;                    // SOL-2025-0001
+  
+  // Operador solicitante
+  operadorId: string;
+  operadorNombre: string;
+  
+  // Tipo y prioridad
+  tipo: TipoSolicitudOperador;
+  prioridad: 'baja' | 'media' | 'alta' | 'critica';
+  motivo: MotivoSolicitud;
+  
+  // Justificación (obligatoria para urgentes/incidencias)
+  justificacion?: string;
+  vehiculosAfectados?: string[];     // IDs de vehículos si es incidencia
+  
+  // Líneas solicitadas
+  lineas: LineaSolicitudOperador[];
+  
+  // Estado y trazabilidad
+  estado: EstadoSolicitudOperador;
+  pedidoProveedorId?: string;        // Si fue asignada a pedido proveedor
+  
+  // Fechas
+  fechaCreacion: Date;
+  fechaEnvio?: Date;
+  fechaAprobacion?: Date;
+  fechaRechazo?: Date;
+  motivoRechazo?: string;
+  fechaEntrega?: Date;
+  
+  // Si es urgente, puede servirse desde stock
+  servidaDesdeStock: boolean;
+  
+  // Auditoría
+  creadoPor: string;
+  aprobadoPor?: string;
+  notas?: string;
+}
+
+// ============================================
+// CENTRAL DE COMPRAS - PEDIDOS A PROVEEDOR
+// ============================================
+
+/**
+ * Estado del pedido a proveedor (WINFIN)
+ */
+export type EstadoPedidoProveedor = 
+  | 'borrador'              // En preparación
+  | 'enviado_proveedor'     // Enviado a WINFIN
+  | 'confirmado'            // WINFIN confirma recepción
+  | 'en_fabricacion'        // En proceso de fabricación
+  | 'enviado'               // WINFIN ha enviado
+  | 'recibido_parcial'      // Recepción parcial en almacén
+  | 'recibido'              // Todo recibido
+  | 'distribuido';          // Material distribuido a operadores
+
+/**
+ * Línea de pedido a proveedor (agregación de solicitudes)
+ */
+export interface LineaPedidoProveedor {
+  id: string;
+  productoId: string;
+  sku: string;
+  nombre: string;
+  
+  // Cantidades
+  cantidadTotal: number;
+  cantidadRecibida: number;
+  cantidadDistribuida: number;
+  
+  // Mínimo de fabricación del proveedor
+  cantidadMinimaFabricacion: number;
+  cumpleMinimoFabricacion: boolean;
+  
+  // Precio (si aplica)
+  precioUnitario?: number;
+  descuentoVolumen?: number;
+  
+  // Desglose por solicitud origen
+  desgloseSolicitudes: {
+    solicitudId: string;
+    solicitudCodigo: string;
+    operadorId: string;
+    operadorNombre: string;
+    cantidad: number;
+  }[];
+}
+
+/**
+ * Pedido agregado a proveedor (WINFIN)
+ */
+export interface PedidoProveedor {
+  id: string;
+  codigo: string;                    // PED-WINFIN-2025-001
+  
+  // Proveedor (siempre WINFIN)
+  proveedorNombre: string;           // "WINFIN"
+  
+  // Solicitudes incluidas
+  solicitudesIncluidas: string[];    // IDs de SolicitudOperador
+  
+  // Líneas consolidadas
+  lineas: LineaPedidoProveedor[];
+  
+  // Análisis de agregación
+  totalUnidades: number;
+  cumpleMinimosFabricacion: boolean;
+  ahorroEstimadoEscala?: number;     // % ahorro por volumen
+  
+  // Estado
+  estado: EstadoPedidoProveedor;
+  
+  // Fechas
+  fechaCreacion: Date;
+  fechaEnvioProveedor?: Date;
+  fechaConfirmacion?: Date;
+  fechaEntregaEstimada?: Date;
+  fechaRecepcion?: Date;
+  fechaDistribucion?: Date;
+  
+  // Económico (opcional)
+  importeTotal?: number;
+  
+  // Auditoría
+  creadoPor: string;
+  notas?: string;
+}
+
+// ============================================
+// STOCK CENTRAL (CON BUFFER URGENCIAS)
+// ============================================
+
+/**
+ * Nivel de alerta del stock
+ */
+export type NivelAlertaStock = 'ok' | 'bajo' | 'critico' | 'agotado';
+
+/**
+ * Stock central con separación de urgencias
+ */
+export interface StockCentralC5 {
+  productoId: string;
+  productoNombre: string;
+  sku: string;
+  
+  // Stock disponible
+  stockTotal: number;
+  stockDisponible: number;           // Total - Reservado
+  
+  // Reservas
+  stockReservadoSolicitudes: number; // Para solicitudes aprobadas
+  stockReservadoUrgencias: number;   // Buffer fijo para emergencias
+  
+  // Configuración
+  stockMinimoUrgencias: number;      // Mínimo a mantener para emergencias
+  stockMinimoReposicion: number;     // Nivel para disparar reposición
+  stockMaximoContrato: number;       // Límite contractual (200)
+  
+  // Alertas
+  nivelAlerta: NivelAlertaStock;
+  
+  // Métricas
+  diasStockEstimado?: number;        // Días que dura el stock actual
+  consumoMedioDiario?: number;
+}
+
+// ============================================
+// KPIs CENTRAL DE COMPRAS
+// ============================================
+
+export interface KPIsCentralCompras {
+  // Solicitudes
+  solicitudesPendientes: number;
+  solicitudesUrgentes: number;
+  solicitudesServidasStock: number;
+  tiempoMedioAprobacionHoras: number;
+  
+  // Agregación
+  pedidosProveedorActivos: number;
+  porcentajeCumplimientoMinimos: number;
+  ahorroAcumuladoEscala: number;
+  
+  // Stock urgencias
+  productosConStockUrgenciaBajo: number;
+  urgenciasServidasUltimos30Dias: number;
+  urgenciasNoServidasPorStock: number;
+  
+  // Eficiencia
+  tiempoMedioEntregaDias: number;
+  solicitudesEntregadasEnPlazo: number;
+}
+
+// ============================================
+// LLIURAMENTS A OPERADORS
+// ============================================
+
+export type EstadoLliurament = 
+  | 'pendent'        // Pendiente de preparar
+  | 'en_preparacio'  // En preparación (pick & pack)
+  | 'preparat'       // Preparado para envío
+  | 'en_transit'     // En tránsito
+  | 'lliurat'        // Entregado
+  | 'parcial';       // Entrega parcial
+
+export type TipusLliurament =
+  | 'normal'         // Entrega normal desde pedido proveedor
+  | 'urgencia'       // Entrega urgente desde buffer
+  | 'reposicio';     // Reposición por RMA/garantía
+
+export interface LineaLliurament {
+  id: string;
+  productoId: string;
+  productoSku: string;
+  productoNombre: string;
+  cantidadSolicitada: number;
+  cantidadPreparada: number;
+  cantidadEntregada: number;
+  numerosSeriePreparados?: string[];
+  numerosSerieEntregados?: string[];
+  solicitudOrigenId?: string;
+}
+
+export interface Lliurament {
+  id: string;
+  codigo: string;  // Format: LLI-YYYY-NNNN
+  operadorId: string;
+  operadorNombre: string;
+  operadorCodi: string;
+  tipo: TipusLliurament;
+  estado: EstadoLliurament;
+  fechaCreacion: Date;
+  fechaPreparacion?: Date;
+  fechaEnvio?: Date;
+  fechaEntrega?: Date;
+  fechaEstimadaEntrega?: Date;
+  pedidoProveedorId?: string;
+  pedidoProveedorCodigo?: string;
+  lineas: LineaLliurament[];
+  direccionEntrega: string;
+  contactoEntrega?: string;
+  telefonoContacto?: string;
+  observaciones?: string;
+  albaranEntrega?: string;
+  firmaRecepcion?: boolean;
+}

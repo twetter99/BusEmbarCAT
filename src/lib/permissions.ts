@@ -30,6 +30,7 @@ import {
   Calendar as CalendarIcon,
   FileSpreadsheet,
   Barcode,
+  Package,
 } from 'lucide-react';
 
 export type NavItem = {
@@ -90,7 +91,11 @@ export const navItems: NavConfig = {
         icon: Boxes,
         subItems: [
             { id: 'c5-dashboard', href: '/contrato-c5-2025', label: 'Dashboard C-5', icon: LayoutDashboard },
-            { id: 'c5-pedidos', href: '/contrato-c5-2025/pedidos', label: 'Comandes i Fabricació', icon: FileSpreadsheet },
+            { id: 'c5-solicitudes', href: '/contrato-c5-2025/solicitudes', label: 'Sol·licituds Operador', icon: FileSpreadsheet },
+            { id: 'c5-central', href: '/contrato-c5-2025/central', label: 'Central de Compres', icon: Building },
+            { id: 'c5-pedidos-proveedor', href: '/contrato-c5-2025/pedidos-proveedor', label: 'Comandes WINFIN', icon: Truck },
+            { id: 'c5-stock-central', href: '/contrato-c5-2025/stock-central', label: 'Estoc Central', icon: Boxes },
+            { id: 'c5-lliuraments', href: '/contrato-c5-2025/lliuraments', label: 'Lliuraments a Operadors', icon: Package },
             { id: 'c5-inventario', href: '/contrato-c5-2025/inventario', label: 'Inventari i Traçabilitat', icon: Boxes },
             { id: 'c5-series', href: '/contrato-c5-2025/series', label: 'Sèries i Lots', icon: Barcode },
             { id: 'c5-movimientos', href: '/contrato-c5-2025/movimientos', label: 'Moviments', icon: History },
@@ -125,23 +130,30 @@ const permissions: Record<Role, { read: string[], write: string[] }> = {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
             'fleet', 'reports', 'access', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-planning', 'c4-work', 'c4-tracking',
-            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-recambios', 'c5-garantias', 'c5-reporting',
+            'contrato-c5', 'c5-dashboard', 'c5-inventario', 'c5-logistica', 'c5-recambios', 'c5-garantias', 'c5-reporting',
+            // Central de Compras modules
+            'c5-solicitudes', 'c5-central', 'c5-pedidos-proveedor', 'c5-stock-central', 'c5-lliuraments',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
         write: [
-            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns', 'installations'
+            'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'incidents', 'inventory', 'breakdowns', 'installations',
+            'c5-solicitudes' // Operadors can create solicitudes
         ],
     },
     'Sermetra': {
         read: [
             'dashboard', 'vehicles', 'equipment', 'tasks', 'checklists', 'reports', 'incidents', 'inventory', 'breakdowns', 'preventive', 'corrective', 'maintenance', 'installations',
             'operators', 'fleet', 'reports', 'system-config', 'users', 'access', 'parameters', 'contrato-c4', 'c4-dashboard', 'c4-inventory', 'c4-planning', 'c4-work', 'c4-tracking',
-            'contrato-c5', 'c5-dashboard', 'c5-pedidos', 'c5-inventario', 'c5-logistica', 'c5-recambios', 'c5-garantias', 'c5-reporting',
+            'contrato-c5', 'c5-dashboard', 'c5-inventario', 'c5-logistica', 'c5-recambios', 'c5-garantias', 'c5-reporting',
+            // Central de Compras modules
+            'c5-solicitudes', 'c5-central', 'c5-pedidos-proveedor', 'c5-stock-central', 'c5-lliuraments',
             // Grant access to new submodules
             'preventive-dashboard', 'planning', 'active', 'history', 'due', 'analysis', 'plan-config'
         ],
-        write: [],
+        write: [
+            'c5-central', 'c5-pedidos-proveedor', 'c5-stock-central', 'c5-lliuraments' // Sermetra manages central purchasing
+        ],
     }
 }
 
